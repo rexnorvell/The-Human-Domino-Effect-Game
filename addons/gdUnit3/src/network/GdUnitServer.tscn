@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwj5ct25okngn"]
+
+[ext_resource type="Script" uid="uid://dhk387r4dcp11" path="res://addons/gdUnit3/src/network/GdUnitServer.gd" id="1"]
+[ext_resource type="Script" uid="uid://bgouj1hhqib3x" path="res://addons/gdUnit3/src/network/GdUnitTcpServer.gd" id="2"]
+
+[node name="Control" type="Node"]
+script = ExtResource("1")
+
+[node name="TcpServer" type="Node" parent="."]
+script = ExtResource("2")

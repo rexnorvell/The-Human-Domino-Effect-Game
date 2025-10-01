@@ -1,0 +1,7 @@
+[gd_resource type="FontFile" load_steps=2 format=2]
+
+[ext_resource path="res://UI/Fonts/Non_Nunito/CALIBRI.TTF" type="FontFile" id=1]
+
+[resource]
+use_mipmaps = true
+font_data = ExtResource( 1 )

@@ -1,0 +1,227 @@
+[gd_scene load_steps=13 format=3 uid="uid://cx43fxqtn64eq"]
+
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="1"]
+[ext_resource type="Script" uid="uid://df0eaecey1h31" path="res://Scripts/Button.gd" id="2"]
+[ext_resource type="Script" uid="uid://bygek8blv5iec" path="res://Scripts/Dismiss.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://bc7xpn3jmgg3s" path="res://UI/sprites/character_sprites/bodies/0.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://danf0e72y7l2m" path="res://Scenes/StaticElcitrap.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://c0nnyko54qexu" path="res://UI/sprites/character_sprites/clothes/0.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://b0exrp8j8euyr" path="res://UI/sprites/character_sprites/front_hair/0.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://4xnsnuxww5qv" path="res://UI/sprites/character_sprites/back_hair/0.png" id="9"]
+
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("1"), ExtResource("1"), ExtResource("1")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="2"]
+fallbacks = Array[Font]([ExtResource("1"), ExtResource("1"), ExtResource("1")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="4"]
+fallbacks = Array[Font]([ExtResource("1"), ExtResource("1"), ExtResource("1")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="5"]
+fallbacks = Array[Font]([ExtResource("1"), ExtResource("1"), ExtResource("1")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[node name="Score" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+offset_right = 192.0
+offset_bottom = 47.0
+script = ExtResource("2")
+
+[node name="Label" type="Label" parent="Button"]
+layout_mode = 0
+offset_left = 8.0
+offset_right = 100.0
+offset_bottom = 42.0
+theme_override_fonts/font = SubResource("1")
+text = "Points:"
+
+[node name="Points" type="Label" parent="Button"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 2.0
+offset_right = 144.0
+offset_bottom = 44.0
+theme_override_fonts/font = SubResource("2")
+text = "0"
+
+[node name="Popup" type="Popup" parent="Button"]
+size = Vector2i(514, 367)
+visible = true
+
+[node name="Name_label" type="Label" parent="Button/Popup"]
+offset_left = 112.0
+offset_top = 32.0
+offset_right = 176.0
+offset_bottom = 64.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+text = "Name:"
+
+[node name="Name_text" type="Label" parent="Button/Popup"]
+offset_left = 176.0
+offset_top = 32.0
+offset_right = 280.0
+offset_bottom = 61.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+
+[node name="Alloy_label" type="Label" parent="Button/Popup"]
+offset_left = 344.0
+offset_top = 32.0
+offset_right = 496.0
+offset_bottom = 64.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+text = "Alloys:"
+
+[node name="Alloy_number" type="Label" parent="Button/Popup"]
+offset_left = 504.0
+offset_top = 32.0
+offset_right = 544.0
+offset_bottom = 61.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("5")
+text = "0"
+
+[node name="Footprint_label" type="Label" parent="Button/Popup"]
+offset_left = 344.0
+offset_top = 136.0
+offset_right = 496.0
+offset_bottom = 168.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+text = "Footprint Tiles:"
+
+[node name="Footprint_number" type="Label" parent="Button/Popup"]
+offset_left = 504.0
+offset_top = 136.0
+offset_right = 544.0
+offset_bottom = 165.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("5")
+text = "0"
+
+[node name="Wellness_label" type="Label" parent="Button/Popup"]
+offset_left = 344.0
+offset_top = 240.0
+offset_right = 496.0
+offset_bottom = 272.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+text = "Wellness Beads:"
+
+[node name="Wellness_number" type="Label" parent="Button/Popup"]
+offset_left = 504.0
+offset_top = 240.0
+offset_right = 544.0
+offset_bottom = 269.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("5")
+text = "0"
+
+[node name="Lydia_label" type="Label" parent="Button/Popup"]
+offset_left = 299.0
+offset_top = 343.0
+offset_right = 508.0
+offset_bottom = 372.0
+pivot_offset = Vector2(88, 61)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("4")
+text = "Total Lydia Lion Coins: "
+
+[node name="Lydia_number" type="Label" parent="Button/Popup"]
+offset_left = 504.0
+offset_top = 344.0
+offset_right = 544.0
+offset_bottom = 373.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("5")
+text = "0"
+
+[node name="Button" type="Button" parent="Button/Popup"]
+visible = false
+offset_left = 224.0
+offset_top = 280.0
+offset_right = 288.0
+offset_bottom = 304.0
+text = "OK"
+script = ExtResource("3")
+
+[node name="clothes" type="Sprite2D" parent="Button/Popup"]
+z_index = 2
+position = Vector2(199, 155)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("7")
+
+[node name="body" type="Sprite2D" parent="Button/Popup"]
+z_index = 1
+position = Vector2(199, 150)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("4")
+
+[node name="front_hair" type="Sprite2D" parent="Button/Popup"]
+z_index = 2
+position = Vector2(199, 155)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("8")
+
+[node name="back_hair" type="Sprite2D" parent="Button/Popup"]
+position = Vector2(199, 155)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("9")
+
+[node name="elcitrap0" parent="Button/Popup" instance=ExtResource("5")]
+position = Vector2(140, 298)
+
+[node name="elcitrap1" parent="Button/Popup" instance=ExtResource("5")]
+position = Vector2(204, 298)
+
+[node name="elcitrap2" parent="Button/Popup" instance=ExtResource("5")]
+position = Vector2(268, 298)
+
+[node name="elcitrap3" parent="Button/Popup" instance=ExtResource("5")]
+position = Vector2(171, 357)
+
+[node name="elcitrap4" parent="Button/Popup" instance=ExtResource("5")]
+position = Vector2(237, 357)
+
+[connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]
+[connection signal="pressed" from="Button/Popup/Button" to="Button/Popup/Button" method="_on_Button_pressed"]

@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "geequlim.godot-tools",
+        "razoric.gdscript-toolkit-formatter",
+        "eamodio.gitlens",
+        "christian-kohler.path-intellisense",
+        "gruntfuggly.todo-tree",
+        "mikeschulze.gdunit3"
+    ]
+}

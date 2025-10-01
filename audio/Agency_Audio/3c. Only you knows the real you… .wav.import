@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://djm8qclhmnyql"
+path="res://.godot/imported/3c. Only you knows the real you… .wav-851090d2b31b7e0c637c357aa0bbf6a8.sample"
+
+[deps]
+
+source_file="res://audio/Agency_Audio/3c. Only you knows the real you… .wav"
+dest_files=["res://.godot/imported/3c. Only you knows the real you… .wav-851090d2b31b7e0c637c357aa0bbf6a8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

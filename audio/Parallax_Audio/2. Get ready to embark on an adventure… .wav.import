@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dxhrngpqwr7sv"
+path="res://.godot/imported/2. Get ready to embark on an adventure… .wav-2eddc0164b82f9bb4810349c33763970.sample"
+
+[deps]
+
+source_file="res://audio/Parallax_Audio/2. Get ready to embark on an adventure… .wav"
+dest_files=["res://.godot/imported/2. Get ready to embark on an adventure… .wav-2eddc0164b82f9bb4810349c33763970.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

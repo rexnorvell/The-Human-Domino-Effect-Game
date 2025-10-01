@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3 uid="uid://bc31q683qccay"]
+
+[ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-14.tres" id="2"]
+[ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-14-bold.tres" id="3"]
+[ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-14-italics.tres" id="4"]
+[ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-14-bold-italics.tres" id="5"]
+[ext_resource type="Script" uid="uid://b1agb76gyj7uc" path="res://addons/gdUnit3/src/update/GdUnitUpdateClient.gd" id="6"]
+
+[sub_resource type="Resource" id="Resource_81vlr"]
+metadata/__load_path__ = "res://addons/gdUnit3/test/update/bbcodeView.gd"
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource("Resource_81vlr")
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit" type="TextEdit" parent="HSplitContainer"]
+offset_right = 300.0
+offset_bottom = 600.0
+custom_minimum_size = Vector2(300, 0)
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer"]
+use_parent_material = true
+offset_left = 312.0
+offset_right = 1024.0
+offset_bottom = 600.0
+tooltip_text = "test"
+theme_override_fonts/mono_font = ExtResource("2")
+theme_override_fonts/bold_italics_font = ExtResource("5")
+theme_override_fonts/italics_font = ExtResource("4")
+theme_override_fonts/bold_font = ExtResource("3")
+theme_override_fonts/normal_font = ExtResource("2")
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/table_v_separation = 0
+theme_override_constants/line_separation = 0
+bbcode_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GdUnitUpdateClient" type="Node" parent="."]
+script = ExtResource("6")
+
+[connection signal="text_changed" from="HSplitContainer/TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="meta_clicked" from="HSplitContainer/RichTextLabel" to="." method="_on_RichTextLabel_meta_clicked"]
+[connection signal="meta_hover_ended" from="HSplitContainer/RichTextLabel" to="." method="_on_RichTextLabel_meta_hover_ended"]
+[connection signal="meta_hover_started" from="HSplitContainer/RichTextLabel" to="." method="_on_RichTextLabel_meta_hover_started"]

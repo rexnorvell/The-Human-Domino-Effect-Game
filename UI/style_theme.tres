@@ -1,0 +1,44 @@
+[gd_resource type="Theme" load_steps=10 format=2]
+
+[ext_resource path="res://UI/Control/grey_button_down.png" type="Texture2D" id=1]
+[ext_resource path="res://UI/Control/green_button13.png" type="Texture2D" id=2]
+[ext_resource path="res://UI/Control/grey_button03.png" type="Texture2D" id=3]
+[ext_resource path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" type="FontFile" id=4]
+
+[sub_resource type="FontFile" id=2]
+size = 125
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxTexture" id=3]
+texture = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 190, 49 )
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 190, 49 )
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = ExtResource( 1 )
+region_rect = Rect2( 0, 0, 190, 45 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.380392, 0.588235, 0.615686, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[resource]
+Button/colors/font_color = Color( 0.6, 0.6, 0.6, 1 )
+Button/colors/font_color_hover = Color( 0.454902, 0.8, 0.298039, 1 )
+Button/fonts/font = SubResource( 2 )
+Button/styles/hover = SubResource( 3 )
+Button/styles/normal = SubResource( 4 )
+Button/styles/pressed = SubResource( 5 )
+Popup/styles/panel = SubResource( 1 )

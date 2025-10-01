@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://cyb1ooqucssw0"]
+
+[ext_resource type="Texture2D" uid="uid://1v4s7y3mtnon" path="res://UI/sprites/level4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="4"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="5"]
+
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("5"), ExtResource("5")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[node name="LevelSelect" type="Node2D"]
+
+[node name="Popup" type="Popup" parent="."]
+size = Vector2i(2470, 1430)
+visible = true
+
+[node name="Title" type="Label" parent="Popup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("1")
+text = "Choose Level"
+
+[node name="Level1" type="TextureButton" parent="Popup"]
+offset_left = 100.0
+offset_top = 110.0
+offset_right = 2020.0
+offset_bottom = 1190.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("4")
+
+[node name="Level2" type="TextureButton" parent="Popup"]
+offset_left = 550.0
+offset_top = 110.0
+offset_right = 2470.0
+offset_bottom = 1190.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("3")
+
+[node name="Level3" type="TextureButton" parent="Popup"]
+offset_left = 100.0
+offset_top = 350.0
+offset_right = 2020.0
+offset_bottom = 1430.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("2")
+
+[node name="Level4" type="TextureButton" parent="Popup"]
+offset_left = 550.0
+offset_top = 350.0
+offset_right = 2470.0
+offset_bottom = 1430.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("1")

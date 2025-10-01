@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://ravepkthb08j"]
+
+[ext_resource type="Texture2D" uid="uid://d4lkhxfouinqi" path="res://UI/sprites/magnifier.png" id="1"]
+[ext_resource type="Script" uid="uid://o0anlbjw7n6j" path="res://Scripts/Oauabae.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://2k7hvafmh2ad" path="res://UI/sprites/string_magnifier.png" id="3"]
+
+[sub_resource type="SpriteFrames" id="1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
+"loop": true,
+"name": &"agencied",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 79.5016
+
+[node name="Oauabae" type="Area2D"]
+script = ExtResource("2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -1.36298)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("1")
+animation = &"agencied"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.500004, 9.5)
+shape = SubResource("2")
+
+[connection signal="body_entered" from="." to="." method="_on_Oauabae_body_entered"]

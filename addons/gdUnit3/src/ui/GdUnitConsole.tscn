@@ -1,0 +1,116 @@
+[gd_scene load_steps=11 format=3 uid="uid://dimlp48uy7ute"]
+
+[ext_resource type="Script" uid="uid://cm35ey70oq0fk" path="res://addons/gdUnit3/src/ui/GdUnitConsole.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://ngtgvwy4acmx" path="res://addons/gdUnit3/src/update/assets/fonts/static/RobotoMono-Bold.ttf" id="2"]
+[ext_resource type="FontFile" uid="uid://bl2qivobff0fc" path="res://addons/gdUnit3/src/update/assets/fonts/static/RobotoMono-BoldItalic.ttf" id="3"]
+[ext_resource type="FontFile" uid="uid://lvr0gic5n58r" path="res://addons/gdUnit3/src/update/assets/fonts/static/RobotoMono-Regular.ttf" id="4"]
+[ext_resource type="FontFile" uid="uid://doc8g3pjfb2nm" path="res://addons/gdUnit3/src/update/assets/fonts/static/RobotoMono-Italic.ttf" id="5"]
+[ext_resource type="Script" uid="uid://pa5c711jwpoc" path="res://addons/gdUnit3/src/ui/parts/RichTextLabelExt.gd" id="6"]
+
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("4")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="2"]
+fallbacks = Array[Font]([ExtResource("3")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="3"]
+fallbacks = Array[Font]([ExtResource("5")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="4"]
+fallbacks = Array[Font]([ExtResource("2")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[node name="Control" type="Control"]
+use_parent_material = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_minimum_size = Vector2(0, 100)
+clip_contents = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1")
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+use_parent_material = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+clip_contents = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="PanelContainer" parent="VBoxContainer"]
+use_parent_material = true
+offset_right = 1024.0
+offset_bottom = 29.0
+grow_horizontal = 2
+custom_minimum_size = Vector2(0, 20)
+size_flags_horizontal = 3
+
+[node name="header_title" type="RichTextLabel" parent="VBoxContainer/Header"]
+use_parent_material = true
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 1017.0
+offset_bottom = 22.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content_height = true
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Console" type="ScrollContainer" parent="VBoxContainer"]
+offset_top = 33.0
+offset_right = 1024.0
+offset_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit" type="RichTextLabel" parent="VBoxContainer/Console"]
+use_parent_material = true
+offset_right = 1024.0
+offset_bottom = 567.0
+custom_minimum_size = Vector2(80, 19)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/mono_font = SubResource("1")
+theme_override_fonts/bold_italics_font = SubResource("2")
+theme_override_fonts/italics_font = SubResource("3")
+theme_override_fonts/bold_font = SubResource("4")
+theme_override_fonts/normal_font = SubResource("1")
+bbcode_enabled = true
+scroll_following = true
+script = ExtResource("6")
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,229 @@
+[gd_scene load_steps=23 format=3 uid="uid://dsuv41blblnbi"]
+
+[ext_resource type="Texture2D" uid="uid://34p71rqqljry" path="res://UI/Parallax/cavepan/cavepan_1.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c7fw1qaevhk64" path="res://UI/Parallax/cavepan/cavepan_2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cwo7m5bmdbma2" path="res://UI/Parallax/cavepan/cavepan_4.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://04exhpfm3x0s" path="res://UI/Parallax/cavepan/cavepan_5.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://m4dorj1qg7w3" path="res://UI/Parallax/cavepan/cavepan_3.png" id="5"]
+[ext_resource type="Script" uid="uid://bip2sqthql0ob" path="res://Scripts/CavepanTimer.gd" id="6"]
+[ext_resource type="PackedScene" uid="uid://2kb7jdtcgrfm" path="res://Scenes/Level_Scenes/CharacterCreation.tscn" id="7"]
+[ext_resource type="Script" uid="uid://dyqkats0fehx0" path="res://Scripts/Parallax_Scripts/Parallax4.gd" id="8"]
+[ext_resource type="Script" uid="uid://cyb1wxyh0p5ot" path="res://Scripts/Parallax4Animations.gd" id="9"]
+[ext_resource type="Script" uid="uid://bjddt5ie7gwp5" path="res://Scenes/Parallax_Scenes/Parallax4Zoom.gd" id="11"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="12"]
+[ext_resource type="AudioStream" uid="uid://cleb6t4l8mq7" path="res://audio/Parallax_Audio/1. Welcome to the Human Domino Effect.wav" id="13"]
+[ext_resource type="AudioStream" uid="uid://c5r8j7u276vae" path="res://audio/Parallax_Audio/5. In the Human Domino Effect every and The Human Domino Effect, every decision you make...wav" id="14"]
+[ext_resource type="AudioStream" uid="uid://dxhrngpqwr7sv" path="res://audio/Parallax_Audio/2. Get ready to embark on an adventure… .wav" id="15"]
+[ext_resource type="AudioStream" uid="uid://cb4tjcbm5mybp" path="res://audio/Parallax_Audio/3. We are all connected across generations….wav" id="16"]
+[ext_resource type="AudioStream" uid="uid://b3t3lt7qmmiib" path="res://audio/Parallax_Audio/4. Now we have the chance to learn from the past, and work together… .wav" id="17"]
+[ext_resource type="AudioStream" uid="uid://dmsxw1byrvfhi" path="res://audio/Parallax_Audio/6. This game teaches you how to navigate challenges… .wav" id="18"]
+[ext_resource type="AudioStream" uid="uid://dge08qqrak77m" path="res://audio/Parallax_Audio/7. Are you ready to join the Human family….wav" id="19"]
+
+[sub_resource type="FontFile" id="5"]
+fallbacks = Array[Font]([ExtResource("12")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Animation" id="1"]
+resource_name = "Screen_Unwipe"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D/ZIndexSetter/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="2"]
+resource_name = "Screen_Wipe"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D/ZIndexSetter/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="4"]
+resource_name = "Zoom"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.6, 0.6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(6125, 0), Vector2(6125, 25)]
+}
+
+[node name="Parallax4" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8")
+next_scene = ExtResource("7")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(248, 475)
+color = Color(0.305882, 0.305882, 0.305882, 0.760784)
+polygon = PackedVector2Array(-152, 77, 680, 77, 680, -91, -152, -91)
+
+[node name="dialogue" type="RichTextLabel" parent="Polygon2D"]
+offset_left = -96.0
+offset_top = -75.0
+offset_right = 624.0
+offset_bottom = 61.0
+theme_override_fonts/normal_font = SubResource("5")
+bbcode_enabled = true
+text = "We are all connected across generations by a shared legacy. From our first small group of ancestors, you know, our shared ancient grandparents. We've grown to nearly 8 billion people! 8 billion human family cousins all living on our earth today. We’ve built civilizations, created art, and advanced our human knowledge through all kinds of technology!"
+text = "We are all connected across generations by a shared legacy. From our first small group of ancestors, you know, our shared ancient grandparents. We've grown to nearly 8 billion people! 8 billion human family cousins all living on our earth today. We’ve built civilizations, created art, and advanced our human knowledge through all kinds of technology!"
+
+[node name="Timer" type="Timer" parent="Polygon2D"]
+wait_time = 0.005
+autostart = true
+
+[node name="AudioStreamPlayer0" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13")
+bus = "Narration"
+
+[node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15")
+bus = "Narration"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16")
+bus = "Narration"
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("17")
+bus = "Narration"
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14")
+bus = "Narration"
+
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18")
+bus = "Narration"
+
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("19")
+bus = "Narration"
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.012, 1)
+motion_offset = Vector2(0, -30)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky"]
+position = Vector2(-525, 0)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("4")
+centered = false
+
+[node name="Mountains" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.06, 1)
+motion_offset = Vector2(0, 80)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Mountains"]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("3")
+centered = false
+offset = Vector2(-650, 0)
+
+[node name="Hills" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.2, 1)
+motion_offset = Vector2(0, 75)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Hills"]
+scale = Vector2(0.54, 0.56)
+texture = ExtResource("5")
+centered = false
+offset = Vector2(-775, 0)
+
+[node name="Flatlands" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.4, 1)
+motion_offset = Vector2(0, 145)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Flatlands"]
+position = Vector2(-2, 0)
+scale = Vector2(0.54, 0.56)
+texture = ExtResource("2")
+centered = false
+offset = Vector2(-575, 0)
+
+[node name="Beach" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.65, 1)
+motion_offset = Vector2(0, 50)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Beach"]
+scale = Vector2(0.54, 0.56)
+texture = ExtResource("1")
+centered = false
+offset = Vector2(-350, 0)
+
+[node name="CavepanTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+script = ExtResource("6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Screen_Unwipe = SubResource("1")
+anims/Screen_Wipe = SubResource("2")
+script = ExtResource("9")
+
+[node name="ZoomPlayer" type="AnimationPlayer" parent="."]
+anims/Zoom = SubResource("4")
+script = ExtResource("11")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(512, 300)
+current = true
+
+[node name="ZIndexSetter" type="Node2D" parent="Camera2D"]
+visible = false
+z_index = 1
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/ZIndexSetter"]
+offset_right = 1024.0
+offset_bottom = 600.0
+color = Color(0, 0, 0, 1)
+
+[connection signal="pan_stopped" from="." to="CavepanTimer" method="_on_Parallax4_pan_stopped" flags=6]
+[connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_Parallax4_trigger_animation"]
+[connection signal="trigger_zoom" from="." to="ZoomPlayer" method="_on_Parallax4_trigger_zoom" flags=6]
+[connection signal="timeout" from="Polygon2D/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Polygon2D/Timer" to="Polygon2D/dialogue" method="_on_Timer_timeout"]
+[connection signal="timeout" from="CavepanTimer" to="." method="_on_CavepanTimer_timeout"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dyk4bxtybt01u"
+path="res://.godot/imported/2a. This O shaped magnifying glass has a special name… .wav-a2e6587811d091b319701104c5b9a21d.sample"
+
+[deps]
+
+source_file="res://audio/Agency_Audio/2a. This O shaped magnifying glass has a special name… .wav"
+dest_files=["res://.godot/imported/2a. This O shaped magnifying glass has a special name… .wav-a2e6587811d091b319701104c5b9a21d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

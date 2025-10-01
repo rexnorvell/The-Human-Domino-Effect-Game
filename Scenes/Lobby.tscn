@@ -1,0 +1,777 @@
+[gd_scene load_steps=31 format=3 uid="uid://da355mvkk7a1t"]
+
+[ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="1"]
+[ext_resource type="PackedScene" uid="uid://b280avyrjcv5t" path="res://Scenes/Back_Button.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://b0dvssdrdf6g2" path="res://UI/Control/grey_panel.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bepv5woel474d" path="res://UI/Control/yellow_button03.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bjhsyid7yg8fu" path="res://UI/Control/green_button02.png" id="5"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
+[ext_resource type="Texture2D" uid="uid://cffbm8m1efihk" path="res://UI/Control/green_button03.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bvbwqwm5kr6o1" path="res://UI/Control/yellow_button02.png" id="8"]
+[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="9"]
+[ext_resource type="Script" uid="uid://c38yj276hupv0" path="res://Scripts/Lobby.gd" id="10"]
+[ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://1v4s7y3mtnon" path="res://UI/sprites/level4.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cvync24oqcy7k" path="res://UI/Control/green_button00.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://byy16ybwc3qjx" path="res://UI/Control/green_button01.png" id="16"]
+
+[sub_resource type="FontFile" id="2"]
+fallbacks = Array[Font]([ExtResource("6")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="StyleBoxEmpty" id="3"]
+
+[sub_resource type="StyleBoxEmpty" id="4"]
+
+[sub_resource type="StyleBoxEmpty" id="5"]
+
+[sub_resource type="Theme" id="6"]
+LineEdit/colors/clear_button_color = Color(0.490196, 0.490196, 0.490196, 1)
+LineEdit/colors/clear_button_color_pressed = Color(1, 0, 0, 1)
+LineEdit/colors/cursor_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
+LineEdit/fonts/font = SubResource("2")
+LineEdit/styles/focus = SubResource("3")
+LineEdit/styles/normal = SubResource("4")
+LineEdit/styles/read_only = SubResource("5")
+
+[sub_resource type="Animation" id="7"]
+resource_name = "start"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 600), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yqok8"]
+_data = {
+&"start": SubResource("7")
+}
+
+[sub_resource type="FontFile" id="8"]
+fallbacks = Array[Font]([ExtResource("6")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/2/0/ascent = 0.0
+cache/0/2/0/descent = 0.0
+cache/0/2/0/underline_position = 0.0
+cache/0/2/0/underline_thickness = 0.0
+cache/0/2/0/scale = 1.0
+cache/0/3/0/ascent = 0.0
+cache/0/3/0/descent = 0.0
+cache/0/3/0/underline_position = 0.0
+cache/0/3/0/underline_thickness = 0.0
+cache/0/3/0/scale = 1.0
+cache/0/4/0/ascent = 0.0
+cache/0/4/0/descent = 0.0
+cache/0/4/0/underline_position = 0.0
+cache/0/4/0/underline_thickness = 0.0
+cache/0/4/0/scale = 1.0
+cache/0/5/0/ascent = 0.0
+cache/0/5/0/descent = 0.0
+cache/0/5/0/underline_position = 0.0
+cache/0/5/0/underline_thickness = 0.0
+cache/0/5/0/scale = 1.0
+cache/0/6/0/ascent = 0.0
+cache/0/6/0/descent = 0.0
+cache/0/6/0/underline_position = 0.0
+cache/0/6/0/underline_thickness = 0.0
+cache/0/6/0/scale = 1.0
+cache/0/7/0/ascent = 0.0
+cache/0/7/0/descent = 0.0
+cache/0/7/0/underline_position = 0.0
+cache/0/7/0/underline_thickness = 0.0
+cache/0/7/0/scale = 1.0
+cache/0/8/0/ascent = 0.0
+cache/0/8/0/descent = 0.0
+cache/0/8/0/underline_position = 0.0
+cache/0/8/0/underline_thickness = 0.0
+cache/0/8/0/scale = 1.0
+cache/0/9/0/ascent = 0.0
+cache/0/9/0/descent = 0.0
+cache/0/9/0/underline_position = 0.0
+cache/0/9/0/underline_thickness = 0.0
+cache/0/9/0/scale = 1.0
+cache/0/10/0/ascent = 0.0
+cache/0/10/0/descent = 0.0
+cache/0/10/0/underline_position = 0.0
+cache/0/10/0/underline_thickness = 0.0
+cache/0/10/0/scale = 1.0
+cache/0/11/0/ascent = 0.0
+cache/0/11/0/descent = 0.0
+cache/0/11/0/underline_position = 0.0
+cache/0/11/0/underline_thickness = 0.0
+cache/0/11/0/scale = 1.0
+cache/0/12/0/ascent = 0.0
+cache/0/12/0/descent = 0.0
+cache/0/12/0/underline_position = 0.0
+cache/0/12/0/underline_thickness = 0.0
+cache/0/12/0/scale = 1.0
+cache/0/13/0/ascent = 0.0
+cache/0/13/0/descent = 0.0
+cache/0/13/0/underline_position = 0.0
+cache/0/13/0/underline_thickness = 0.0
+cache/0/13/0/scale = 1.0
+cache/0/14/0/ascent = 0.0
+cache/0/14/0/descent = 0.0
+cache/0/14/0/underline_position = 0.0
+cache/0/14/0/underline_thickness = 0.0
+cache/0/14/0/scale = 1.0
+cache/0/15/0/ascent = 0.0
+cache/0/15/0/descent = 0.0
+cache/0/15/0/underline_position = 0.0
+cache/0/15/0/underline_thickness = 0.0
+cache/0/15/0/scale = 1.0
+cache/0/17/0/ascent = 0.0
+cache/0/17/0/descent = 0.0
+cache/0/17/0/underline_position = 0.0
+cache/0/17/0/underline_thickness = 0.0
+cache/0/17/0/scale = 1.0
+cache/0/18/0/ascent = 0.0
+cache/0/18/0/descent = 0.0
+cache/0/18/0/underline_position = 0.0
+cache/0/18/0/underline_thickness = 0.0
+cache/0/18/0/scale = 1.0
+cache/0/19/0/ascent = 0.0
+cache/0/19/0/descent = 0.0
+cache/0/19/0/underline_position = 0.0
+cache/0/19/0/underline_thickness = 0.0
+cache/0/19/0/scale = 1.0
+cache/0/20/0/ascent = 0.0
+cache/0/20/0/descent = 0.0
+cache/0/20/0/underline_position = 0.0
+cache/0/20/0/underline_thickness = 0.0
+cache/0/20/0/scale = 1.0
+cache/0/21/0/ascent = 0.0
+cache/0/21/0/descent = 0.0
+cache/0/21/0/underline_position = 0.0
+cache/0/21/0/underline_thickness = 0.0
+cache/0/21/0/scale = 1.0
+cache/0/22/0/ascent = 0.0
+cache/0/22/0/descent = 0.0
+cache/0/22/0/underline_position = 0.0
+cache/0/22/0/underline_thickness = 0.0
+cache/0/22/0/scale = 1.0
+cache/0/23/0/ascent = 0.0
+cache/0/23/0/descent = 0.0
+cache/0/23/0/underline_position = 0.0
+cache/0/23/0/underline_thickness = 0.0
+cache/0/23/0/scale = 1.0
+cache/0/24/0/ascent = 0.0
+cache/0/24/0/descent = 0.0
+cache/0/24/0/underline_position = 0.0
+cache/0/24/0/underline_thickness = 0.0
+cache/0/24/0/scale = 1.0
+cache/0/25/0/ascent = 0.0
+cache/0/25/0/descent = 0.0
+cache/0/25/0/underline_position = 0.0
+cache/0/25/0/underline_thickness = 0.0
+cache/0/25/0/scale = 1.0
+cache/0/26/0/ascent = 0.0
+cache/0/26/0/descent = 0.0
+cache/0/26/0/underline_position = 0.0
+cache/0/26/0/underline_thickness = 0.0
+cache/0/26/0/scale = 1.0
+cache/0/27/0/ascent = 0.0
+cache/0/27/0/descent = 0.0
+cache/0/27/0/underline_position = 0.0
+cache/0/27/0/underline_thickness = 0.0
+cache/0/27/0/scale = 1.0
+cache/0/28/0/ascent = 0.0
+cache/0/28/0/descent = 0.0
+cache/0/28/0/underline_position = 0.0
+cache/0/28/0/underline_thickness = 0.0
+cache/0/28/0/scale = 1.0
+cache/0/29/0/ascent = 0.0
+cache/0/29/0/descent = 0.0
+cache/0/29/0/underline_position = 0.0
+cache/0/29/0/underline_thickness = 0.0
+cache/0/29/0/scale = 1.0
+cache/0/30/0/ascent = 0.0
+cache/0/30/0/descent = 0.0
+cache/0/30/0/underline_position = 0.0
+cache/0/30/0/underline_thickness = 0.0
+cache/0/30/0/scale = 1.0
+cache/0/31/0/ascent = 0.0
+cache/0/31/0/descent = 0.0
+cache/0/31/0/underline_position = 0.0
+cache/0/31/0/underline_thickness = 0.0
+cache/0/31/0/scale = 1.0
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+cache/0/33/0/ascent = 0.0
+cache/0/33/0/descent = 0.0
+cache/0/33/0/underline_position = 0.0
+cache/0/33/0/underline_thickness = 0.0
+cache/0/33/0/scale = 1.0
+cache/0/34/0/ascent = 0.0
+cache/0/34/0/descent = 0.0
+cache/0/34/0/underline_position = 0.0
+cache/0/34/0/underline_thickness = 0.0
+cache/0/34/0/scale = 1.0
+cache/0/35/0/ascent = 0.0
+cache/0/35/0/descent = 0.0
+cache/0/35/0/underline_position = 0.0
+cache/0/35/0/underline_thickness = 0.0
+cache/0/35/0/scale = 1.0
+cache/0/36/0/ascent = 0.0
+cache/0/36/0/descent = 0.0
+cache/0/36/0/underline_position = 0.0
+cache/0/36/0/underline_thickness = 0.0
+cache/0/36/0/scale = 1.0
+cache/0/37/0/ascent = 0.0
+cache/0/37/0/descent = 0.0
+cache/0/37/0/underline_position = 0.0
+cache/0/37/0/underline_thickness = 0.0
+cache/0/37/0/scale = 1.0
+cache/0/38/0/ascent = 0.0
+cache/0/38/0/descent = 0.0
+cache/0/38/0/underline_position = 0.0
+cache/0/38/0/underline_thickness = 0.0
+cache/0/38/0/scale = 1.0
+cache/0/39/0/ascent = 0.0
+cache/0/39/0/descent = 0.0
+cache/0/39/0/underline_position = 0.0
+cache/0/39/0/underline_thickness = 0.0
+cache/0/39/0/scale = 1.0
+cache/0/40/0/ascent = 0.0
+cache/0/40/0/descent = 0.0
+cache/0/40/0/underline_position = 0.0
+cache/0/40/0/underline_thickness = 0.0
+cache/0/40/0/scale = 1.0
+cache/0/41/0/ascent = 0.0
+cache/0/41/0/descent = 0.0
+cache/0/41/0/underline_position = 0.0
+cache/0/41/0/underline_thickness = 0.0
+cache/0/41/0/scale = 1.0
+cache/0/42/0/ascent = 0.0
+cache/0/42/0/descent = 0.0
+cache/0/42/0/underline_position = 0.0
+cache/0/42/0/underline_thickness = 0.0
+cache/0/42/0/scale = 1.0
+cache/0/68/0/ascent = 0.0
+cache/0/68/0/descent = 0.0
+cache/0/68/0/underline_position = 0.0
+cache/0/68/0/underline_thickness = 0.0
+cache/0/68/0/scale = 1.0
+cache/0/200/0/ascent = 0.0
+cache/0/200/0/descent = 0.0
+cache/0/200/0/underline_position = 0.0
+cache/0/200/0/underline_thickness = 0.0
+cache/0/200/0/scale = 1.0
+cache/0/300/0/ascent = 0.0
+cache/0/300/0/descent = 0.0
+cache/0/300/0/underline_position = 0.0
+cache/0/300/0/underline_thickness = 0.0
+cache/0/300/0/scale = 1.0
+
+[sub_resource type="Animation" id="9"]
+resource_name = "start"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -600), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u6tgg"]
+_data = {
+&"start": SubResource("9")
+}
+
+[sub_resource type="FontFile" id="12"]
+fallbacks = Array[Font]([ExtResource("6")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="10"]
+fallbacks = Array[Font]([ExtResource("6")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Animation" id="11"]
+resource_name = "start"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 600), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_08v5d"]
+_data = {
+&"start": SubResource("11")
+}
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9, 0.9)
+mouse_filter = 1
+script = ExtResource("10")
+
+[node name="Lobby_Container" type="MarginContainer" parent="."]
+layout_mode = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_right = 1024.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby_Container"]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="Lobby_Container/HBoxContainer"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MenuContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 125
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 125
+
+[node name="Menu" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer"]
+layout_mode = 2
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 31
+patch_margin_top = 28
+patch_margin_right = 29
+patch_margin_bottom = 28
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="Name" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 3
+patch_margin_top = 7
+patch_margin_right = 3
+patch_margin_bottom = 35
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+
+[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+clear_button_enabled = true
+
+[node name="Host" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 5
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8")
+texture_pressed = ExtResource("4")
+texture_hover = ExtResource("4")
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Host"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Join" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Join_Button" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 5
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5")
+texture_pressed = ExtResource("7")
+texture_hover = ExtResource("7")
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Join"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 3
+patch_margin_top = 7
+patch_margin_right = 3
+patch_margin_bottom = 28
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/NinePatchRect"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+
+[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/NinePatchRect/MarginContainer"]
+layout_mode = 2
+theme = SubResource("6")
+placeholder_text = "Host IP"
+clear_button_enabled = true
+
+[node name="Error_Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu"]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 305.0
+offset_right = 297.0
+offset_bottom = 342.0
+theme = ExtResource("9")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_yqok8")
+}
+autoplay = "start"
+
+[node name="LevelSelect_Container" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 5472.0
+offset_bottom = 2944.0
+scale = Vector2(0.2, 0.2)
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelect_Container"]
+layout_mode = 2
+theme_override_constants/separation = 40
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="LevelSelect_Container/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_fonts/font = SubResource("8")
+theme_override_font_sizes/font_size = 300
+text = "Select Level"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="LevelSelect_Container/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="GridContainer" type="GridContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 100
+theme_override_constants/v_separation = 50
+columns = 2
+
+[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+custom_minimum_size = Vector2(250, 141)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("12")
+stretch_mode = 4
+
+[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+custom_minimum_size = Vector2(250, 141)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("11")
+stretch_mode = 4
+
+[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+custom_minimum_size = Vector2(250, 141)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("14")
+stretch_mode = 4
+
+[node name="Virtual_World" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+custom_minimum_size = Vector2(250, 141)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("13")
+stretch_mode = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container"]
+libraries = {
+"": SubResource("AnimationLibrary_u6tgg")
+}
+
+[node name="WaitRoom_Container" type="MarginContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 600.0
+offset_bottom = 600.0
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="HBoxContainer" type="HBoxContainer" parent="WaitRoom_Container"]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="WaitRoom_Container/HBoxContainer"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MenuContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 75
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 75
+
+[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer"]
+layout_mode = 2
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 31
+patch_margin_top = 28
+patch_margin_right = 29
+patch_margin_bottom = 28
+
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Host_Username" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Host: "
+
+[node name="Host_IP" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Host IP: "
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Awaiting Players..."
+
+[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 31
+patch_margin_top = 28
+patch_margin_right = 29
+patch_margin_bottom = 28
+
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ItemList" type="ItemList" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+theme_override_colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
+theme_override_fonts/font = SubResource("12")
+
+[node name="Start_Button" type="TextureButton" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("15")
+texture_pressed = ExtResource("16")
+texture_hover = ExtResource("16")
+
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("9")
+theme_override_fonts/font = SubResource("10")
+text = "Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Error_Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu"]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 305.0
+offset_right = 297.0
+offset_bottom = 342.0
+theme = ExtResource("9")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WaitRoom_Container"]
+libraries = {
+"": SubResource("AnimationLibrary_08v5d")
+}
+
+[node name="Back_Button" parent="." instance=ExtResource("2")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 28.8889
+offset_top = 8.66663
+offset_right = 162.889
+offset_bottom = 61.6666
+grow_vertical = 0
+
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host" to="." method="_on_Host_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button" to="." method="_on_Join_Button_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Virtual_World" to="." method="_on_Virtual_World_pressed"]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button" to="." method="_on_Start_Button_pressed"]

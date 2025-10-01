@@ -1,0 +1,130 @@
+[gd_scene load_steps=13 format=3 uid="uid://bu6qhfu5krfht"]
+
+[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
+[ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Oauabae.tscn" id="2"]
+[ext_resource type="Script" uid="uid://bjywnsiwfjwcj" path="res://Scripts/Level_Scripts/level1.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://h5lyfqvnawki" path="res://Scenes/Elcitrap1.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://Scenes/Level_Scenes/level1_cont.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://Scenes/Narration.tscn" id="6"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="7"]
+[ext_resource type="AudioStream" uid="uid://b0mwx604s4kp5" path="res://audio/Agency_Audio/8. You now have the power….wav" id="9"]
+
+[sub_resource type="FontFile" id="3"]
+fallbacks = Array[Font]([ExtResource("7")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Curve2D" id="1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1024, 0, 0, 0, 0, 0, 1024, 600, 0, 0, 0, 0, 0, 600, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[sub_resource type="Animation" id="2"]
+resource_name = "Reveal"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.9, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:theme_override_colors/default_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hhdnl"]
+_data = {
+&"Reveal": SubResource("2")
+}
+
+[node name="level1" type="Node"]
+script = ExtResource("3")
+Elcitrap = ExtResource("4")
+next_scene = ExtResource("5")
+
+[node name="DialogueBox" type="Polygon2D" parent="."]
+z_index = 1
+position = Vector2(0, -162)
+scale = Vector2(1, 1.42188)
+color = Color(0.117647, 0.117647, 0.117647, 0.745098)
+polygon = PackedVector2Array(64, 384, 960, 384, 960, 530.286, 553.133, 530.286, 509.765, 530.286, 423.913, 530.286, 64, 530.286)
+
+[node name="DialogueText" type="RichTextLabel" parent="DialogueBox"]
+offset_left = 88.0
+offset_top = 396.0
+offset_right = 936.0
+offset_bottom = 524.0
+theme_override_fonts/normal_font = SubResource("3")
+text = "helllohello"
+
+[node name="Timer" type="Timer" parent="DialogueBox"]
+wait_time = 0.005
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 7
+
+[node name="Oauabae" parent="." instance=ExtResource("2")]
+
+[node name="EPath" type="Path2D" parent="."]
+curve = SubResource("1")
+
+[node name="EPathFollow" type="PathFollow2D" parent="EPath"]
+
+[node name="ElcitrapTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 12.0
+one_shot = true
+
+[node name="EndTimer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[node name="Narration" parent="." instance=ExtResource("6")]
+visible = false
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+visible_characters = -1
+
+[node name="TextAnimationPlayer" parent="Narration" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_hhdnl")
+}
+
+[node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9")
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+
+[connection signal="timeout" from="DialogueBox/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="ElcitrapTimer" to="." method="_on_ElcitrapTimer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="timeout" from="EndTimer" to="." method="_on_EndTimer_timeout"]
+[connection signal="animation_finished" from="Narration/TextAnimationPlayer" to="." method="_on_TextAnimationPlayer_animation_finished"]
+
+[editable path="Narration"]

@@ -1,0 +1,151 @@
+[gd_scene load_steps=15 format=3 uid="uid://dm6jp5f5emk6y"]
+
+[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
+[ext_resource type="PackedScene" path="res://Scenes/StaticOauabae.tscn" id="2"]
+[ext_resource type="Script" uid="uid://chpyhuas5lxkx" path="res://Scripts/Level_Scripts/level1_cont.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://dtfwm3j3judh2" path="res://Scenes/CapturedElcitrap.tscn" id="4"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="5"]
+[ext_resource type="PackedScene" path="res://Scenes/Parallax_Scenes/Parallax4.tscn" id="6"]
+[ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="7"]
+[ext_resource type="PackedScene" path="res://Scenes/Narration.tscn" id="8"]
+[ext_resource type="Script" uid="uid://diar4q3wstj4n" path="res://Scripts/Level1Animations.gd" id="9"]
+[ext_resource type="Script" uid="uid://cnidc0wdr76rn" path="res://Scripts/Level1Button.gd" id="10"]
+
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("5")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Animation" id="2"]
+resource_name = "Fade"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="3"]
+resource_name = "Screen_Wipe"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ZIndexSetter/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="4"]
+resource_name = "Reveal"
+length = 8.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 5, 7.7, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:theme_override_colors/default_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 6.8, 7.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[node name="level1_cont" type="Node"]
+script = ExtResource("3")
+Elcitrap = ExtResource("4")
+next_scene = ExtResource("6")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1")
+expand = true
+stretch_mode = 7
+
+[node name="Oauabae" parent="." instance=ExtResource("2")]
+position = Vector2(506.921, 272.615)
+scale = Vector2(2.49937, 2.49937)
+gravity = 1024.0
+
+[node name="Button" type="TextureButton" parent="."]
+visible = false
+offset_left = 800.0
+offset_top = 384.0
+offset_right = 1432.0
+offset_bottom = 1121.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("7")
+script = ExtResource("10")
+
+[node name="Label" type="Label" parent="Button"]
+offset_left = 30.9447
+offset_top = 9.36
+offset_right = 131.945
+offset_bottom = 44.36
+theme_override_fonts/font = SubResource("1")
+text = "Continue"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource("2")
+anims/Screen_Wipe = SubResource("3")
+script = ExtResource("9")
+
+[node name="End" type="Timer" parent="."]
+
+[node name="Narration" parent="." instance=ExtResource("8")]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 232.0
+offset_bottom = 512.0
+theme_override_colors/default_color = Color(1, 1, 1, 0)
+
+[node name="TextAnimationPlayer" parent="Narration" index="1"]
+anims/Reveal = SubResource("4")
+
+[node name="ZIndexSetter" type="Node2D" parent="."]
+z_index = 1
+
+[node name="ColorRect" type="ColorRect" parent="ZIndexSetter"]
+process_priority = 1
+visible = false
+offset_right = 1024.0
+offset_bottom = 600.0
+color = Color(0, 0, 0, 1)
+
+[connection signal="five_selected" from="." to="Button" method="_on_level1_cont_five_selected" flags=6]
+[connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_level1_cont_trigger_animation"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="End" to="." method="_on_End_timeout"]
+[connection signal="animation_finished" from="Narration/TextAnimationPlayer" to="." method="_on_TextAnimationPlayer_animation_finished"]
+
+[editable path="Narration"]

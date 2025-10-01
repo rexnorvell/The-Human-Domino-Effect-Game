@@ -1,0 +1,28 @@
+name: ci-pr
+run-name: ${{ github.head_ref || github.ref_name }}-ci-pr
+
+on:
+    pull_request:
+        paths-ignore:
+            - "**.yml"
+            - "**.jpg"
+            - "**.png"
+            - "**.md"
+    workflow_dispatch:
+
+concurrency:
+    group: ci-pr-${{ github.event.number }}
+    cancel-in-progress: true
+
+jobs:
+    unit-tests:
+        strategy:
+            fail-fast: false
+            max-parallel: 10
+            matrix:
+                godot-version: [3.5.2]
+
+        name: "CI on Godot 🐧 v${{ matrix.godot-version }}"
+        uses: ./.github/workflows/unit-tests.yml
+        with:
+            godot-version: ${{ matrix.godot-version }}

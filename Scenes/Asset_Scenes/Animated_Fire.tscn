@@ -1,0 +1,84 @@
+[gd_scene load_steps=8 format=3 uid="uid://bifgc6bc832oq"]
+
+[ext_resource type="Texture2D" uid="uid://bx1rxi4hrjgts" path="res://UI/sprites/radial_gradient.png" id="1"]
+[ext_resource type="Script" uid="uid://bu2ssksvfsy2x" path="res://Scripts/Fire.gd" id="2"]
+
+[sub_resource type="Shader" id="1"]
+code = "shader_type canvas_item;
+
+uniform sampler2D noise;
+
+const float fire_animation_speed = 0.7;
+
+void fragment() {
+	vec4 base = texture(TEXTURE, UV);
+	vec4 n = texture(noise, vec2(UV.x, UV.y + (TIME * fire_animation_speed)));
+	
+	// Make center brighter than the edges
+	base.r += 0.4f - distance(vec2(0.5, UV.y), UV);
+	
+	// Integrate noise into the base red channel
+	base.r = (base.r * 0.3) + (n.r * 0.4);
+	
+	// Cherry pick colors for specific positons of the fire
+	// i.e. closer to center is white, then yellow, then red
+	
+	// Color takes in 4 values, red, green, blue, and alpha
+	COLOR = vec4(float(base.r > 0.4), float(base.r > 0.5), float(base.r > 0.6), float(base.r > 0.4));
+	
+}"
+
+[sub_resource type="FastNoiseLite" id="2"]
+
+[sub_resource type="NoiseTexture2D" id="3"]
+seamless = true
+noise = SubResource("2")
+
+[sub_resource type="ShaderMaterial" id="4"]
+shader = SubResource("1")
+shader_parameter/noise = SubResource("3")
+
+[sub_resource type="Environment" id="5"]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 1.37
+glow_strength = 1.1
+
+[node name="Animated_Fire_Texture" type="Node2D"]
+
+[node name="Fire" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.596078)
+material = SubResource("4")
+position = Vector2(621, 392)
+scale = Vector2(0.264649, 0.282226)
+texture = ExtResource("1")
+script = ExtResource("2")
+
+[node name="PointLight2D" type="PointLight2D" parent="Fire"]
+position = Vector2(-3.39087, 46.8291)
+scale = Vector2(1, 0.880246)
+texture = ExtResource("1")
+texture_scale = 1.25
+energy = 2.0
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Fire"]
+position = Vector2(0, -70.865)
+scale = Vector2(1.5, 1.5)
+amount = 3
+lifetime = 2.5
+explosiveness = 0.2
+lifetime_randomness = 0.1
+emission_shape = 1
+emission_sphere_radius = 100.0
+direction = Vector2(0, -1)
+spread = 60.0
+gravity = Vector2(0, 500)
+initial_velocity = 300.0
+initial_velocity_random = 0.5
+angle = 45.0
+angle_random = 1.0
+scale_amount = 10.0
+color = Color(2, 2, 0, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("5")

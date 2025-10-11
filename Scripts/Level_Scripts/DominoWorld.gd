@@ -2,6 +2,20 @@
 class_name DominoWorld
 extends Node2D
 
+const HAND_SCALE   = Vector2(0.22, 0.22)
+const PLACED_SCALE = Vector2(0.08, 0.08)
+const ROTATION_OFFSET_DEG := 90.0  # rotate pieces 90° clockwise
+
+# --- Hardcoded step directions by path, in degrees ---
+# Order requested: Path1, Path2, Path3?, Path4, Path5, Path6, ?, SunsetPath
+const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
+
+# How far to move each successive domino along that direction
+const STEP_PIXELS := 12.0  # tune for your art scale
+
+# Keep a per-path step count; replaces placed_domino_offset
+var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
+
 @export var Domino: PackedScene
 # NOTE: If domino game performance is low, try switching to preload
 #const FootprintTile = preload("res://Scripts/FootprintTile.gd")
@@ -23,10 +37,8 @@ var num_placed = 0
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0]  # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null]  # last domino on domino chain in each path
 
-var position_table = []
-var placed_domino_offset = [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), 
-							Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), 
-							Vector2(0, 0), Vector2(0, 0)]
+var position_table: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO,
+									  Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
 var prev_domino_size = 0
 
 var bonusWords = ["Bonus", "Bonus2"]
@@ -191,11 +203,11 @@ func draw_7():
 		# Scaled down Domino position
 		if i < 4:
 			domino.position = Vector2(100, 96 * i - 144)
-			domino.scale = Vector2(0.55, 0.55)  # Adjust this as needed, this scales the dominos in hand
+			domino.scale = HAND_SCALE # Adjust this as needed, this scales the dominos in hand
 		else:
 			domino.position = Vector2(150, 96 * (i - 4) - 144)
-			domino.scale = Vector2(0.55, 0.55) 
-		
+			domino.scale = HAND_SCALE
+		domino.set_base_scale(HAND_SCALE)
 		# initialize domino
 		domino.init(
 			domino_nums[0],
@@ -206,8 +218,9 @@ func draw_7():
 		)
 
 # path set-up
-func add_position(pos):
-	position_table.append(pos)
+func add_position(global_pos: Vector2) -> void:
+	position_table.append(global_pos)
+	print("add_position(global)=", global_pos, " idx=", position_table.size() - 1)
 
 # take a domino from the main deck
 func draw_domino():
@@ -240,6 +253,8 @@ func select_domino(domino) -> bool:
 
 # handles placing of domino onto a path
 func place_domino(num):
+	print("DOMINO Placed at ", num)
+	_verify_anchors_ready()
 	var flip = false
 	# check if it is your turn and you have selected a domino
 	if turn == self_num and selected_domino:
@@ -296,17 +311,24 @@ func place_domino(num):
 
 			# place domino; update screen and update turn
 
-			selected_domino.placed = true
-			selected_domino.position = position_table[num] + placed_domino_offset[num]  # handles where the domnio is placed
+			# Place locally
+			# selected_domino.placed = true
+			# selected_domino.scale  = PLACED_SCALE
+			selected_domino.mark_as_placed(PLACED_SCALE)
+
+			# If your anchors are GLOBAL positions:
+			selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
+			# If your anchors are LOCAL to this node, use this instead:
+			# selected_domino.position = _path_position_for_step(num, path_step_count[num])
+
+			# Optional facing
+			_orient_to_path(selected_domino, num)
+
 			path_ends[num] = selected_domino.top_num
 			end_dominos[num] = selected_domino
-			
-			# Original
-			#placed_domino_offset[num] = placed_domino_offset[num] + Vector2(160, -176)
-			
-			# CS499 Feb 2025 Scaled Down .4x
-			placed_domino_offset[num] = placed_domino_offset[num] + Vector2(64, -70)
-			
+
+			# Advance step AFTER using the current slot
+			path_step_count[num] += 1
 			num_placed += 1
 
 			turn = (turn + 1) % len(gamestate.players)
@@ -410,34 +432,37 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 
 # update domino path for all players after a player places a domino
 @rpc("any_peer") func update_domino_path(domino_nums, domino_elms, pos, path_num, flip):
-	# remove old domino if exists
-	#if end_dominos[path_num]:
-	#	end_dominos[path_num].queue_free()
+	# Sync our anchor for this path in case host moved it
+	position_table[path_num] = pos  # (pos should be global anchor)
 
-	# create new placed domino
 	var domino = Domino.instantiate()
 	add_child(domino)
-	domino.position = pos + placed_domino_offset[path_num]
-	var domino_title = (
-		str(min(domino_nums[0], domino_nums[1]))
-		+ str(max(domino_nums[0], domino_nums[1]))
-	)
+	domino.scale = PLACED_SCALE
+
+	# If anchors are global:
+	domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
+	# If anchors are local, use:
+	# domino.position = _path_position_for_step(path_num, path_step_count[path_num])
+
+	# Optional facing
+	_orient_to_path(domino, path_num)
+
+	var domino_title = str(min(domino_nums[0], domino_nums[1])) + str(max(domino_nums[0], domino_nums[1]))
 	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
 	domino.init(domino_nums[0], domino_nums[1], domino_elms[0], domino_elms[1], true)
-	domino.placed = true
+	domino.mark_as_placed(PLACED_SCALE)
 
-	# update path
-	path_ends[path_num] = domino_nums[1]
-	end_dominos[path_num] = domino
-
-	# flip domino sprite if necessary
 	if flip:
 		domino.get_node("Sprite2D").rotation_degrees = 180
 
-	# change turn
+	path_ends[path_num] = domino_nums[1]
+	end_dominos[path_num] = domino
+
+	# Advance step AFTER placing (locks peers to host)
+	path_step_count[path_num] += 1
+
 	turn = (turn + 1) % len(gamestate.players)
 	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
-
 
 # replace placed domino with one from the deck
 func replace_domino():
@@ -466,9 +491,7 @@ func replace_domino():
 	
 	# remove all old dominos from screen
 	num_placed = 0
-	placed_domino_offset = [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0),
-							Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), 
-							Vector2(0, 0), Vector2(0, 0)]
+	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
 	var group_dominos = get_tree().get_nodes_in_group("dominos")
 	clear_selected_domino()
 	for domino in group_dominos:
@@ -701,3 +724,36 @@ func _on_HelpButton_pressed():
 	
 func _on_CloseButton_pressed():
 	$HelpMenu/HelpImage.visible = false
+	
+	
+	
+# functions to fix domino alignment 10/1/2025
+
+func _deg_to_vec2(angle_deg: float) -> Vector2:
+	var a := deg_to_rad(angle_deg)
+	return Vector2(cos(a), sin(a))
+
+func _path_step_vector(path_num: int) -> Vector2:
+	var v := _deg_to_vec2(PATH_ANGLE_DEGREES[path_num])
+	return v * STEP_PIXELS
+
+func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
+	var anchor: Vector2 = position_table[path_num]
+	var step: Vector2   = _path_step_vector(path_num)
+	return anchor + step * float(step_index)
+
+# Optional: make the domino visually point along its growth direction
+func _orient_to_path(domino: Node2D, path_num: int) -> void:
+	domino.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
+
+func _verify_anchors_ready():
+	if position_table.size() != 8:
+		push_error("Expected 8 anchors, have %s" % position_table.size())
+
+func set_anchor(path_index: int, global_pos: Vector2) -> void:
+	if path_index < 0 or path_index >= position_table.size():
+		push_error("set_anchor: index out of range: %s" % path_index)
+		return
+	position_table[path_index] = global_pos
+	# Optional debug:
+	# print("Anchor[", path_index, "] = ", global_pos)

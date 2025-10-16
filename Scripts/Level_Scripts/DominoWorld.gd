@@ -2,16 +2,16 @@
 class_name DominoWorld
 extends Node2D
 
-const HAND_SCALE   = Vector2(0.22, 0.22)
+const HAND_SCALE = Vector2(0.22, 0.22)
 const PLACED_SCALE = Vector2(0.08, 0.08)
-const ROTATION_OFFSET_DEG := 90.0  # rotate pieces 90° clockwise
+const ROTATION_OFFSET_DEG := 90.0 # rotate pieces 90° clockwise
 
 # --- Hardcoded step directions by path, in degrees ---
 # Order requested: Path1, Path2, Path3?, Path4, Path5, Path6, ?, SunsetPath
 const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
 
 # How far to move each successive domino along that direction
-const STEP_PIXELS := 12.0  # tune for your art scale
+const STEP_PIXELS := 12.0 # tune for your art scale
 
 # Keep a per-path step count; replaces placed_domino_offset
 var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
@@ -26,16 +26,16 @@ var footprint_tile_ring = null
 var tower = load(ReferenceManager.get_reference("Tower.gd"))
 var sorted_players = []
 
-var turn = 0  # whose turn is it, indexed from 0 on
+var turn = 0 # whose turn is it, indexed from 0 on
 var hand = []
 var dominos = [] + gamestate.dominos
-var self_num = 0  # player's number, indexed from 1 on
-var selected_domino = null  # currently selected domino
-var center_num = 0  # current round number
+var self_num = 0 # player's number, indexed from 1 on
+var selected_domino = null # currently selected domino
+var center_num = 0 # current round number
 var num_placed = 0
 
-var path_ends = [0, 0, 0, 0, 0, 0, 0, 0]  # last number on domino chain in each path
-var end_dominos = [null, null, null, null, null, null, null, null]  # last domino on domino chain in each path
+var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
+var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
 
 var position_table: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO,
 									  Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
@@ -106,22 +106,22 @@ func _init_players() -> void:
 			)
 
 		# initalize loaded scores if data is loaded
-		if(SaveManager.loaded_data):
+		if (SaveManager.loaded_data):
 			var path = current + "/Score/Button/Popup/"
 			print(gamestate.lydia_lion.keys().find(player_id))
-			if(gamestate.lydia_lion.keys().find(player_id) == -1):
+			if (gamestate.lydia_lion.keys().find(player_id) == -1):
 				get_node(path + "Lydia_number").text == "0"
 			else:
 				get_node(path + "Lydia_number").text = str(gamestate.lydia_lion[player_id])
-			if(gamestate.wellness_beads.keys().find(player_id) == -1):
+			if (gamestate.wellness_beads.keys().find(player_id) == -1):
 				get_node(path + "Wellness_number").text == "0"
 			else:
 				get_node(path + "Wellness_number").text = str(gamestate.wellness_beads[player_id])
-			if(gamestate.alloys.keys().find(player_id) == -1):
+			if (gamestate.alloys.keys().find(player_id) == -1):
 				get_node(path + "Alloy_number").text = "0"
 			else:
 				get_node(path + "Alloy_number").text = str(gamestate.alloys[player_id])
-			if(gamestate.footprint_tiles.keys().find(player_id) == -1):
+			if (gamestate.footprint_tiles.keys().find(player_id) == -1):
 				get_node(path + "Footprint_number").text = "0"
 			else:
 				get_node(path + "Footprint_number").text = str(gamestate.footprint_tiles[player_id])
@@ -156,11 +156,11 @@ func _init_players() -> void:
 	$Turn.text = gamestate.players[1] + "'s\nTurn"
 
 func _on_Start_pressed() -> void:
-	if(SaveManager.loaded_data):
-		for i in range(0,SaveManager.Save["0"].Current_Round):
+	if (SaveManager.loaded_data):
+		for i in range(0, SaveManager.Save["0"].Current_Round):
 			next_round()
 	else:
-		SaveManager.Save["0"].Current_Round = 0	
+		SaveManager.Save["0"].Current_Round = 0
 	setup_dominos()
 	
 	$Start.queue_free()
@@ -186,27 +186,36 @@ func setup_dominos():
 
 # initialize 7 dominos from main deck on player's screen
 func draw_7():
+	# draw 7 dominos
+	# sort by lowest number, low to high
+	var drawn_dominos = []
+
+	for i in range(7):
+		var nums = draw_domino()
+		drawn_dominos.append(nums)
+	
+	drawn_dominos.sort_custom(func(a, b):
+		var min_a = min(a[0], a[1])
+		var min_b = min(b[0], b[1])
+		if min_a == min_b:
+			return max(a[0], a[1]) < max(b[0], b[1])
+		return min_a < min_b
+	)
+
 	for i in range(7):
 		# get domino info
-		var domino_nums = draw_domino()
+		var domino_nums = drawn_dominos[i]
 		var domino = Domino.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
 		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
 		add_child(domino)
 
-		# set domino position
-		#if i < 4:
-		#	domino.position = Vector2(2000, 400 * i - 600)
-		#else:
-		#	domino.position = Vector2(2250, 400 * (i - 4) - 600)
-		
-		# Scaled down Domino position
-		if i < 4:
-			domino.position = Vector2(100, 96 * i - 144)
-			domino.scale = HAND_SCALE # Adjust this as needed, this scales the dominos in hand
-		else:
-			domino.position = Vector2(150, 96 * (i - 4) - 144)
-			domino.scale = HAND_SCALE
+		# set domino position and scale
+		# placed at bottom of screen, with spacing
+		var domino_spacing = 70
+		domino.position = Vector2((i * domino_spacing) - (192 + domino_spacing * 3), 175)
+		domino.scale = HAND_SCALE
+
 		domino.set_base_scale(HAND_SCALE)
 		# initialize domino
 		domino.init(
@@ -235,7 +244,12 @@ func draw_domino():
 	return nums
 
 func clear_selected_domino():
+	if selected_domino:
+		selected_domino.deselect()
 	selected_domino = null
+
+func get_selected_domino():
+	return selected_domino
 
 # Validate that a given domino is selected or not
 func is_domino_selected(domino) -> bool:
@@ -433,7 +447,7 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 # update domino path for all players after a player places a domino
 @rpc("any_peer") func update_domino_path(domino_nums, domino_elms, pos, path_num, flip):
 	# Sync our anchor for this path in case host moved it
-	position_table[path_num] = pos  # (pos should be global anchor)
+	position_table[path_num] = pos # (pos should be global anchor)
 
 	var domino = Domino.instantiate()
 	add_child(domino)
@@ -591,7 +605,7 @@ func add_tower(round_num):
 		$Tower/Sprite2D/Resilience.visible = true
 		$Tower/Sprite2D/Relationship.visible = true
 		$Tower/Sprite2D/Discernment.visible = true
-	elif round_num ==9:
+	elif round_num == 9:
 		$Tower/Sprite2D/Arts.visible = true
 		$Tower/Sprite2D/Sciences.visible = true
 		$Tower/Sprite2D/Humanities.visible = true
@@ -655,7 +669,7 @@ func _on_Code_pressed():
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 func _on_X_pressed():
-	$EnterCodeMenu.visible = false 
+	$EnterCodeMenu.visible = false
 	$EnterCodeMenu/InvalidCode.visible = false
 	$EnterCodeMenu/UsedCode.visible = false
 	$EnterCodeMenu/AcceptCode.visible = false
@@ -717,14 +731,12 @@ func _on_Start_mouse_exited():
 #### ^^^^ END BUTTON HOVER HANDLERS ^^^^ ####
 
 
-
 func _on_HelpButton_pressed():
 	$HelpMenu/HelpImage.visible = true
 	$HelpMenu.move_to_front()
 	
 func _on_CloseButton_pressed():
 	$HelpMenu/HelpImage.visible = false
-	
 	
 	
 # functions to fix domino alignment 10/1/2025
@@ -739,7 +751,7 @@ func _path_step_vector(path_num: int) -> Vector2:
 
 func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
 	var anchor: Vector2 = position_table[path_num]
-	var step: Vector2   = _path_step_vector(path_num)
+	var step: Vector2 = _path_step_vector(path_num)
 	return anchor + step * float(step_index)
 
 # Optional: make the domino visually point along its growth direction

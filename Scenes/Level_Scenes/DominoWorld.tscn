@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Character Bubble.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://belf0op6o2ek2" path="res://UI/sprites/character_sprites/faces/0.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://ftttl40wh16g" path="res://UI/sprites/character_sprites/faces/2.png" id="5"]
-[ext_resource type="PackedScene" path="res://Scenes/Settings.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://cixonnslrnkt" path="res://Scenes/Settings.tscn" id="6"]
 [ext_resource type="Script" uid="uid://ben0kvs4llmuh" path="res://Scripts/Level_Scripts/DominoWorld.gd" id="7"]
 [ext_resource type="PackedScene" uid="uid://dq5f7r63drllb" path="res://Scenes/Domino.tscn" id="8"]
 [ext_resource type="PackedScene" uid="uid://dejvxq7nbxxxf" path="res://Scenes/Path.tscn" id="9"]
@@ -14,7 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://bjdomk6fvs8ts" path="res://audio/effects/next.wav" id="12"]
 [ext_resource type="Texture2D" uid="uid://f3flf06cem8b" path="res://UI/sprites/character_sprites/back_hair/8.png" id="13"]
 [ext_resource type="PackedScene" uid="uid://2qcxgankmj3j" path="res://Scenes/SaveButton.tscn" id="14"]
-[ext_resource type="PackedScene" path="res://Scenes/Tower.tscn" id="15"]
+[ext_resource type="PackedScene" uid="uid://du60w0816hck7" path="res://Scenes/Tower.tscn" id="15"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="16"]
 [ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="17"]
 [ext_resource type="Texture2D" uid="uid://77bnnplkinqm" path="res://UI/Control/grey_button_down.png" id="18"]
@@ -363,7 +363,7 @@ metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_vh554")
+&"": SubResource("AnimationLibrary_vh554")
 }
 autoplay = "Zoom Out"
 
@@ -619,19 +619,19 @@ position = Vector2(-494, -86)
 scale = Vector2(0.2, 0.2)
 
 [node name="SaveButton" parent="." instance=ExtResource("14")]
-position = Vector2(-191, 141)
+position = Vector2(-186, -222)
 scale = Vector2(0.4, 0.4)
 
 [node name="Start" type="TextureButton" parent="."]
-offset_left = 50.0
-offset_right = 240.0
-offset_bottom = 49.0
+offset_left = -228.0
+offset_top = 132.0
+offset_right = -38.0
+offset_bottom = 181.0
 scale = Vector2(0.4, 0.4)
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("19")
 texture_pressed = ExtResource("18")
 texture_hover = ExtResource("20")
-metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Start"]
 layout_mode = 0
@@ -651,10 +651,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Code" type="TextureButton" parent="."]
-offset_left = -144.0
-offset_top = 132.0
-offset_right = 46.0
-offset_bottom = 181.0
+visible = false
+offset_left = -154.0
+offset_top = -228.0
+offset_right = 36.0
+offset_bottom = -179.0
 scale = Vector2(0.4, 0.4)
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("19")
@@ -680,10 +681,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Next" type="TextureButton" parent="."]
-offset_left = -229.0
-offset_top = 160.0
-offset_right = -39.0
-offset_bottom = 209.0
+offset_left = -144.0
+offset_top = -232.0
+offset_right = 46.0
+offset_bottom = -183.0
 scale = Vector2(0.4, 0.4)
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("19")
@@ -692,7 +693,8 @@ texture_hover = ExtResource("20")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Next"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -709,10 +711,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Help" type="TextureButton" parent="."]
-offset_left = -314.0
-offset_top = 132.0
-offset_right = -124.0
-offset_bottom = 181.0
+offset_left = -308.0
+offset_top = -232.0
+offset_right = -118.0
+offset_bottom = -183.0
 scale = Vector2(0.4, 0.4)
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("19")
@@ -951,8 +953,8 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" to="." method="_on_EnterButton_pressed"]
 [connection signal="pressed" from="EnterCodeMenu/X" to="." method="_on_X_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpButton" to="." method="_on_HelpButton_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
 
 [editable path="Character Bubble1"]
 [editable path="Character Bubble1/Score"]

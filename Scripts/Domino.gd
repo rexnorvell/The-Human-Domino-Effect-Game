@@ -8,7 +8,7 @@ extends Node2D
 @export var bottom_element = ""
 
 
-var original_pos = null
+@export var original_pos = null
 var _orig_y_sort := false
 var _orig_z := 0
 # Affects the Domino hand as well
@@ -19,8 +19,8 @@ var selected = false
 @export var placed = false
 
 # NEW: separate hover multipliers for hand vs. placed
-@export var hand_hover_mult := 1.10     # 10% bump in the hand
-@export var placed_hover_mult := 3   # 300% bump on the board
+@export var hand_hover_mult := 1.10 # 10% bump in the hand
+@export var placed_hover_mult := 3 # 300% bump on the board
 
 # Track the node’s base scale so we can return to it on mouse exit
 var _base_scale: Vector2 = Vector2.ONE
@@ -28,12 +28,11 @@ var _base_scale: Vector2 = Vector2.ONE
 # Reference to world node to minimize `get_parent()` calls
 var _world = null
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Sprite2D.z_as_relative = true
 	$Sprite2D.top_level = false
-	$Sprite2D.z_index = 0 
+	$Sprite2D.z_index = 0
 	_world = get_parent()
 	# change domino appearance
 	if not placed:
@@ -86,7 +85,7 @@ func _on_Area2D_mouse_entered() -> void:
 	_orig_y_sort = y_sort_enabled
 	y_sort_enabled = false
 	_orig_z = z_index
-	z_index = 100000   # put it way on top
+	z_index = 100000 # put it way on top
 
 func _on_Area2D_mouse_exited() -> void:
 	scale = _base_scale
@@ -95,25 +94,69 @@ func _on_Area2D_mouse_exited() -> void:
 
 
 func _on_Area2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	# Click once to "pick up" a domino
-	if event is InputEventMouseButton:
-		if event.is_pressed():
-			if !placed:
-				if !_world.is_domino_selected(self):
-					if _world.select_domino(self):
-						selected = true
-				else:
-					#TODO: Below line delays returning the domino in case the domino is being placed. This should be done in a better way
-					await get_tree().create_timer(0.05).timeout
-					# TODO: Need to fix position of domnio
-					_world.clear_selected_domino()
-					selected = false
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+		if placed:
+			return # dont interact with placed dominoes
 
+		var selected_domino = _world.get_selected_domino()
+
+		# nothing selected → select this one
+		if selected_domino == null:
+			if _world.select_domino(self):
+				selected = true
+		# another domino already selected → swap with it
+		elif selected_domino != self:
+			swap(selected_domino)
+			_world.call_deferred("clear_selected_domino")
+
+		# clicking the same domino again → deselect
+		else:
+			# before deselecting, make sure there isnt actually another domino here
+			var other_domino = get_domino_at_click()
+			if other_domino:
+				swap(other_domino)
+			_world.call_deferred("clear_selected_domino")
+
+
+func swap(other: Domino) -> void:
+	# await get_tree().process_frame
+	# Swap positions
+	position = other.original_pos
+	other.position = original_pos
+
+	# Swap original positions for consistency
+	original_pos = position
+	other.original_pos = other.position
+
+func deselect() -> void:
+	selected = false
+	if !placed:
+		position = original_pos
+
+func get_domino_at_click() -> Domino:
+	var mouse_pos = get_global_mouse_position()
+	var space_state = get_world_2d().direct_space_state
+
+	# Create query parameters
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = mouse_pos
+	query.collide_with_areas = true # detect Area2D (your dominoes)
+	query.collide_with_bodies = false
+
+	# Perform the query (max 10 results)
+	var results = space_state.intersect_point(query, 10)
+
+	# Return the first domino found that is not self
+	for r in results:
+		var node = r.collider
+		if node is Domino and node != self:
+			return node
+	return null
 
 func _physics_process(_delta):
 	if selected and not placed:
 		var mousePos = get_global_mouse_position()
-		position.x = 2* (mousePos.x);
-		position.y = 2* mousePos.y ;
-	elif not placed:
-		position = original_pos
+		position.x = 2 * mousePos.x;
+		position.y = 2 * mousePos.y;
+	# elif not placed:
+	# 	position = original_pos

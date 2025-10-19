@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Oauabae.tscn" id="2"]
 [ext_resource type="Script" uid="uid://bjywnsiwfjwcj" path="res://Scripts/Level_Scripts/level1.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://h5lyfqvnawki" path="res://Scenes/Elcitrap1.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://Scenes/Level_Scenes/level1_cont.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://Scenes/Narration.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://dm6jp5f5emk6y" path="res://Scenes/Level_Scenes/level1_cont.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://csr4hlqkrmt0f" path="res://Scenes/Narration.tscn" id="6"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="7"]
 [ext_resource type="AudioStream" uid="uid://b0mwx604s4kp5" path="res://audio/Agency_Audio/8. You now have the power….wav" id="9"]
 

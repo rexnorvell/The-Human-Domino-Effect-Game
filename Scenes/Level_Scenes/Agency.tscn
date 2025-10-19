@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://b31nbh4uncwuv" path="res://Scripts/Level_Scripts/String.gd" id="4"]
 [ext_resource type="Script" uid="uid://dkth7ilyfx2e1" path="res://Scripts/Level_Scripts/Agency.gd" id="5"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
-[ext_resource type="PackedScene" path="res://Scenes/Narration.tscn" id="7"]
+[ext_resource type="PackedScene" uid="uid://csr4hlqkrmt0f" path="res://Scenes/Narration.tscn" id="7"]
 [ext_resource type="AudioStream" uid="uid://dd7nqlpd588le" path="res://audio/Agency_Audio/1b. This tool is several things at once…  .wav" id="8"]
 [ext_resource type="AudioStream" uid="uid://fa0eyrag6po5" path="res://audio/Agency_Audio/1.a This O shaped tool that looks like a magnifying glass is you...wav" id="9"]
 [ext_resource type="PackedScene" uid="uid://bu6qhfu5krfht" path="res://Scenes/Level_Scenes/level1.tscn" id="10"]

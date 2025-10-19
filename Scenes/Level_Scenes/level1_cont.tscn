@@ -1,13 +1,13 @@
 [gd_scene load_steps=15 format=3 uid="uid://dm6jp5f5emk6y"]
 
 [ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
-[ext_resource type="PackedScene" path="res://Scenes/StaticOauabae.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://cb20uqao6w7e2" path="res://Scenes/StaticOauabae.tscn" id="2"]
 [ext_resource type="Script" uid="uid://chpyhuas5lxkx" path="res://Scripts/Level_Scripts/level1_cont.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://dtfwm3j3judh2" path="res://Scenes/CapturedElcitrap.tscn" id="4"]
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="5"]
-[ext_resource type="PackedScene" path="res://Scenes/Parallax_Scenes/Parallax4.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://dsuv41blblnbi" path="res://Scenes/Parallax_Scenes/Parallax4.tscn" id="6"]
 [ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="7"]
-[ext_resource type="PackedScene" path="res://Scenes/Narration.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://csr4hlqkrmt0f" path="res://Scenes/Narration.tscn" id="8"]
 [ext_resource type="Script" uid="uid://diar4q3wstj4n" path="res://Scripts/Level1Animations.gd" id="9"]
 [ext_resource type="Script" uid="uid://cnidc0wdr76rn" path="res://Scripts/Level1Button.gd" id="10"]
 

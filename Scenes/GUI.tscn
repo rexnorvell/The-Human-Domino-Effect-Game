@@ -6,5 +6,3 @@
 
 [node name="PauseMenu" parent="." instance=ExtResource("1")]
 visible = false
-layout_mode = 3
-anchors_preset = 15

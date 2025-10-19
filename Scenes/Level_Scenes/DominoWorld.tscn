@@ -292,16 +292,6 @@ position = Vector2(-100, 115)
 [node name="Score" parent="Character Bubble1" index="4"]
 z_index = 2
 
-[node name="Label" parent="Character Bubble1/Score/Button" index="0"]
-offset_left = 0.0
-offset_right = 92.0
-
-[node name="Points" parent="Character Bubble1/Score/Button" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 40.0
-offset_bottom = 42.0
-
 [node name="Character Bubble2" parent="." instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-222, -130)
@@ -680,6 +670,43 @@ text = "Enter Code"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="NextTurn" type="TextureButton" parent="."]
+anchors_preset = -1
+anchor_left = 1.52105
+anchor_top = 21.3673
+anchor_right = 1.52105
+anchor_bottom = 21.3673
+offset_left = -86.0
+offset_top = 94.0
+offset_right = 104.0
+offset_bottom = 143.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="NextTurn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="NextTurn/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Next Turn"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Next" type="TextureButton" parent="."]
 offset_left = -144.0
 offset_top = -232.0
@@ -697,6 +724,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/margin_bottom = 15
 
@@ -944,6 +973,9 @@ metadata/_edit_lock_ = true
 [connection signal="mouse_entered" from="Code" to="." method="_on_EnterCode_mouse_entered"]
 [connection signal="mouse_exited" from="Code" to="." method="_on_EnterCode_mouse_exited"]
 [connection signal="pressed" from="Code" to="." method="_on_Code_pressed"]
+[connection signal="mouse_entered" from="NextTurn" to="." method="_on_NextTurn_mouse_entered"]
+[connection signal="mouse_exited" from="NextTurn" to="." method="_on_NextTurn_mouse_exited"]
+[connection signal="pressed" from="NextTurn" to="." method="_on_NextTurn_pressed"]
 [connection signal="mouse_entered" from="Next" to="." method="_on_Next_mouse_entered"]
 [connection signal="mouse_exited" from="Next" to="." method="_on_Next_mouse_exited"]
 [connection signal="pressed" from="Next" to="." method="_on_Next_pressed"]
@@ -953,8 +985,8 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" to="." method="_on_EnterButton_pressed"]
 [connection signal="pressed" from="EnterCodeMenu/X" to="." method="_on_X_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpButton" to="." method="_on_HelpButton_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
 
 [editable path="Character Bubble1"]
 [editable path="Character Bubble1/Score"]

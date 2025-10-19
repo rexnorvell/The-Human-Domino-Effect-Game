@@ -357,6 +357,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("4")
 
 [node name="Title_Container" type="MarginContainer" parent="."]
@@ -408,12 +410,12 @@ horizontal_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container/HBoxContainer/VBoxContainer/Label"]
 libraries = {
-"": SubResource("AnimationLibrary_m3d3c")
+&"": SubResource("AnimationLibrary_m3d3c")
 }
 autoplay = "Text shine"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container"]
 root_node = NodePath("../HBoxContainer/VBoxContainer/MarginContainer/TextureRect")
 libraries = {
-"": SubResource("AnimationLibrary_k2au8")
+&"": SubResource("AnimationLibrary_k2au8")
 }

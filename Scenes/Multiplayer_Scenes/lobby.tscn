@@ -10,7 +10,7 @@
 [ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-h5.tres" id="8"]
 [ext_resource type="Script" uid="uid://bao2v77n1vinx" path="res://Scripts/Menu_Scripts/Menu.gd" id="9"]
 [ext_resource type="Script" uid="uid://fya3yuj65wsc" path="res://Scripts/Menu_Scripts/Checklist.gd" id="11"]
-[ext_resource type="PackedScene" path="res://Scenes/LoadButton.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://dj43t4jxdkqut" path="res://Scenes/LoadButton.tscn" id="12"]
 
 [sub_resource type="FontFile" id="5"]
 subpixel_positioning = 0

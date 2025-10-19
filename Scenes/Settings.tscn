@@ -6,6 +6,9 @@
 
 [sub_resource type="FontFile" id="1"]
 fallbacks = Array[Font]([ExtResource("3")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -20,18 +23,10 @@ offset_right = 130.0
 offset_bottom = 124.0
 scale = Vector2(0.6, 0.6)
 focus_mode = 0
-focus_mode = 0
 icon = ExtResource("2")
 flat = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PopupMenu" type="PopupMenu" parent="Gear"]
-offset_left = -320.0
-offset_top = -160.0
-offset_right = 320.0
-offset_bottom = 160.0
 
 [node name="Settings_title" type="Label" parent="Gear/PopupMenu"]
 offset_left = 280.0
@@ -40,8 +35,5 @@ offset_right = 364.0
 offset_bottom = 51.0
 theme_override_fonts/font = SubResource("1")
 text = "Settings"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="pressed" from="Gear" to="." method="_on_Gear_Button_pressed"]

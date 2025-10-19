@@ -33,7 +33,7 @@ var player_name = "Player"
 # Number of CPUs desired to include
 # Warning: will softlock scenes besides the Domino Game if set to a val besides 0
 # Until bug is fixed, only change value when starting in the Domino Game
-var cpuNum = 0
+var cpuNum = 5
 
 # Tutorial mode flag - Added CS499 Fall 2024
 var tutorial_mode = false

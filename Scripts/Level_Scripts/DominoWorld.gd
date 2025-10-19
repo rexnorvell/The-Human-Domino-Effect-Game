@@ -34,6 +34,9 @@ var selected_domino = null # currently selected domino
 var center_num = 0 # current round number
 var num_placed = 0
 
+# variable to check if currently selected domino is a double Fall 2025
+var can_place = true
+
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
 
@@ -47,6 +50,7 @@ var usedBonus = ["ABC123"]
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Next.visible = false
+	$NextTurn.visible = false
 	intialize_tower()
 	_init_players()
 	dominos.erase([0, 0])
@@ -139,7 +143,7 @@ func _init_players() -> void:
 				for child in get_children():
 					print("Found child node: ", child.name)
 		else:
-			get_node("Path2D" + str(ind)).temp = true
+			get_node("Path" + str(ind)).temp = true
 
 		ind += 1
 
@@ -166,6 +170,7 @@ func _on_Start_pressed() -> void:
 	$Start.queue_free()
 	if (self_num == 0):
 		$Next.visible = true
+		$NextTurn.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
@@ -257,6 +262,12 @@ func is_domino_selected(domino) -> bool:
 
 # Attempt to select domino. Return true if successful.
 func select_domino(domino) -> bool:
+	
+	# if statement added to restrict more than 1 domino being placed a turn if its not a double Fall 2025
+	if (can_place == false):
+		print("cannot place anymore this turn")
+		return false
+		
 	if selected_domino == null:
 		selected_domino = domino
 	return selected_domino == domino
@@ -344,6 +355,13 @@ func place_domino(num):
 			# Advance step AFTER using the current slot
 			path_step_count[num] += 1
 			num_placed += 1
+			
+			# logic to check if the placed domino is a double, if it was then set the condition Fall 2025
+			if (selected_domino.top_num == selected_domino.bottom_num):
+				can_place = true
+			else:
+				can_place = false
+			#print(can_place)
 
 			turn = (turn + 1) % len(gamestate.players)
 			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
@@ -497,7 +515,6 @@ func replace_domino():
 	else:
 		return
 
-
 # go to next round of play
 @rpc("any_peer") func next_round():
 	# show all footprint tiles from this round
@@ -574,6 +591,15 @@ func _on_Next_pressed() -> void:
 	if center_num <= 9:
 		setup_dominos()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+
+# new function added for next turn Fall 2025 
+func _on_NextTurn_pressed() -> void:
+	print("next turn")
+	can_place = true
+	
+	# if all dominos have been exhausted then call next_round
+	#if hand.is_empty() == true:
+		#next_round()
 		
 #intialize tower as not seen
 func intialize_tower():
@@ -716,6 +742,12 @@ func _on_EnterCode_mouse_exited():
 func _on_Next_mouse_entered():
 	$Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
 func _on_Next_mouse_exited():
+	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+
+# added color on hover for added next turn button Fall 2025
+func _on_NextTurn_mouse_entered():
+	$Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
+func _on_NextTurn_mouse_exited():
 	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 func _on_Help_mouse_entered():

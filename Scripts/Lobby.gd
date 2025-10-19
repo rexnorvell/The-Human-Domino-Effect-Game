@@ -15,6 +15,7 @@ var local_ip = get_local_ip()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+			
 	LevelSelectContainer.visible = false
 	WaitRoomContainer.visible = false
 	
@@ -104,7 +105,7 @@ func handle_level(level):
 	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: " + get_player_name())
-	waitroom_host_ip.set_text("Host IP: " + local_ip)
+	waitroom_host_ip.set_text("Host IP: " + str(local_ip))
 	
 	# Change menu to waiting room
 	change_menu_smoothly(LevelSelectContainer, WaitRoomContainer)
@@ -131,7 +132,7 @@ func get_local_ip():
 		ip_address = IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),1)
 	elif OS.has_feature("X11") or OS.has_feature("OSX"):
 		ip_address = IP.resolve_hostname(str(OS.get_environment("HOSTNAME")),1)
-	
+
 	return ip_address
 
 ##### VVV LEVEL SELECT BUTTONS VVV #####

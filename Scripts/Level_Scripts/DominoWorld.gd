@@ -34,8 +34,10 @@ var selected_domino = null # currently selected domino
 var center_num = 0 # current round number
 var num_placed = 0
 
-# variable to check if currently selected domino is a double Fall 2025
-var can_place = true
+# Fall 2025
+var can_place = true # to check if currently selected domino is a double
+var hand_dominos = [] # track dominos in hand
+var needs_help = false # track if player needs help
 
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
@@ -51,6 +53,7 @@ var usedBonus = ["ABC123"]
 func _ready() -> void:
 	$Next.visible = false
 	$NextTurn.visible = false
+	$Help.visible = false
 	intialize_tower()
 	_init_players()
 	dominos.erase([0, 0])
@@ -173,6 +176,9 @@ func _on_Start_pressed() -> void:
 		$NextTurn.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+	
+	# Fall 2025
+	_help_Flag()
 
 # initialize everyone's dominos
 func setup_dominos():
@@ -230,6 +236,9 @@ func draw_7():
 			curriculum.domino_dict[domino_title][0],
 			true
 		)
+	
+	# Fall 2025, set the hand array to the drawn dominos
+	hand_dominos = drawn_dominos	
 
 # path set-up
 func add_position(global_pos: Vector2) -> void:
@@ -265,7 +274,7 @@ func select_domino(domino) -> bool:
 	
 	# if statement added to restrict more than 1 domino being placed a turn if its not a double Fall 2025
 	if (can_place == false):
-		print("cannot place anymore this turn")
+		print("Cannot place anymore this turn")
 		return false
 		
 	if selected_domino == null:
@@ -393,9 +402,22 @@ func place_domino(num):
 
 			# get new domino from deck
 			# replace_domino()                   # UNCOMMENT IF WANT TO REPLACE DOMINOS
-
+			
+			# Fall 2025 logic for when the player needs help, track the currently placed domino
+			var placed_domino = []
+			# flip how the domino tuple is stored in the hand array based on orientation
+			if (flip):
+				placed_domino = [selected_domino.top_num, selected_domino.bottom_num]
+			else:
+				placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
+				
+			print("Placed domino: ", placed_domino) 
+			hand_dominos.erase(placed_domino) # remove the domino from the hand array
+			
 			clear_selected_domino()
 			$Place.playing = true
+			
+		
 
 
 # increment total score for player
@@ -581,6 +603,8 @@ func replace_domino():
 func _on_Next_pressed() -> void:
 	# reset field for host
 	next_round()
+	can_place = true
+	$Help.visible = false
 
 	# reset field for everyone else
 	for p in gamestate.players:
@@ -591,16 +615,39 @@ func _on_Next_pressed() -> void:
 	if center_num <= 9:
 		setup_dominos()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+	
+	# Fall 2025
+	_help_Flag()
 
 # new function added for next turn Fall 2025 
 func _on_NextTurn_pressed() -> void:
-	print("next turn")
-	can_place = true
+	print("Next turn")
+	print(hand_dominos)
 	
-	# if all dominos have been exhausted then call next_round
-	#if hand.is_empty() == true:
-		#next_round()
+	# if all dominos have been exhausted then call next_round (TEMP)
+	if hand_dominos.is_empty():
+		next_round()
 		
+	can_place = true
+	_help_Flag()
+					
+# use current dominos to check if you have a playable domino by comparing to all end dominos
+func _help_Check() -> bool:
+	for end_domino in path_ends:
+		for domino in hand_dominos:
+			if domino.has(end_domino):
+				print("Value of the domino to play on: ", end_domino)
+				print("This is a playable domino: ", domino)
+				return true			
+	return false # false when there are no playable dominos
+
+# called whenever help needs to be checked, ie at the start of the game, next turn, or next round
+func _help_Flag() -> void:
+	if !_help_Check():
+		print("Player needs help!")
+		$Help.visible = true
+		needs_help = true
+	
 #intialize tower as not seen
 func intialize_tower():
 	$Tower/Sprite2D/Energy.visible = false

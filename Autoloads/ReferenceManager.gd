@@ -97,6 +97,17 @@ const refDict = {
 	"faces/2.png": "res://UI/sprites/character_sprites/faces/2.png",
 	"faces/3.png": "res://UI/sprites/character_sprites/faces/3.png",
 	
+	"player_icons/basket.png": "res://UI/sprites/player_icons/basket.png",
+	"player_icons/boat.png": "res://UI/sprites/player_icons/boat.png",
+	"player_icons/bowandarrow.png": "res://UI/sprites/player_icons/bowandarrow.png",
+	"player_icons/campfire.png": "res://UI/sprites/player_icons/campfire.png",
+	"player_icons/fire.png": "res://UI/sprites/player_icons/fire.png",
+	"player_icons/spear.png": "res://UI/sprites/player_icons/spear.png",
+	"player_icons/stone.png": "res://UI/sprites/player_icons/stone.png",
+	"player_icons/sun.png": "res://UI/sprites/player_icons/sun.png",
+	"player_icons/sunshine.png": "res://UI/sprites/player_icons/sunshine.png",
+	"player_icons/wheel.png": "res://UI/sprites/player_icons/wheel.png",
+	
 	"dominos/00.png": "res://UI/sprites/dominos/00.png",
 	"dominos/01.png": "res://UI/sprites/dominos/01.png",
 	"dominos/02.png": "res://UI/sprites/dominos/02.png",

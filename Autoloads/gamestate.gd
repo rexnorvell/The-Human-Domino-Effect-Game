@@ -57,6 +57,7 @@ var players_ready = []
 @export var hair = {}
 @export var clothes = {}
 @export var body = {}
+@export var player_icon = {}
 
 var first_level = "Agency"
 
@@ -211,18 +212,24 @@ func _connected_fail():
 					footprint_tiles[id] = SaveManager.Save["0"].footprint_tiles[keys[i]]
 				if(SaveManager.Save["0"].wellness_beads.keys().find(keys[i]) != -1):
 					wellness_beads[id] = SaveManager.Save["0"].wellness_beads[keys[i]]
+				if(SaveManager.Save["0"].player_icon.keys().find(keys[i]) != -1):
+					player_icon[id] = SaveManager.Save["0"].player_icon[keys[i]]
+				else:
+					player_icon[id] = "basket.png"
 		if(not CharacterFound):
 			total_points[id] = 0
 			elcitraps[id] = []
 			hair[id] = 0
 			clothes[id] = 0
 			body[id] = 0
+			player_icon[id] = "basket.png"
 	else:
 		total_points[id] = 0
 		elcitraps[id] = []
 		hair[id] = 0
 		clothes[id] = 0
 		body[id] = 0
+		player_icon[id] = "basket.png"
 	emit_signal("player_list_changed")
 
 

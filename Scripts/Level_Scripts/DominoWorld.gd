@@ -60,107 +60,216 @@ func _ready() -> void:
 	
 #  Sets up and resolves players and their resulting nodes
 func _init_players() -> void:
+	print("=== _init_players() START ===")
+	
 	# initialize footprint tile ring
-	# NOTE: If domino game performance is low, try switching to preload
-	#footprint_tile_ring = preload("res://Scripts/FootprintTileRing.gd").new(self)
 	footprint_tile_ring = load(ReferenceManager.get_reference("FootprintTileRing.gd")).new(self)
 	footprint_tile_ring.position = $Board.position
 	add_child(footprint_tile_ring)
-	
-	# intialize character bubble icons around table
-	var ind = 1
+	print("Added footprint_tile_ring at: ", footprint_tile_ring.position)
 
+	# sort players
+	sorted_players.clear()
 	for p in gamestate.players:
 		sorted_players.append(p)
 	sorted_players.sort()
-	# setup each player one by one
+	print("sorted_players: ", sorted_players)
+
+	# Build a deterministic pool of available player icon filenames
+	var all_icon_names: Array[String] = []
+	for key in ReferenceManager.refDict.keys():
+		if key.begins_with("player_icons/"):
+			all_icon_names.append(key.get_slice("/", 1))
+	all_icon_names.sort()
+
+	# Reserve local player's chosen icon (fallback to basket.png)
+	var my_icon_name: String = gamestate.player_icon.get(multiplayer.get_unique_id(), "basket.png")
+	var remaining_icon_pool: Array = all_icon_names.duplicate()
+	remaining_icon_pool.erase(my_icon_name)
+
+	# Deterministic per-player icon assignment map to avoid randomness differences across peers
+	var assigned_icons := {}
+
+	var ind := 1
+
 	for player_id in sorted_players:
-		# initialize hair and face for board view
-		var current = "Character Bubble" + str(ind)
-		get_node(current + "/face").set_texture(
-			load(ReferenceManager.get_reference("faces/" + str(gamestate.body[player_id]) + ".png"))
-		)
-		get_node(current + "/front_hair").set_texture(
-			load(ReferenceManager.get_reference("front_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		get_node(current + "/back_hair").set_texture(
-			load(ReferenceManager.get_reference("back_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		# initialize character looks in popup
-		get_node(current + "/Score/Button/Popup/front_hair").set_texture(
-			load(ReferenceManager.get_reference("front_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		get_node(current + "/Score/Button/Popup/back_hair").set_texture(
-			load(ReferenceManager.get_reference("back_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		print(gamestate.hair[player_id])
-		get_node(current + "/Score/Button/Popup/body").set_texture(
-			load(ReferenceManager.get_reference("bodies/" + str(gamestate.body[player_id]) + ".png"))
-		)
-		print(gamestate.body[player_id])
-		get_node(current + "/Score/Button/Popup/clothes").set_texture(
-			load(ReferenceManager.get_reference("clothes/" + str(gamestate.clothes[player_id]) + ".png"))
-		)
-		print(gamestate.clothes[player_id])
-		get_node(current + "/Score/Button/Popup/Name_text").set_text(
-			gamestate.players[player_id]
-		)
+		var bubble_path := "Character Bubble" + str(ind)
+		print("\n--- setting up ", bubble_path, " for player_id=", player_id, " ---")
 
-		# initalize elcitraps
-		for i in range(len(gamestate.elcitraps[player_id])):
-			get_node(current + "/Score/Button/Popup/elcitrap" + str(i)).init(
-				(gamestate.elcitraps[player_id])[i]
-			)
+		# Resolve icon filename for this player
+		var icon_name: String = ""
+		if assigned_icons.has(player_id):
+			icon_name = assigned_icons[player_id]
+		else:
+			var existing_choice: String = gamestate.player_icon.get(player_id, "")
+			if existing_choice != "" and existing_choice != "basket.png" and all_icon_names.has(existing_choice):
+				# Respect any explicit choice if present and available
+				icon_name = existing_choice
+				remaining_icon_pool.erase(existing_choice)
+			elif player_id == multiplayer.get_unique_id():
+				icon_name = my_icon_name
+			else:
+				# Assign deterministically from remaining pool
+				if remaining_icon_pool.size() > 0:
+					icon_name = remaining_icon_pool.pop_front()
+				else:
+					icon_name = my_icon_name # fallback
+			assigned_icons[player_id] = icon_name
+		print("player_id ", player_id, " resolved icon_name = ", icon_name)
+		
+		var icon_texture: Texture2D = null
+		var ref_key := "player_icons/" + icon_name
+		if ReferenceManager.refDict.has(ref_key):
+			var icon_path: String = str(ReferenceManager.get_reference(ref_key))
+			print(" icon_path from ReferenceManager = ", icon_path)
+			if ResourceLoader.exists(icon_path):
+				var maybe_tex = load(icon_path)
+				if maybe_tex is Texture2D:
+					icon_texture = maybe_tex
+					print(" loaded icon texture OK")
+				else:
+					print(" loaded resource is NOT Texture2D")
+			else:
+				print(" ResourceLoader: no such path for ", icon_path)
+		else:
+			print(" ref_key missing from ReferenceManager: ", ref_key)
 
-		# initalize loaded scores if data is loaded
-		if (SaveManager.loaded_data):
-			var path = current + "/Score/Button/Popup/"
-			print(gamestate.lydia_lion.keys().find(player_id))
-			if (gamestate.lydia_lion.keys().find(player_id) == -1):
-				get_node(path + "Lydia_number").text == "0"
-			else:
-				get_node(path + "Lydia_number").text = str(gamestate.lydia_lion[player_id])
-			if (gamestate.wellness_beads.keys().find(player_id) == -1):
-				get_node(path + "Wellness_number").text == "0"
-			else:
-				get_node(path + "Wellness_number").text = str(gamestate.wellness_beads[player_id])
-			if (gamestate.alloys.keys().find(player_id) == -1):
-				get_node(path + "Alloy_number").text = "0"
-			else:
-				get_node(path + "Alloy_number").text = str(gamestate.alloys[player_id])
-			if (gamestate.footprint_tiles.keys().find(player_id) == -1):
-				get_node(path + "Footprint_number").text = "0"
-			else:
-				get_node(path + "Footprint_number").text = str(gamestate.footprint_tiles[player_id])
-		# set self number and make own path bubble visible
+		# Apply icon ONLY to the small avatar face node; preserve previous on-screen size
+		var face_path := bubble_path + "/face"
+		if has_node(face_path):
+			var face_node = get_node(face_path)
+			print(" found face node at ", face_path, " class=", face_node.get_class())
+			if icon_texture != null:
+				if face_node is Sprite2D:
+					var prev_tex: Texture2D = face_node.texture
+					var prev_size: Vector2 = Vector2(64, 64)
+					if prev_tex != null:
+						prev_size = prev_tex.get_size()
+					var prev_scale: Vector2 = face_node.scale
+					face_node.texture = icon_texture
+					var new_size := icon_texture.get_size()
+					if new_size.x > 0.0 and new_size.y > 0.0:
+						var target_px := Vector2(prev_size.x * prev_scale.x, prev_size.y * prev_scale.y)
+						var new_scale := Vector2(target_px.x / new_size.x, target_px.y / new_size.y)
+						face_node.scale = new_scale
+					face_node.centered = true
+					print("  -> Sprite2D.texture applied to face with scale=", face_node.scale)
+				elif face_node is TextureRect:
+					face_node.texture = icon_texture
+					face_node.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					print("  -> TextureRect.texture applied to face (keep aspect)")
+				else:
+					print("  WARNING: face node type doesn't support texture assignment directly")
+		else:
+			print(" WARNING: no face node at ", face_path)
+
+		# IMPORTANT: hide other layered parts completely so they can't draw giant art
+		var parts_to_hide := [
+			"/front_hair",
+			"/back_hair",
+			"/body",
+			"/clothes",
+			"/Score/Button/Popup/front_hair",
+			"/Score/Button/Popup/back_hair",
+			"/Score/Button/Popup/body",
+			"/Score/Button/Popup/clothes"
+		]
+		for rel in parts_to_hide:
+			var full_path: String = bubble_path + rel
+			if has_node(full_path):
+				var n = get_node(full_path)
+				n.visible = false
+				print(" hid node: ", full_path, " class=", n.get_class())
+
+		# Name in popup (still fine to set)
+		var popup_name_path := bubble_path + "/Score/Button/Popup/Name_text"
+		if has_node(popup_name_path):
+			get_node(popup_name_path).set_text(gamestate.players[player_id])
+			print(" set popup name for ", bubble_path, " = ", gamestate.players[player_id])
+
+		# elcitraps (unchanged)
+		var traps = gamestate.elcitraps[player_id]
+		for i in range(len(traps)):
+			var trap_node_path := bubble_path + "/Score/Button/Popup/elcitrap" + str(i)
+			if has_node(trap_node_path):
+				get_node(trap_node_path).init(traps[i])
+				print(" init elcitrap ", i, " for ", bubble_path)
+
+		# scores if loaded
+		if SaveManager.loaded_data:
+			var score_base := bubble_path + "/Score/Button/Popup/"
+			var lydia_path := score_base + "Lydia_number"
+			var well_path := score_base + "Wellness_number"
+			var alloy_path := score_base + "Alloy_number"
+			var foot_path := score_base + "Footprint_number"
+
+			if has_node(lydia_path):
+				if gamestate.lydia_lion.keys().find(player_id) == -1:
+					get_node(lydia_path).text = "0"
+				else:
+					get_node(lydia_path).text = str(gamestate.lydia_lion[player_id])
+				print("  Lyd score set on ", lydia_path)
+
+			if has_node(well_path):
+				if gamestate.wellness_beads.keys().find(player_id) == -1:
+					get_node(well_path).text = "0"
+				else:
+					get_node(well_path).text = str(gamestate.wellness_beads[player_id])
+				print("  Well score set on ", well_path)
+
+			if has_node(alloy_path):
+				if gamestate.alloys.keys().find(player_id) == -1:
+					get_node(alloy_path).text = "0"
+				else:
+					get_node(alloy_path).text = str(gamestate.alloys[player_id])
+				print("  Alloy score set on ", alloy_path)
+
+			if has_node(foot_path):
+				if gamestate.footprint_tiles.keys().find(player_id) == -1:
+					get_node(foot_path).text = "0"
+				else:
+					get_node(foot_path).text = str(gamestate.footprint_tiles[player_id])
+				print("  Footprint score set on ", foot_path)
+
+		# self / path visibility logic (unchanged)
 		if player_id == multiplayer.get_unique_id():
 			self_num = ind - 1
-			#get_node("Path2D" + str(ind)).visible = true
-			var path_node = get_node("Path" + str(ind))
-			if path_node:
-				path_node.visible = true
-				print("Found and made visible: Path" + str(ind))
+			var path_node_self = get_node_or_null("Path" + str(ind))
+			if path_node_self:
+				path_node_self.visible = true
+				print(" made Path", ind, " visible for SELF")
 			else:
-				print("Could not find node: Path" + str(ind))
-				# Print all child nodes to see what's actually available
+				print(" could not find Path", ind, " for SELF, dumping children:")
 				for child in get_children():
-					print("Found child node: ", child.name)
+					print("    child: ", child.name)
 		else:
-			get_node("Path" + str(ind)).temp = true
+			var other_path_node = get_node_or_null("Path" + str(ind))
+			if other_path_node:
+				other_path_node.temp = true
+				print(" marked Path", ind, " as temp for OTHER")
 
 		ind += 1
 
 	# remove any unused character sprites
 	for i in range(ind, 7):
-		get_node("Character Bubble" + str(i)).queue_free()
+		var unused_path := "Character Bubble" + str(i)
+		if has_node(unused_path):
+			get_node(unused_path).queue_free()
+			print(" removed unused ", unused_path)
 
 	MusicController.playMusic(ReferenceManager.get_reference("main.ogg"))
+	print("Started music")
 
-	# add start game and next round buttons to host screen
+	# Host sees Start button
 	if multiplayer.get_unique_id() == 1:
 		$Start.visible = true
+		print("Host detected, Start button visible")
 
 	$Turn.text = gamestate.players[1] + "'s\nTurn"
+	print("Turn label set to ", $Turn.text)
+	print("=== _init_players() END ===")
+
+
 
 func _on_Start_pressed() -> void:
 	if (SaveManager.loaded_data):

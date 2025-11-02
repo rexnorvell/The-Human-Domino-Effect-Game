@@ -57,33 +57,23 @@ func _init_players() -> void:
 	sorted_players.sort()
 	# setup each player one by one
 	for player_id in sorted_players:
-		# initialize hair and face for board view
+		# initialize player icon for board view
 		var current = "Character Bubble" + str(ind)
-		get_node(current + "/face").set_texture(
-			load(ReferenceManager.get_reference("faces/" + str(gamestate.body[player_id]) + ".png"))
-		)
-		get_node(current + "/front_hair").set_texture(
-			load(ReferenceManager.get_reference("front_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		get_node(current + "/back_hair").set_texture(
-			load(ReferenceManager.get_reference("back_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		# initialize character looks in popup
-		get_node(current + "/Score/Button/Popup/front_hair").set_texture(
-			load(ReferenceManager.get_reference("front_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		get_node(current + "/Score/Button/Popup/back_hair").set_texture(
-			load(ReferenceManager.get_reference("back_hair/" + str(gamestate.hair[player_id]) + ".png"))
-		)
-		print(gamestate.hair[player_id])
-		get_node(current + "/Score/Button/Popup/body").set_texture(
-			load(ReferenceManager.get_reference("bodies/" + str(gamestate.body[player_id]) + ".png"))
-		)
-		print(gamestate.body[player_id])
-		get_node(current + "/Score/Button/Popup/clothes").set_texture(
-			load(ReferenceManager.get_reference("clothes/" + str(gamestate.clothes[player_id]) + ".png"))
-		)
-		print(gamestate.clothes[player_id])
+		var icon_name = gamestate.player_icon.get(player_id, "basket.png")
+		var icon_texture = load(ReferenceManager.get_reference("player_icons/" + icon_name))
+		
+		# Set player icon on the face node (main board view)
+		get_node(current + "/face").set_texture(icon_texture)
+		
+		# Hide hair sprites since we're using player icons
+		get_node(current + "/front_hair").visible = false
+		get_node(current + "/back_hair").visible = false
+		
+		# initialize player icon in popup
+		get_node(current + "/Score/Button/Popup/front_hair").set_texture(icon_texture)
+		get_node(current + "/Score/Button/Popup/back_hair").visible = false
+		get_node(current + "/Score/Button/Popup/body").set_texture(icon_texture)
+		get_node(current + "/Score/Button/Popup/clothes").visible = false
 		get_node(current + "/Score/Button/Popup/Name_text").set_text(
 			gamestate.players[player_id]
 		)

@@ -985,8 +985,8 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" to="." method="_on_EnterButton_pressed"]
 [connection signal="pressed" from="EnterCodeMenu/X" to="." method="_on_X_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpButton" to="." method="_on_HelpButton_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
 
 [editable path="Character Bubble1"]
 [editable path="Character Bubble1/Score"]

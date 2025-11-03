@@ -270,7 +270,6 @@ func _init_players() -> void:
 	print("=== _init_players() END ===")
 
 
-
 func _on_Start_pressed() -> void:
 	if (SaveManager.loaded_data):
 		for i in range(0, SaveManager.Save["0"].Current_Round):
@@ -332,9 +331,11 @@ func draw_7():
 
 		# set domino position and scale
 		# placed at bottom of screen, with spacing
-		var domino_spacing = 70
+		# rotate 90 degrees counter-clockwise to lie flat
+		var domino_spacing = 85
 		domino.position = Vector2((i * domino_spacing) - (192 + domino_spacing * 3), 175)
 		domino.scale = HAND_SCALE
+		domino.rotation_degrees = 270
 
 		domino.set_base_scale(HAND_SCALE)
 		# initialize domino
@@ -347,7 +348,7 @@ func draw_7():
 		)
 	
 	# Fall 2025, set the hand array to the drawn dominos
-	hand_dominos = drawn_dominos	
+	hand_dominos = drawn_dominos
 
 # path set-up
 func add_position(global_pos: Vector2) -> void:
@@ -380,7 +381,6 @@ func is_domino_selected(domino) -> bool:
 
 # Attempt to select domino. Return true if successful.
 func select_domino(domino) -> bool:
-	
 	# if statement added to restrict more than 1 domino being placed a turn if its not a double Fall 2025
 	if (can_place == false):
 		print("Cannot place anymore this turn")
@@ -520,15 +520,13 @@ func place_domino(num):
 			else:
 				placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
 				
-			print("Placed domino: ", placed_domino) 
+			print("Placed domino: ", placed_domino)
 			hand_dominos.erase(placed_domino) # remove the domino from the hand array
 			
 			clear_selected_domino()
 			$Place.playing = true
 			
 		
-
-
 # increment total score for player
 func increment_total(num):
 	var path = "Character Bubble" + str(num) + "/Score/Button/Popup/Lydia_number"
@@ -747,7 +745,7 @@ func _help_Check() -> bool:
 			if domino.has(end_domino):
 				print("Value of the domino to play on: ", end_domino)
 				print("This is a playable domino: ", domino)
-				return true			
+				return true
 	return false # false when there are no playable dominos
 
 # called whenever help needs to be checked, ie at the start of the game, next turn, or next round

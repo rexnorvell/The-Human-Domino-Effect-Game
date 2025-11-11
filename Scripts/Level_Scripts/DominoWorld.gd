@@ -11,7 +11,7 @@ const ROTATION_OFFSET_DEG := 90.0 # rotate pieces 90° clockwise
 const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
 
 # How far to move each successive domino along that direction
-const STEP_PIXELS := 12.0 # tune for your art scale
+const STEP_PIXELS := 24.0 # tune for your art scale
 
 # Keep a per-path step count; replaces placed_domino_offset
 var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
@@ -42,8 +42,7 @@ var needs_help = false # track if player needs help
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
 
-var position_table: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO,
-									  Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
+var position_table: Array[Vector2] = []
 var prev_domino_size = 0
 
 var bonusWords = ["Bonus", "Bonus2"]
@@ -936,9 +935,13 @@ func _path_step_vector(path_num: int) -> Vector2:
 	return v * STEP_PIXELS
 
 func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
-	var anchor: Vector2 = position_table[path_num]
+	# Treat stored anchors as LOCAL positions in this DominoWorld
+	var local_anchor: Vector2 = position_table[path_num]
 	var step: Vector2 = _path_step_vector(path_num)
-	return anchor + step * float(step_index)
+	var local_pos: Vector2 = local_anchor + step * float(step_index)
+
+	# Convert that local position into global space for placement
+	return to_global(local_pos)
 
 # Optional: make the domino visually point along its growth direction
 func _orient_to_path(domino: Node2D, path_num: int) -> void:

@@ -53,6 +53,7 @@ func _ready() -> void:
 	$Next.visible = false
 	$NextTurn.visible = false
 	$Help.visible = false
+	$Reset.visible = false
 	intialize_tower()
 	_init_players()
 	dominos.erase([0, 0])
@@ -278,6 +279,7 @@ func _on_Start_pressed() -> void:
 	setup_dominos()
 	
 	$Start.queue_free()
+	
 	if (self_num == 0):
 		$Next.visible = true
 		$NextTurn.visible = true
@@ -522,6 +524,9 @@ func place_domino(num):
 			print("Placed domino: ", placed_domino)
 			hand_dominos.erase(placed_domino) # remove the domino from the hand array
 			
+			if can_place:
+				_help_Flag()
+			
 			clear_selected_domino()
 			$Place.playing = true
 			
@@ -663,6 +668,10 @@ func replace_domino():
 		$End.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
 		$End.visible = true
 		$Next.visible = false
+		# added for Fall 2025
+		$Help.visible = false
+		$NextTurn.visible = false
+		$Reset.visible = true
 		center_num += 1
 		return
 
@@ -723,16 +732,18 @@ func _on_Next_pressed() -> void:
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	
 	# Fall 2025
-	_help_Flag()
+	if center_num < 9:
+		_help_Flag()
 
-# new function added for next turn Fall 2025 
+# new functions added for next turn Fall 2025 
+# next turn button when player is done when their turn
 func _on_NextTurn_pressed() -> void:
 	print("Next turn")
 	print(hand_dominos)
 	
 	# if all dominos have been exhausted then call next_round (TEMP)
 	if hand_dominos.is_empty():
-		next_round()
+		_on_Next_pressed()
 		
 	can_place = true
 	_help_Flag()
@@ -753,6 +764,10 @@ func _help_Flag() -> void:
 		print("Player needs help!")
 		$Help.visible = true
 		needs_help = true
+		
+# called at the end of the game when reset button becomes visible and is pressed
+func _on_Reset_pressed() -> void:
+	get_tree().reload_current_scene() # reload the entirety of the scene
 	
 #intialize tower as not seen
 func intialize_tower():
@@ -899,14 +914,19 @@ func _on_Next_mouse_exited():
 
 # added color on hover for added next turn button Fall 2025
 func _on_NextTurn_mouse_entered():
-	$Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$NextTurn/MarginContainer/Label.set("theme_override_colors/font_color", green)
 func _on_NextTurn_mouse_exited():
-	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+	$NextTurn/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 func _on_Help_mouse_entered():
 	$Help/MarginContainer/Label.set("theme_override_colors/font_color", green)
 func _on_Help_mouse_exited():
 	$Help/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+	
+func _on_Reset_mouse_entered():
+	$Reset/MarginContainer/Label.set("theme_override_colors/font_color", green)
+func _on_Reset_mouse_exited():
+	$Reset/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 func _on_Start_mouse_entered():
 	$Start/MarginContainer/Label.set("theme_override_colors/font_color", green)

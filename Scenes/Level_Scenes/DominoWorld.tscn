@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://b5p1i36ak27cu"]
+[gd_scene load_steps=49 format=3 uid="uid://b5p1i36ak27cu"]
 
 [ext_resource type="Texture2D" uid="uid://c7thnwhpiw6xc" path="res://UI/sprites/reference.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://dib1w1judeeb2" path="res://UI/Menu_Sprites/background.png" id="2"]
@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://c2mtwejs5k33a" path="res://UI/Miscellaneous/DominoHint.png" id="26"]
 [ext_resource type="Texture2D" uid="uid://bpvkpeg5r6ls1" path="res://UI/sprites/help.png" id="27"]
 [ext_resource type="Texture2D" uid="uid://cgb7uykpyjide" path="res://UI/sprites/close.png" id="28"]
+[ext_resource type="PackedScene" uid="uid://onq3cam2n0us" path="res://Scenes/PauseMenu.tscn" id="29_bru2g"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Zoom In"
@@ -204,6 +205,12 @@ region_rect = Rect2(0, 0, 512, 512)
 scale = Vector2(0.5, 0.5)
 script = ExtResource("7")
 Domino = ExtResource("8")
+
+[node name="PauseCL" type="CanvasLayer" parent="."]
+layer = 15
+
+[node name="PauseMenu" parent="PauseCL" instance=ExtResource("29_bru2g")]
+visible = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-192, 0)

@@ -10,26 +10,20 @@ func _ready():
 #func _process(delta):
 #	pass
 
-#variable to manipulate when game is paused
-var is_paused = false: set = set_is_paused
-
 #open and close pause menu using the escape button
 func _unhandled_input(event):
 	if event.is_action_pressed("Pause"):
-		self.is_paused = !is_paused
-
-#pauses the game itself
-func set_is_paused(value):
-	is_paused = value
-	visible = is_paused
+		visible = !visible
+		get_tree().paused = !get_tree().paused
 
 #closes the pause menu
 func _on_ResumeBtn_pressed():
-	self.is_paused = false
-	
+	get_tree().paused = false
+	visible = false
 
 #returns to main menu
 func _on_MainBtn_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://Scenes/GAME_START.tscn")
 	
 

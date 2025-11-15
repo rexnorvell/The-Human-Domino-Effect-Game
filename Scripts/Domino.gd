@@ -85,7 +85,7 @@ func _on_Area2D_mouse_entered() -> void:
 	_orig_y_sort = y_sort_enabled
 	y_sort_enabled = false
 	_orig_z = z_index
-	z_index = 100000 # put it way on top
+	z_index = 10 # put it on top
 
 func _on_Area2D_mouse_exited() -> void:
 	scale = _base_scale

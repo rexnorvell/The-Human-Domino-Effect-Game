@@ -299,6 +299,9 @@ position = Vector2(-100, 115)
 [node name="Score" parent="Character Bubble1" index="4"]
 z_index = 2
 
+[node name="Popup" parent="Character Bubble1/Score/Button" index="2"]
+visible = false
+
 [node name="Character Bubble2" parent="." instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-222, -130)
@@ -388,30 +391,35 @@ scores)"
 horizontal_alignment = 1
 
 [node name="AlloyPopup" type="Popup" parent="."]
-size = Vector2i(600, 600)
+position = Vector2i(303, 75)
+size = Vector2i(417, 381)
 
 [node name="Title" type="Label" parent="AlloyPopup"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -568.0
-offset_right = 576.0
-offset_bottom = 138.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 144.0
+offset_top = 31.0
+offset_right = -136.0
+offset_bottom = -319.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
 theme_override_fonts/font = SubResource("6")
 text = "Alloy Acquired!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Alloy" type="Label" parent="AlloyPopup"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -568.0
-offset_top = -264.0
-offset_right = 576.0
-offset_bottom = -126.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 167.0
+offset_top = 55.0
+offset_right = -163.0
+offset_bottom = -292.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_fonts/font = SubResource("6")
 text = "Electrum"
@@ -419,18 +427,20 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Info" type="Label" parent="AlloyPopup"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -100.0
-offset_right = 890.0
-offset_bottom = 155.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 82.0
+offset_top = 134.0
+offset_right = -67.0
+offset_bottom = -79.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
 text = "Electrum is an alloy of gold and silver.
-It represents blah blab an dblah."
+It represents ...
+"
+autowrap_mode = 3
 
 [node name="Close" type="Button" parent="AlloyPopup"]
 anchors_preset = 7
@@ -438,23 +448,28 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -30.0
-offset_top = -255.0
-offset_right = 51.0
-offset_bottom = -205.0
+offset_left = -43.5
+offset_top = -81.0
+offset_right = 37.5
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
 [node name="WellnessBeadPopup" type="Popup" parent="."]
-size = Vector2i(600, 425)
+position = Vector2i(303, 75)
+size = Vector2i(417, 381)
 
 [node name="Title" type="Label" parent="WellnessBeadPopup"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -568.0
-offset_right = 576.0
-offset_bottom = 138.0
+offset_left = -60.5
+offset_top = 31.0
+offset_right = 63.5
+offset_bottom = 68.0
+grow_horizontal = 2
 theme_override_fonts/font = SubResource("6")
 text = "Alloy Acquired!"
 horizontal_alignment = 1
@@ -466,10 +481,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -568.0
-offset_top = -264.0
-offset_right = 576.0
-offset_bottom = -126.0
+offset_left = -71.5
+offset_top = -129.5
+offset_right = 66.5
+offset_bottom = -101.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_fonts/font = SubResource("6")
 text = "Electrum"
@@ -482,13 +499,15 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -100.0
-offset_right = 890.0
-offset_bottom = 155.0
+offset_left = -123.5
+offset_top = -70.5
+offset_right = 158.5
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
 text = "Electrum is an alloy of gold and silver.
-It represents blah blab an dblah."
+It represents ..."
 
 [node name="Close" type="Button" parent="WellnessBeadPopup"]
 anchors_preset = 7
@@ -496,24 +515,28 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -30.0
-offset_top = -65.0
-offset_right = 51.0
-offset_bottom = -15.0
+offset_left = -33.5
+offset_top = -85.0
+offset_right = 47.5
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
 [node name="FootprintTilePopup" type="Popup" parent="."]
-size = Vector2i(550, 600)
+position = Vector2i(303, 75)
+size = Vector2i(417, 381)
 
 [node name="Title" type="Label" parent="FootprintTilePopup"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -570.857
-offset_top = 5.71429
-offset_right = 573.143
-offset_bottom = 89.7143
+offset_left = -59.5
+offset_top = 31.0
+offset_right = 61.5
+offset_bottom = 64.0
+grow_horizontal = 2
 theme_override_fonts/font = SubResource("6")
 text = "Alloy Acquired!"
 horizontal_alignment = 1
@@ -525,10 +548,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -574.571
-offset_top = -323.0
-offset_right = 569.429
-offset_bottom = -223.0
+offset_left = -41.5
+offset_top = -130.5
+offset_right = 40.5
+offset_bottom = -104.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_fonts/font = SubResource("6")
 text = "Electrum"
@@ -536,17 +561,21 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Info" type="Label" parent="FootprintTilePopup"]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -504.0
-offset_top = 8.0
-offset_right = 516.0
-offset_bottom = 263.0
+offset_left = -179.5
+offset_top = -118.5
+offset_right = 180.5
+offset_bottom = 81.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
 text = "Electrum"
+autowrap_mode = 3
 
 [node name="Close" type="Button" parent="FootprintTilePopup"]
 anchors_preset = 7
@@ -554,18 +583,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -60.0
-offset_right = 41.0
-offset_bottom = -10.0
+offset_left = -44.5
+offset_top = -74.0
+offset_right = 36.5
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
 [node name="Description" type="RichTextLabel" parent="FootprintTilePopup"]
-offset_left = 104.286
-offset_top = 250.0
-offset_right = 1104.29
-offset_bottom = 612.0
+offset_left = 22.0
+offset_top = 104.0
+offset_right = 403.0
+offset_bottom = 288.0
 theme_override_fonts/normal_font = SubResource("10")
 text = "First Citizen:
 Before we proceed any further, hear me speak.

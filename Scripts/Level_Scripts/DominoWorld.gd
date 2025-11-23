@@ -58,6 +58,11 @@ func _ready() -> void:
 	_init_players()
 	dominos.erase([0, 0])
 	
+	var center_area := $CentralDomino.get_node_or_null("Area2D")
+	if center_area:
+		center_area.input_pickable = false
+		center_area.monitoring = false
+		
 #  Sets up and resolves players and their resulting nodes
 func _init_players() -> void:
 	print("=== _init_players() START ===")
@@ -747,7 +752,12 @@ func replace_domino():
 	# load center domino
 	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
 	$CentralDomino.get_node("Sprite2D").texture = load(domino_title)
-
+	
+	var center_area := $CentralDomino.get_node_or_null("Area2D")
+	if center_area:
+		center_area.input_pickable = false
+		center_area.monitoring = false
+	
 	# reset path visibility
 	for i in range(1, 7):
 		if i != self_num + 1:

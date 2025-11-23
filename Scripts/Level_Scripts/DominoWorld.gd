@@ -82,10 +82,23 @@ func _init_players() -> void:
 			all_icon_names.append(key.get_slice("/", 1))
 	all_icon_names.sort()
 
+	# Gather icons already explicitly chosen by any player 
+	var chosen_icon_names: Array[String] = []
+	for pid in gamestate.players:
+		var explicit_choice: String = gamestate.player_icon.get(pid, "")
+		if explicit_choice != "" and all_icon_names.has(explicit_choice):
+			if chosen_icon_names.find(explicit_choice) == -1:
+				chosen_icon_names.append(explicit_choice)
+
+	# Shuffle for icons not chosen by players
+	var remaining_icon_pool: Array[String] = []
+	for name in all_icon_names:
+		if chosen_icon_names.find(name) == -1:
+			remaining_icon_pool.append(name)
+	remaining_icon_pool.shuffle()
+
 	# Reserve local player's chosen icon (fallback to basket.png)
 	var my_icon_name: String = gamestate.player_icon.get(multiplayer.get_unique_id(), "basket.png")
-	var remaining_icon_pool: Array = all_icon_names.duplicate()
-	remaining_icon_pool.erase(my_icon_name)
 
 	# Deterministic per-player icon assignment map to avoid randomness differences across peers
 	var assigned_icons := {}
@@ -102,14 +115,15 @@ func _init_players() -> void:
 			icon_name = assigned_icons[player_id]
 		else:
 			var existing_choice: String = gamestate.player_icon.get(player_id, "")
-			if existing_choice != "" and existing_choice != "basket.png" and all_icon_names.has(existing_choice):
+			# Respect any explicit choice 
+			if existing_choice != "" and all_icon_names.has(existing_choice):
 				# Respect any explicit choice if present and available
 				icon_name = existing_choice
 				remaining_icon_pool.erase(existing_choice)
 			elif player_id == multiplayer.get_unique_id():
 				icon_name = my_icon_name
 			else:
-				# Assign deterministically from remaining pool
+				# Assign randomly but uniquely from remaining pool
 				if remaining_icon_pool.size() > 0:
 					icon_name = remaining_icon_pool.pop_front()
 				else:
@@ -256,6 +270,39 @@ func _init_players() -> void:
 		if has_node(unused_path):
 			get_node(unused_path).queue_free()
 			print(" removed unused ", unused_path)
+
+	# Replace decorative board faces with unused player icons
+	var board_face_nodes := ["sunrise", "sunset"]
+	for node_name in board_face_nodes:
+		var face_sprite := get_node_or_null(node_name)
+		if face_sprite and face_sprite is Sprite2D:
+			var assigned_icon_name: String = my_icon_name
+			if remaining_icon_pool.size() > 0:
+				assigned_icon_name = remaining_icon_pool.pop_front()
+			var ref_key_board := "player_icons/" + assigned_icon_name
+			if ReferenceManager.refDict.has(ref_key_board):
+				var icon_path_board: String = str(ReferenceManager.get_reference(ref_key_board))
+				if ResourceLoader.exists(icon_path_board):
+					var prev_tex_b: Texture2D = face_sprite.texture
+					var prev_size_b: Vector2 = Vector2(64, 64)
+					if prev_tex_b != null:
+						prev_size_b = prev_tex_b.get_size()
+					var prev_scale_b: Vector2 = face_sprite.scale
+					var new_tex_b = load(icon_path_board)
+					if new_tex_b is Texture2D:
+						face_sprite.texture = new_tex_b
+						var new_size_b: Vector2 = (new_tex_b as Texture2D).get_size()
+						if new_size_b.x > 0.0 and new_size_b.y > 0.0:
+							var target_px_b := Vector2(prev_size_b.x * prev_scale_b.x, prev_size_b.y * prev_scale_b.y)
+							var new_scale_b := Vector2(target_px_b.x / new_size_b.x, target_px_b.y / new_size_b.y)
+							face_sprite.scale = new_scale_b
+						print(" Replaced board face ", node_name, " with icon ", assigned_icon_name)
+					else:
+						print(" WARNING: loaded non-texture for board face ", node_name)
+				else:
+					print(" WARNING: icon path for board face not found: ", icon_path_board)
+			else:
+				print(" WARNING: ref key missing for board face: ", ref_key_board)
 
 	MusicController.playMusic(ReferenceManager.get_reference("main.ogg"))
 	print("Started music")

@@ -34,9 +34,9 @@ var selected_domino = null # currently selected domino
 var center_num = 0 # current round number
 var num_placed = 0
 
-# Fall 2025
+# (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
-var hand_dominos = [] # track dominos in hand
+var hand_dominos = [] # track dominos in hand numerically
 var needs_help = false # track if player needs help
 
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
@@ -51,6 +51,7 @@ var usedBonus = ["ABC123"]
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Next.visible = false
+	# (Fall 2025) set the visibility of added buttons accordingly
 	$NextTurn.visible = false
 	$Help.visible = false
 	$Reset.visible = false
@@ -338,7 +339,7 @@ func _on_Start_pressed() -> void:
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	
-	# Fall 2025
+	# (Fall 2025)
 	_help_Flag()
 
 # initialize everyone's dominos
@@ -400,7 +401,7 @@ func draw_7():
 			true
 		)
 	
-	# Fall 2025, set the hand array to the drawn dominos
+	# (Fall 2025) set the hand array to the drawn dominos
 	hand_dominos = drawn_dominos
 
 # path set-up
@@ -434,9 +435,9 @@ func is_domino_selected(domino) -> bool:
 
 # Attempt to select domino. Return true if successful.
 func select_domino(domino) -> bool:
-	# if statement added to restrict more than 1 domino being placed a turn if its not a double Fall 2025
+	# (Fall 2025) added to restrict more than 1 domino being placed a turn if its not a double
 	if (can_place == false):
-		print("Cannot place anymore this turn")
+		print("Cannot place anymore this turn") # debug
 		return false
 		
 	if selected_domino == null:
@@ -527,12 +528,12 @@ func place_domino(num):
 			path_step_count[num] += 1
 			num_placed += 1
 			
-			# logic to check if the placed domino is a double, if it was then set the condition Fall 2025
+			# (Fall 2025) logic to check if the placed domino is a double, if it was then set the condition
 			if (selected_domino.top_num == selected_domino.bottom_num):
 				can_place = true
 			else:
 				can_place = false
-			#print(can_place)
+			# print(can_place) # debug
 
 			turn = (turn + 1) % len(gamestate.players)
 			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
@@ -565,7 +566,7 @@ func place_domino(num):
 			# get new domino from deck
 			# replace_domino()                   # UNCOMMENT IF WANT TO REPLACE DOMINOS
 			
-			# Fall 2025 logic for when the player needs help, track the currently placed domino
+			# (Fall 2025) logic for when the player needs help, track the currently placed domino
 			var placed_domino = []
 			# flip how the domino tuple is stored in the hand array based on orientation
 			if (flip):
@@ -576,8 +577,8 @@ func place_domino(num):
 			print("Placed domino: ", placed_domino)
 			hand_dominos.erase(placed_domino) # remove the domino from the hand array
 			
-			if can_place:
-				_help_Flag()
+			if can_place: # check in the case of a played double if help needs to be raised
+				_help_Flag() 
 			
 			clear_selected_domino()
 			$Place.playing = true
@@ -720,7 +721,7 @@ func replace_domino():
 		$End.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
 		$End.visible = true
 		$Next.visible = false
-		# added for Fall 2025
+		# (Fall 2025) added visibility conditions for created buttons
 		$Help.visible = false
 		$NextTurn.visible = false
 		$Reset.visible = true
@@ -788,41 +789,42 @@ func _on_Next_pressed() -> void:
 		setup_dominos()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	
-	# Fall 2025
+	# (Fall 2025) added seperately from above condition for differentiation
 	if center_num < 9:
 		_help_Flag()
 
-# new functions added for next turn Fall 2025 
-# next turn button when player is done when their turn
+# (Fall 2025) new function added for next turn
+# button is pressed when player is done with their turn
 func _on_NextTurn_pressed() -> void:
-	print("Next turn")
+	print("Next turn") # debugs
 	print(hand_dominos)
 	
-	# if all dominos have been exhausted then call next_round (TEMP)
+	# if all dominos have been exhausted then call next_round (TEMP CONDITION)
 	if hand_dominos.is_empty():
 		_on_Next_pressed()
 		
-	can_place = true
+	can_place = true # as only 1 domino can be placed unless a double was played
 	_help_Flag()
 					
-# use current dominos to check if you have a playable domino by comparing to all end dominos
+# (Fall 2025) use current dominos to check if you have a playable domino by comparing to all end dominos
 func _help_Check() -> bool:
 	for end_domino in path_ends:
 		for domino in hand_dominos:
-			if domino.has(end_domino):
-				print("Value of the domino to play on: ", end_domino)
+			if domino.has(end_domino): # if a playable end domino is found
+				print("Value of the domino to play on: ", end_domino) # debug
 				print("This is a playable domino: ", domino)
 				return true
-	return false # false when there are no playable dominos
+	return false # no playable dominos
 
-# called whenever help needs to be checked, ie at the start of the game, next turn, or next round
+# (Fall 2025) called whenever help needs to be checked, ie at the start of the game, next turn, or next round
+# currently just toggles the visibility of the button (MULTIPLAYER REINTEGRATION NEEDED)
 func _help_Flag() -> void:
 	if !_help_Check():
-		print("Player needs help!")
-		$Help.visible = true
+		print("Player needs help!") # debug
+		$Help.visible = true # toggle on visibility 
 		needs_help = true
 		
-# called at the end of the game when reset button becomes visible and is pressed
+# (Fall 2025) called at the end of the game when reset button becomes visible 
 func _on_Reset_pressed() -> void:
 	get_tree().reload_current_scene() # reload the entirety of the scene
 	
@@ -969,7 +971,7 @@ func _on_Next_mouse_entered():
 func _on_Next_mouse_exited():
 	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
-# added color on hover for added next turn button Fall 2025
+# (Fall 2025) added color on hover for added next turn, help, and reset buttons
 func _on_NextTurn_mouse_entered():
 	$NextTurn/MarginContainer/Label.set("theme_override_colors/font_color", green)
 func _on_NextTurn_mouse_exited():

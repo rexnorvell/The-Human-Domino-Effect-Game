@@ -1,9 +1,5 @@
 extends Control
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 @onready var LobbyContainer = $Lobby_Container
 @onready var LevelSelectContainer = $LevelSelect_Container
 @onready var WaitRoomContainer = $WaitRoom_Container
@@ -17,7 +13,6 @@ var player_icon_buttons: Dictionary[String, Button] = {}
 var icons_loaded: bool = false
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 			
 	LevelSelectContainer.visible = false
@@ -25,10 +20,6 @@ func _ready():
 	
 	# gamestate.gd signal event listeners
 	gamestate.connect("player_list_changed", Callable(self, "refresh_lobby"))
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
 func _on_Host_pressed():
 	if get_player_name() == "":
@@ -46,23 +37,23 @@ func _on_Join_Button_pressed():
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
 	
-	#var ip =  $Connect/JoinBox/IPAddress.text
-	#if not ip.is_valid_ip_address():
-		#set_error_text("Invalid IP Address")
-		#return
+	var ip =  $Connect/JoinBox/IPAddress.text # $Connect/JoinBox/IPAddress is null
+	if not ip.is_valid_ip_address():
+		set_error_label("Invalid IP Address")
+		return
 		
 	#get host name
-	var host_ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/NinePatchRect/MarginContainer/LineEdit.text
-	if host_ip == $Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text:
-		set_error_label("Host and player can not have the same name.")
-		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
-		return
+	var host_ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
+	#if host_ip == $Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text:
+		#set_error_label("Host and player can not have the same name.")
+		#SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
+		#return
 
 	set_error_label("")
 	
 	# Disable Host and Join buttons
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host.disabled = true
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button.disabled = true
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Host.disabled = true
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Join/Join_Button.disabled = true
 
 	var player_name = get_player_name()
 	# Set host username and ip address labels
@@ -164,13 +155,11 @@ func handle_level(level):
 	# Ensure Start button is visible and enabled (host always can start after selecting icon)
 	_update_start_button_state()
 
-##### VVV HELPER FUNCTIONS VVV #####
-
 func get_player_name() -> String:
-	return $Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text
+	return $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text
 	
 func set_player_name(name: String):
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.set_text(name)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.set_text(name)
 
 func set_error_label(text: String):
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/Error_Label.set_text(text)
@@ -227,10 +216,6 @@ func _get_icon_texture(icon_name: String) -> Texture2D:
 	else:
 		print("SKIP: loaded resource at ", tex_path, " but it's not a Texture2D")
 		return null
-
-
-
-##### VVV PLAYER ICON SELECTION VVV #####
 
 func load_player_icons() -> void:
 	var grid: GridContainer = $WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/IconGrid
@@ -315,8 +300,6 @@ func load_player_icons() -> void:
 	icons_loaded = true
 	print("Icon load complete. Total buttons: ", player_icon_buttons.size())
 
-
-
 func _on_icon_selected(icon_name: String) -> void:
 	print("Icon selected: ", icon_name)
 	selected_icon = icon_name
@@ -327,8 +310,6 @@ func _on_icon_selected(icon_name: String) -> void:
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 	_update_start_button_state()
-
-
 
 func set_player_icon(icon_name: String):
 	var player_id = multiplayer.get_unique_id()
@@ -350,9 +331,6 @@ func _highlight_selected_icon() -> void:
 		if not is_instance_valid(btn):
 			continue
 		btn.button_pressed = (icon_file == selected_icon)
-
-
-##### VVV LEVEL SELECT BUTTONS VVV #####
 
 func _on_Char_Creation_pressed():
 	handle_level("Agency")

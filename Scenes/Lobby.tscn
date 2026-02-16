@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://da355mvkk7a1t"]
+[gd_scene format=3 uid="uid://da355mvkk7a1t"]
 
 [ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://b280avyrjcv5t" path="res://Scenes/Back_Button.tscn" id="2"]
@@ -16,30 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cvync24oqcy7k" path="res://UI/Control/green_button00.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://byy16ybwc3qjx" path="res://UI/Control/green_button01.png" id="16"]
-
-[sub_resource type="FontFile" id="2"]
-fallbacks = Array[Font]([ExtResource("6")])
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="StyleBoxEmpty" id="3"]
-
-[sub_resource type="StyleBoxEmpty" id="4"]
-
-[sub_resource type="StyleBoxEmpty" id="5"]
-
-[sub_resource type="Theme" id="6"]
-LineEdit/colors/clear_button_color = Color(0.490196, 0.490196, 0.490196, 1)
-LineEdit/colors/clear_button_color_pressed = Color(1, 0, 0, 1)
-LineEdit/colors/cursor_color = Color(0, 0, 0, 1)
-LineEdit/colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
-LineEdit/fonts/font = SubResource("2")
-LineEdit/styles/focus = SubResource("3")
-LineEdit/styles/normal = SubResource("4")
-LineEdit/styles/read_only = SubResource("5")
 
 [sub_resource type="Animation" id="7"]
 resource_name = "start"
@@ -64,6 +40,15 @@ _data = {
 
 [sub_resource type="FontFile" id="8"]
 fallbacks = Array[Font]([ExtResource("6")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -308,6 +293,15 @@ _data = {
 
 [sub_resource type="FontFile" id="12"]
 fallbacks = Array[Font]([ExtResource("6")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -316,6 +310,15 @@ cache/0/16/0/scale = 1.0
 
 [sub_resource type="FontFile" id="10"]
 fallbacks = Array[Font]([ExtResource("6")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -343,7 +346,7 @@ _data = {
 &"start": SubResource("11")
 }
 
-[node name="Lobby" type="Control"]
+[node name="Lobby" type="Control" unique_id=795876909]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -354,7 +357,7 @@ scale = Vector2(0.9, 0.9)
 mouse_filter = 1
 script = ExtResource("10")
 
-[node name="Lobby_Container" type="MarginContainer" parent="."]
+[node name="Lobby_Container" type="MarginContainer" parent="." unique_id=1329336948]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -365,10 +368,10 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Lobby_Container"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby_Container" unique_id=1822421318]
 layout_mode = 2
 
-[node name="Logo" type="TextureRect" parent="Lobby_Container/HBoxContainer"]
+[node name="Logo" type="TextureRect" parent="Lobby_Container/HBoxContainer" unique_id=353689797]
 custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -377,16 +380,16 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MenuContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer"]
+[node name="MenuContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer" unique_id=48366962]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 125
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 125
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 150
 
-[node name="Menu" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer"]
+[node name="Menu" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer" unique_id=1790096521]
 layout_mode = 2
 texture = ExtResource("3")
 region_rect = Rect2(0, 0, 100, 100)
@@ -395,131 +398,7 @@ patch_margin_top = 28
 patch_margin_right = 29
 patch_margin_bottom = 28
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 80
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 80
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 25
-
-[node name="Name" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name"]
-layout_mode = 2
-theme = ExtResource("9")
-text = "Name"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NinePatchRect" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource("3")
-region_rect = Rect2(0, 0, 100, 100)
-patch_margin_left = 3
-patch_margin_top = 7
-patch_margin_right = 3
-patch_margin_bottom = 35
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 8
-
-[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("9")
-clear_button_enabled = true
-
-[node name="Host" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_horizontal = 5
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("8")
-texture_pressed = ExtResource("4")
-texture_hover = ExtResource("4")
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("9")
-text = "Host"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Join" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Join_Button" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_horizontal = 5
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5")
-texture_pressed = ExtResource("7")
-texture_hover = ExtResource("7")
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("9")
-text = "Join"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NinePatchRect" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource("3")
-region_rect = Rect2(0, 0, 100, 100)
-patch_margin_left = 3
-patch_margin_top = 7
-patch_margin_right = 3
-patch_margin_bottom = 28
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/NinePatchRect"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 8
-
-[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/NinePatchRect/MarginContainer"]
-layout_mode = 2
-theme = SubResource("6")
-placeholder_text = "Host IP"
-clear_button_enabled = true
-
-[node name="Error_Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu"]
+[node name="Error_Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu" unique_id=1016796339]
 layout_mode = 0
 offset_left = 81.0
 offset_top = 305.0
@@ -529,14 +408,160 @@ theme = ExtResource("9")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container"]
-root_node = NodePath("../..")
-libraries = {
-&"": SubResource("AnimationLibrary_yqok8")
-}
-autoplay = "start"
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu" unique_id=1560986804]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -69.0
+offset_right = 192.0
+offset_bottom = 69.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
 
-[node name="LevelSelect_Container" type="MarginContainer" parent="."]
+[node name="Name" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer" unique_id=418019220]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name" unique_id=212216508]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 10
+patch_margin_top = 20
+patch_margin_right = 10
+patch_margin_bottom = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect" unique_id=1094072573]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.09375
+offset_top = -11.0
+offset_right = 31.09375
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+
+[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer" unique_id=1229767252]
+layout_mode = 2
+theme = ExtResource("9")
+theme_override_colors/font_placeholder_color = Color(0.69411767, 0.69411767, 0.69411767, 0.6)
+placeholder_text = "Name"
+alignment = 1
+max_length = 32
+expand_to_text_length = true
+clear_button_enabled = true
+
+[node name="IP" type="NinePatchRect" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer" unique_id=1361729849]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 10
+patch_margin_top = 20
+patch_margin_right = 10
+patch_margin_bottom = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP" unique_id=64355400]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.09375
+offset_top = -11.0
+offset_right = 31.09375
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+
+[node name="LineEdit" type="LineEdit" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer" unique_id=598057468]
+layout_mode = 2
+theme = ExtResource("9")
+theme_override_colors/font_placeholder_color = Color(0.6955037, 0.6955029, 0.6955031, 0.6)
+placeholder_text = "Host IP"
+alignment = 1
+max_length = 32
+expand_to_text_length = true
+clear_button_enabled = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer" unique_id=1645596931]
+layout_mode = 2
+
+[node name="Host" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1266781458]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("8")
+texture_pressed = ExtResource("4")
+texture_hover = ExtResource("4")
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" unique_id=140982941]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/MarginContainer" unique_id=1659101171]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Host"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Join" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1782994551]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Join_Button" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join" unique_id=1125241492]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 5
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5")
+texture_pressed = ExtResource("7")
+texture_hover = ExtResource("7")
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" unique_id=2118971894]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button/MarginContainer" unique_id=1129559598]
+layout_mode = 2
+theme = ExtResource("9")
+text = "Join"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container" unique_id=1475839705]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_yqok8")
+autoplay = &"start"
+
+[node name="LevelSelect_Container" type="MarginContainer" parent="." unique_id=160266583]
 layout_mode = 0
 offset_top = 50.0
 offset_right = 5472.0
@@ -548,12 +573,12 @@ theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 metadata/_edit_lock_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelect_Container"]
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelect_Container" unique_id=1795668252]
 layout_mode = 2
 theme_override_constants/separation = 40
 metadata/_edit_lock_ = true
 
-[node name="Label" type="Label" parent="LevelSelect_Container/VBoxContainer"]
+[node name="Label" type="Label" parent="LevelSelect_Container/VBoxContainer" unique_id=2057130829]
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_fonts/font = SubResource("8")
@@ -563,11 +588,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="CenterContainer" type="CenterContainer" parent="LevelSelect_Container/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="LevelSelect_Container/VBoxContainer" unique_id=1907505819]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="GridContainer" type="GridContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer"]
+[node name="GridContainer" type="GridContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer" unique_id=768670445]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -575,7 +600,7 @@ theme_override_constants/h_separation = 100
 theme_override_constants/v_separation = 50
 columns = 2
 
-[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=269964990]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -584,7 +609,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("12")
 stretch_mode = 4
 
-[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=748264962]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -593,7 +618,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11")
 stretch_mode = 4
 
-[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=876093611]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -602,7 +627,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14")
 stretch_mode = 4
 
-[node name="Virtual_World" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer"]
+[node name="Virtual_World" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=154937086]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -611,12 +636,11 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("13")
 stretch_mode = 4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container"]
-libraries = {
-&"": SubResource("AnimationLibrary_u6tgg")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container" unique_id=1492345975]
+libraries/ = SubResource("AnimationLibrary_u6tgg")
 
-[node name="WaitRoom_Container" type="MarginContainer" parent="."]
+[node name="WaitRoom_Container" type="MarginContainer" parent="." unique_id=287395699]
+visible = false
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -628,10 +652,10 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="HBoxContainer" type="HBoxContainer" parent="WaitRoom_Container"]
+[node name="HBoxContainer" type="HBoxContainer" parent="WaitRoom_Container" unique_id=196105286]
 layout_mode = 2
 
-[node name="Logo" type="TextureRect" parent="WaitRoom_Container/HBoxContainer"]
+[node name="Logo" type="TextureRect" parent="WaitRoom_Container/HBoxContainer" unique_id=754985956]
 custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -640,7 +664,7 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MenuContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer"]
+[node name="MenuContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer" unique_id=1896801901]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -650,7 +674,7 @@ theme_override_constants/margin_top = 75
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 75
 
-[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer"]
+[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer" unique_id=995136705]
 layout_mode = 2
 texture = ExtResource("3")
 region_rect = Rect2(0, 0, 100, 100)
@@ -659,7 +683,7 @@ patch_margin_top = 28
 patch_margin_right = 29
 patch_margin_bottom = 28
 
-[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu"]
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu" unique_id=1381375496]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -669,26 +693,26 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer" unique_id=752078006]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Host_Username" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="Host_Username" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=904878268]
 layout_mode = 2
 theme = ExtResource("9")
 text = "Host: "
 
-[node name="Host_IP" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="Host_IP" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=724048394]
 layout_mode = 2
 theme = ExtResource("9")
 text = "Host IP: "
 
-[node name="IconLabel" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="IconLabel" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=1845461292]
 layout_mode = 2
 theme = ExtResource("9")
 text = "Select Your Icon:"
 
-[node name="IconGrid" type="GridContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="IconGrid" type="GridContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=1359665383]
 custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 size_flags_vertical = 0
@@ -696,17 +720,17 @@ theme_override_constants/h_separation = 5
 theme_override_constants/v_separation = 5
 columns = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=349297613]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer" unique_id=2009841681]
 layout_mode = 2
 theme = ExtResource("9")
 text = "Awaiting Players..."
 
-[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer" unique_id=248582657]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -717,7 +741,7 @@ patch_margin_top = 28
 patch_margin_right = 29
 patch_margin_bottom = 28
 
-[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu"]
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu" unique_id=1794569479]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -726,13 +750,13 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ItemList" type="ItemList" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer"]
+[node name="ItemList" type="ItemList" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer" unique_id=1479120472]
 layout_mode = 2
 theme = ExtResource("9")
 theme_override_colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
 theme_override_fonts/font = SubResource("12")
 
-[node name="Start_Button" type="TextureButton" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer"]
+[node name="Start_Button" type="TextureButton" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=2142748404]
 layout_mode = 2
 size_flags_horizontal = 6
 mouse_default_cursor_shape = 2
@@ -740,14 +764,14 @@ texture_normal = ExtResource("15")
 texture_pressed = ExtResource("16")
 texture_hover = ExtResource("16")
 
-[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button"]
+[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button" unique_id=581071129]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button/MarginContainer"]
+[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button/MarginContainer" unique_id=1505953497]
 layout_mode = 2
 theme = ExtResource("9")
 theme_override_fonts/font = SubResource("10")
@@ -755,7 +779,7 @@ text = "Start"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Error_Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu"]
+[node name="Error_Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu" unique_id=12817687]
 layout_mode = 0
 offset_left = 81.0
 offset_top = 305.0
@@ -765,12 +789,10 @@ theme = ExtResource("9")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="WaitRoom_Container"]
-libraries = {
-&"": SubResource("AnimationLibrary_08v5d")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WaitRoom_Container" unique_id=681960685]
+libraries/ = SubResource("AnimationLibrary_08v5d")
 
-[node name="Back_Button" parent="." instance=ExtResource("2")]
+[node name="Back_Button" parent="." unique_id=1037139428 instance=ExtResource("2")]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -782,8 +804,8 @@ offset_right = 162.889
 offset_bottom = 61.6666
 grow_vertical = 0
 
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host" to="." method="_on_Host_pressed"]
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Join/Join_Button" to="." method="_on_Join_Button_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" to="." method="_on_Host_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" to="." method="_on_Join_Button_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]

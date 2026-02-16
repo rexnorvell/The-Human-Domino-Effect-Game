@@ -1,9 +1,18 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://brneq6bi4fuba"]
+[gd_resource type="Theme" format=3 uid="uid://brneq6bi4fuba"]
 
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="1"]
 
 [sub_resource type="FontFile" id="6"]
 fallbacks = Array[Font]([ExtResource("1")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -16,19 +25,57 @@ cache/0/16/0/scale = 1.0
 
 [sub_resource type="FontFile" id="1"]
 fallbacks = Array[Font]([ExtResource("1")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
+cache/0/24/0/ascent = 0.0
+cache/0/24/0/descent = 0.0
+cache/0/24/0/underline_position = 0.0
+cache/0/24/0/underline_thickness = 0.0
+cache/0/24/0/scale = 1.0
+cache/0/300/0/ascent = 0.0
+cache/0/300/0/descent = 0.0
+cache/0/300/0/underline_position = 0.0
+cache/0/300/0/underline_thickness = 0.0
+cache/0/300/0/scale = 1.0
+cache/0/14/0/ascent = 0.0
+cache/0/14/0/descent = 0.0
+cache/0/14/0/underline_position = 0.0
+cache/0/14/0/underline_thickness = 0.0
+cache/0/14/0/scale = 1.0
 
 [sub_resource type="FontFile" id="2"]
 fallbacks = Array[Font]([ExtResource("1")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
+cache/0/14/0/ascent = 0.0
+cache/0/14/0/descent = 0.0
+cache/0/14/0/underline_position = 0.0
+cache/0/14/0/underline_thickness = 0.0
+cache/0/14/0/scale = 1.0
 
 [sub_resource type="StyleBoxEmpty" id="3"]
 
@@ -37,17 +84,17 @@ cache/0/16/0/scale = 1.0
 [sub_resource type="StyleBoxEmpty" id="5"]
 
 [resource]
-ItemList/colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
+ItemList/colors/font_color = Color(0.21230495, 0.2123048, 0.21230477, 1)
 ItemList/colors/font_color_selected = Color(0, 0, 0, 1)
 ItemList/fonts/font = SubResource("6")
 ItemList/styles/bg = SubResource("7")
 ItemList/styles/bg_focus = SubResource("8")
-Label/colors/font_color_shadow = Color(0.239216, 0.239216, 0.239216, 0.745098)
+Label/colors/font_color_shadow = Color(0.43799016, 0.100221805, 0, 1)
 Label/fonts/font = SubResource("1")
 LineEdit/colors/clear_button_color = Color(0.490196, 0.490196, 0.490196, 1)
 LineEdit/colors/clear_button_color_pressed = Color(0.6, 0.215686, 0.215686, 1)
 LineEdit/colors/cursor_color = Color(0, 0, 0, 1)
-LineEdit/colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
+LineEdit/colors/font_color = Color(0.2, 0.2, 0.2, 1)
 LineEdit/fonts/font = SubResource("2")
 LineEdit/styles/focus = SubResource("3")
 LineEdit/styles/normal = SubResource("4")

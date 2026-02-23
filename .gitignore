@@ -1,6 +1,61 @@
-# Godot 4+ specific ignores
-.godot/
-/android/
+# =========================
+# Godot 4
+# =========================
 
-# MacOS
+# Godot cache
+.godot/
+.import/
+.export/
+
+# Mono (if used)
+.mono/
+
+# =========================
+# Build Artifacts
+# =========================
+/build/
+/bin/
+/dist/
+
+# Exported executables
+*.exe
+*.pck
+*.apk
+*.aab
+*.app
+*.x86_64
+*.zip
+
+# =========================
+# OS Junk
+# =========================
+
+# macOS
 .DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+*.swp
+
+# =========================
+# Editors / IDE
+# =========================
+
+.vscode/
+.idea/
+*.code-workspace
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Temporary
+# =========================
+*.tmp
+*.bak

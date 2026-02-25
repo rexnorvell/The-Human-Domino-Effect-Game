@@ -68,7 +68,7 @@ var random_seed = 0
 
 # Keeping track of previous scene.
 # (For UI purposes mainly, back button etc)
-var prev_scene = "res://Scenes/GAME_START.tscn"
+var prev_scene = "res://Scenes/Core/GAME_START.tscn"
 var title_screen_click_flag = false
 
 
@@ -256,7 +256,7 @@ func unregister_player(id):
 
 @rpc("any_peer") func post_start_game():
 	gamestate.players_ready = []
-	var world = load("res://Scenes/Level_Scenes/Manager.tscn")
+	var world = load("res://Scenes/Core/Manager.tscn")
 	
 			
 	if multiplayer.get_unique_id() != 1:
@@ -340,7 +340,7 @@ func begin_game():
 
 #Added CS499 Fall 2024
 func start_tutorial():
-	var tutorial_scene = load("res://Scenes/Level_Scenes/Manager.tscn")
+	var tutorial_scene = load("res://Scenes/Core/Manager.tscn")
 	player_name = "Tutorial" #Set the player name to Tutorial
 	dominos = tutorial_dominos
 	random_seed = 12345 #Fixed Seed for Tutorial consistency

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0w7nvyfiwm1h"]
+
+[ext_resource type="AudioStream" uid="uid://b7f2rqpd6d3eg" path="res://audio/background/quantum.ogg" id="1"]
+[ext_resource type="Script" uid="uid://dsnj8gvlp47q5" path="res://Scenes/Core/Manager.gd" id="2"]
+
+[node name="Manager" type="Node2D"]
+script = ExtResource("2")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1")

@@ -1,0 +1,358 @@
+[gd_scene load_steps=32 format=3 uid="uid://cudgvg65rtqfj"]
+
+[ext_resource type="Texture2D" uid="uid://d0s2bjjxo35bq" path="res://UI/sprites/pond/pond.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bsue2kwakm0eb" path="res://UI/sprites/pond/r_ring.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dyo8c2ptcgy0p" path="res://UI/sprites/pond/y_ring.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dj8aaj1uma6i2" path="res://UI/sprites/pond/b_ring.png" id="4"]
+[ext_resource type="Script" uid="uid://djawqeobn75t2" path="res://Scenes/Level_3_Pond/Stone.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://c6bogqhdugavu" path="res://UI/sprites/pond/stone.png" id="6"]
+[ext_resource type="Script" uid="uid://dtfrksumyypsv" path="res://Scenes/Level_3_Pond/Pond.gd" id="7"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="8"]
+[ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Components/Character Bubble.tscn" id="9"]
+[ext_resource type="AudioStream" uid="uid://dod16p8my67xs" path="res://audio/effects/select.wav" id="10"]
+[ext_resource type="AudioStream" uid="uid://80uwjdhywcbr" path="res://audio/effects/back.wav" id="11"]
+[ext_resource type="PackedScene" uid="uid://b5p1i36ak27cu" path="res://Scenes/Level_4_DominoWorld/DominoWorld.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://bq040pq1lpnqx" path="res://UI/sprites/pond/r_stone.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bj4cwpnj5dweo" path="res://UI/sprites/pond/br_stone.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://b5xvdp4v1oowj" path="res://UI/sprites/pond/ybr_stone.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://d0vqqep6tpr38" path="res://UI/sprites/pond/yr_stone.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://cgnmw0d3d3frw" path="res://UI/sprites/pond/yb_stone.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://bd8fslm8my28u" path="res://UI/sprites/pond/y_stone.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://bc1edsrop3cdd" path="res://UI/sprites/pond/b_stone.png" id="19"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 900.0
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 900.0
+
+[sub_resource type="CircleShape2D" id="3"]
+radius = 900.0
+
+[sub_resource type="CircleShape2D" id="4"]
+radius = 350.0
+
+[sub_resource type="CircleShape2D" id="5"]
+radius = 350.0
+
+[sub_resource type="CircleShape2D" id="6"]
+radius = 350.0
+
+[sub_resource type="CircleShape2D" id="7"]
+radius = 300.0
+
+[sub_resource type="FontFile" id="8"]
+fallbacks = Array[Font]([ExtResource("8")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="SpriteFrames" id="9"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19")
+}],
+"loop": true,
+"name": &"b",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14")
+}],
+"loop": true,
+"name": &"br",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13")
+}],
+"loop": true,
+"name": &"r",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18")
+}],
+"loop": true,
+"name": &"y",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17")
+}],
+"loop": true,
+"name": &"yb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15")
+}],
+"loop": true,
+"name": &"ybr",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16")
+}],
+"loop": true,
+"name": &"yr",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="10"]
+radius = 72.0
+height = 144.0
+
+[sub_resource type="FontFile" id="11"]
+fallbacks = Array[Font]([ExtResource("8")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="12"]
+fallbacks = Array[Font]([ExtResource("8")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[node name="Pond" type="Node2D"]
+position = Vector2(550, 300)
+scale = Vector2(0.2, 0.2)
+script = ExtResource("7")
+next_scene = ExtResource("12")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(26, 24)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+
+[node name="b_ring" type="Sprite2D" parent="."]
+position = Vector2(-500, 500)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("4")
+
+[node name="r_ring" type="Sprite2D" parent="."]
+position = Vector2(500, 500)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("2")
+
+[node name="y_ring" type="Sprite2D" parent="."]
+position = Vector2(0, -500)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("3")
+
+[node name="y_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="y_area"]
+position = Vector2(0, -488)
+shape = SubResource("1")
+
+[node name="b_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="b_area"]
+position = Vector2(-536, 520)
+shape = SubResource("2")
+
+[node name="r_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="r_area"]
+position = Vector2(496, 520)
+shape = SubResource("3")
+
+[node name="yb_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="yb_area"]
+position = Vector2(-448, -56)
+shape = SubResource("4")
+
+[node name="yr_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="yr_area"]
+position = Vector2(416, -88)
+shape = SubResource("5")
+
+[node name="br_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="br_area"]
+position = Vector2(0, 776)
+shape = SubResource("6")
+
+[node name="ybr_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ybr_area"]
+position = Vector2(0, 80)
+shape = SubResource("7")
+
+[node name="Choice" type="Label" parent="."]
+offset_left = -2456.0
+offset_top = -1336.0
+offset_right = -1627.0
+offset_bottom = -1158.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Yellow Choice"
+
+[node name="Health" type="Label" parent="."]
+offset_left = -200.0
+offset_top = -912.0
+offset_right = -147.0
+offset_bottom = -888.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Yellow"
+
+[node name="Liberty" type="Label" parent="."]
+offset_left = -1040.0
+offset_top = 600.0
+offset_right = -1001.0
+offset_bottom = 623.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Blue"
+
+[node name="Happiness" type="Label" parent="."]
+offset_left = 504.0
+offset_top = 600.0
+offset_right = 539.0
+offset_bottom = 624.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Red"
+
+[node name="Correct" type="Label" parent="."]
+offset_left = 1568.0
+offset_top = 352.0
+offset_right = 1628.0
+offset_bottom = 375.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Correct:"
+
+[node name="Correct_num" type="Label" parent="."]
+offset_left = 2048.0
+offset_top = 360.0
+offset_right = 2087.0
+offset_bottom = 383.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "0"
+
+[node name="Indicator" type="Label" parent="."]
+offset_left = 1544.0
+offset_top = 688.0
+offset_right = 1666.0
+offset_bottom = 738.0
+scale = Vector2(5, 5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("8")
+text = "Make some
+healthy choices!"
+
+[node name="Character" parent="." instance=ExtResource("9")]
+visible = false
+position = Vector2(-1934.5, 16.0002)
+scale = Vector2(5, 5)
+
+[node name="Stone" type="Area2D" parent="."]
+scale = Vector2(2.5, 2.5)
+script = ExtResource("5")
+
+[node name="stone" type="AnimatedSprite2D" parent="Stone"]
+position = Vector2(0.00012207, 0)
+scale = Vector2(0.4, 0.4)
+sprite_frames = SubResource("9")
+animation = &"br"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone"]
+rotation = 1.57079
+shape = SubResource("10")
+
+[node name="Popup" type="Popup" parent="."]
+size = Vector2i(1154, 919)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Popup"]
+offset_left = 109.0
+offset_top = 200.0
+offset_right = 1637.0
+offset_bottom = 680.0
+theme_override_fonts/normal_font = SubResource("11")
+text = "Excellent work! Now, you must make choices that promote health, liberty, and happiness."
+
+[node name="Button" type="Button" parent="Popup"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = -15.5
+offset_right = 35.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = SubResource("12")
+text = "Let's Go!"
+
+[node name="CorrectSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10")
+volume_db = -10.0
+
+[node name="IncorrectSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11")
+volume_db = -10.0
+
+[connection signal="input_event" from="y_area" to="." method="_on_y_area_input_event"]
+[connection signal="mouse_entered" from="y_area" to="." method="_on_y_area_mouse_entered"]
+[connection signal="mouse_exited" from="y_area" to="." method="_on_y_area_mouse_exited"]
+[connection signal="input_event" from="b_area" to="." method="_on_b_area_input_event"]
+[connection signal="mouse_entered" from="b_area" to="." method="_on_b_area_mouse_entered"]
+[connection signal="mouse_exited" from="b_area" to="." method="_on_b_area_mouse_exited"]
+[connection signal="input_event" from="r_area" to="." method="_on_r_area_input_event"]
+[connection signal="mouse_entered" from="r_area" to="." method="_on_r_area_mouse_entered"]
+[connection signal="mouse_exited" from="r_area" to="." method="_on_r_area_mouse_exited"]
+[connection signal="input_event" from="yb_area" to="." method="_on_yb_area_input_event"]
+[connection signal="input_event" from="yr_area" to="." method="_on_yr_area_input_event"]
+[connection signal="input_event" from="br_area" to="." method="_on_br_area_input_event"]
+[connection signal="input_event" from="ybr_area" to="." method="_on_ybr_area_input_event"]
+[connection signal="pressed" from="Popup/Button" to="." method="_on_Button_pressed"]

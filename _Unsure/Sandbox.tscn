@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmv3bhev4mclq"]
+
+[ext_resource type="PackedScene" uid="uid://bhfrwjqgni8xo" path="res://Scenes/Components/Player.tscn" id="1"]
+[ext_resource type="Script" uid="uid://dbrf0y8cswl88" path="res://_Unsure/Sandbox.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://cqq544vjcr0t3" path="res://Scenes/Core/GUI.tscn" id="3"]
+
+[node name="World" type="Node3D"]
+script = ExtResource("2")
+
+[node name="GUI" parent="." instance=ExtResource("3")]
+
+[node name="Player" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 35.6584, 0)
+
+[node name="Chunks" type="Node3D" parent="."]

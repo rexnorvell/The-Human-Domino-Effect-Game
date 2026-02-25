@@ -1,0 +1,142 @@
+[gd_scene load_steps=21 format=3 uid="uid://h5lyfqvnawki"]
+
+[ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
+[ext_resource type="Script" uid="uid://3udsnc7iq026" path="res://Scenes/Components/Elcitrap1.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://xeubxsxh0hhc" path="res://UI/sprites/red_wave2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ma5lpxmr3jvg" path="res://UI/sprites/elcitrap_g.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bn76wi5q3sr1g" path="res://UI/sprites/red_wave1.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://b8h3tyfc5jdb0" path="res://UI/sprites/red_wave4.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://lmup2roi5ykd" path="res://UI/sprites/red_wave3.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c04xhcxj7ynfc" path="res://UI/sprites/elcitrap_r.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://5xrdpv0tmj58" path="res://UI/sprites/blue_wave1.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bmh2sv0l34tcp" path="res://UI/sprites/blue_wave2.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bmjal1fijsvjh" path="res://UI/sprites/blue_wave3.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://l2uxh578f125" path="res://UI/sprites/green_wave3.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bvckj6ejo4dra" path="res://UI/sprites/blue_wave4.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://dv8sv278q2yew" path="res://UI/sprites/green_wave1.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bjrqrs7bxewit" path="res://UI/sprites/green_wave2.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://bcitdg5np4i3p" path="res://UI/sprites/green_wave4.png" id="16"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="17"]
+
+[sub_resource type="SpriteFrames" id="1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13")
+}],
+"loop": true,
+"name": &"blue",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16")
+}],
+"loop": true,
+"name": &"green",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}],
+"loop": true,
+"name": &"red",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}],
+"loop": true,
+"name": &"static_blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4")
+}],
+"loop": true,
+"name": &"static_green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8")
+}],
+"loop": true,
+"name": &"static_red",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="2"]
+radius = 25.1859
+height = 181.983
+
+[sub_resource type="FontFile" id="3"]
+fallbacks = Array[Font]([ExtResource("17")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[node name="Elcitrap1" type="RigidBody2D"]
+collision_layer = 2
+input_pickable = true
+gravity_scale = 0.0
+script = ExtResource("2")
+min_speed = 300
+max_speed = 400
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.6, 0.3)
+sprite_frames = SubResource("1")
+animation = &"static_blue"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.57079
+shape = SubResource("2")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(1.18501, 2.04959)
+scale = Vector2(1.44224, 1.42331)
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -24.0
+offset_top = -8.0
+offset_right = 24.0
+offset_bottom = 6.0
+theme_override_fonts/font = SubResource("3")
+
+[connection signal="body_entered" from="." to="." method="_on_Elcitrap1_body_entered"]
+[connection signal="body_shape_entered" from="." to="." method="_on_Elcitrap1_body_shape_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

@@ -1,0 +1,202 @@
+[gd_scene load_steps=20 format=3 uid="uid://2kb7jdtcgrfm"]
+
+[ext_resource type="Texture2D" uid="uid://c607vhgg8so8d" path="res://UI/sprites/character_creation_background.jpeg" id="1"]
+[ext_resource type="Script" uid="uid://yks12t3egsw3" path="res://Scenes/Level_2_CharacterCreation/CharacterCreation.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://danf0e72y7l2m" path="res://Scenes/Components/StaticElcitrap.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://bc7xpn3jmgg3s" path="res://UI/sprites/character_sprites/bodies/0.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://7eimaelymx4d" path="res://UI/sprites/left_arrow.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c0nnyko54qexu" path="res://UI/sprites/character_sprites/clothes/0.png" id="6"]
+[ext_resource type="PackedScene" uid="uid://bifgc6bc832oq" path="res://Scenes/Components/Animated_Fire.tscn" id="7"]
+[ext_resource type="Texture2D" uid="uid://dbwuwes6pfjfm" path="res://UI/sprites/right_arrow.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="9"]
+[ext_resource type="PackedScene" uid="uid://cudgvg65rtqfj" path="res://Scenes/Level_3_Pond/Pond.tscn" id="10"]
+[ext_resource type="Texture2D" uid="uid://b0exrp8j8euyr" path="res://UI/sprites/character_sprites/front_hair/0.png" id="11"]
+[ext_resource type="Script" uid="uid://bcsycki4udhu" path="res://Scenes/Level_2_CharacterCreation/CreationRect.gd" id="12"]
+[ext_resource type="Script" uid="uid://cmmswogjh6xad" path="res://Scenes/Level_2_CharacterCreation/CreationAnimations.gd" id="13"]
+[ext_resource type="Script" uid="uid://cjlfr3j6cmixr" path="res://Scenes/Level_2_CharacterCreation/CreationZoom.gd" id="14"]
+
+[sub_resource type="Animation" id="1"]
+resource_name = "Fade"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+
+[sub_resource type="Animation" id="3"]
+resource_name = "Screen_Unwipe"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ZIndexSetter/ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k4fbn"]
+_data = {
+&"Fade": SubResource("1"),
+&"Screen_Unwipe": SubResource("3")
+}
+
+[sub_resource type="Animation" id="4"]
+resource_name = "Zoom"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.5, 0.5), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pgici"]
+_data = {
+&"Zoom": SubResource("4")
+}
+
+[node name="CharacterCreation" type="Node2D"]
+script = ExtResource("2")
+next_scene = ExtResource("10")
+Elcitrap = ExtResource("3")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+scale = Vector2(0.235, 0.246)
+texture = ExtResource("1")
+stretch_mode = 5
+
+[node name="Animated_Fire_Texture" parent="." instance=ExtResource("7")]
+
+[node name="clothes" type="Sprite2D" parent="."]
+light_mask = 2
+z_index = 2
+position = Vector2(512, 332)
+texture = ExtResource("6")
+
+[node name="body" type="Sprite2D" parent="."]
+light_mask = 2
+z_index = 1
+position = Vector2(512, 319.5)
+texture = ExtResource("4")
+
+[node name="front_hair" type="Sprite2D" parent="."]
+light_mask = 2
+z_index = 2
+position = Vector2(512, 332)
+texture = ExtResource("11")
+
+[node name="back_hair" type="Sprite2D" parent="."]
+light_mask = 2
+position = Vector2(512, 332)
+texture = ExtResource("11")
+
+[node name="hair_left" type="TextureButton" parent="."]
+offset_left = 328.0
+offset_top = 24.0
+offset_right = 840.0
+offset_bottom = 468.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("5")
+
+[node name="hair_right" type="TextureButton" parent="."]
+offset_left = 584.0
+offset_top = 24.0
+offset_right = 1096.0
+offset_bottom = 468.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("8")
+
+[node name="body_left" type="TextureButton" parent="."]
+offset_left = 280.0
+offset_top = 136.0
+offset_right = 792.0
+offset_bottom = 580.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("5")
+
+[node name="body_right" type="TextureButton" parent="."]
+offset_left = 632.0
+offset_top = 136.0
+offset_right = 1144.0
+offset_bottom = 580.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("8")
+
+[node name="clothes_left" type="TextureButton" parent="."]
+offset_left = 256.0
+offset_top = 264.0
+offset_right = 768.0
+offset_bottom = 708.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("5")
+
+[node name="clothes_right" type="TextureButton" parent="."]
+offset_left = 656.0
+offset_top = 264.0
+offset_right = 1168.0
+offset_bottom = 708.0
+scale = Vector2(0.214384, 0.214384)
+texture_normal = ExtResource("8")
+
+[node name="next" type="TextureButton" parent="."]
+offset_left = 832.0
+offset_top = 392.0
+offset_right = 1464.0
+offset_bottom = 1129.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("9")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_k4fbn")
+}
+script = ExtResource("13")
+
+[node name="ZIndexSetter" type="Node2D" parent="."]
+z_index = 6
+
+[node name="ColorRect" type="ColorRect" parent="ZIndexSetter"]
+offset_right = 1024.0
+offset_bottom = 600.0
+color = Color(0, 0, 0, 1)
+script = ExtResource("12")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(512, 300)
+
+[node name="ZoomPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_pgici")
+}
+script = ExtResource("14")
+
+[connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_CharacterCreation_trigger_animation"]
+[connection signal="pressed" from="hair_left" to="." method="_on_hair_left_pressed"]
+[connection signal="pressed" from="hair_right" to="." method="_on_hair_right_pressed"]
+[connection signal="pressed" from="body_left" to="." method="_on_body_left_pressed"]
+[connection signal="pressed" from="body_right" to="." method="_on_body_right_pressed"]
+[connection signal="pressed" from="clothes_left" to="." method="_on_clothes_left_pressed"]
+[connection signal="pressed" from="clothes_right" to="." method="_on_clothes_right_pressed"]
+[connection signal="pressed" from="next" to="." method="_on_next_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="trigger_animation" from="ZIndexSetter/ColorRect" to="AnimationPlayer" method="_on_ColorRect_trigger_animation"]
+[connection signal="trigger_zoom" from="ZIndexSetter/ColorRect" to="ZoomPlayer" method="_on_ColorRect_trigger_zoom" flags=6]

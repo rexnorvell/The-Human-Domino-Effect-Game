@@ -1,0 +1,120 @@
+[gd_scene load_steps=15 format=3 uid="uid://dtfwm3j3judh2"]
+
+[ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
+[ext_resource type="Script" uid="uid://bibgt27a0gvq" path="res://Scenes/Components/CapturedElcitrap.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://c04xhcxj7ynfc" path="res://UI/sprites/elcitrap_r.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ma5lpxmr3jvg" path="res://UI/sprites/elcitrap_g.png" id="4"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="6"]
+[ext_resource type="Texture2D" uid="uid://cjubjlib62b5g" path="res://UI/sprites/science_icon.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://da4biu7ur7m2m" path="res://UI/sprites/humanities_icon.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://b1rrei01e0vjg" path="res://UI/sprites/arts_icon.png" id="9"]
+[ext_resource type="AudioStream" uid="uid://80uwjdhywcbr" path="res://audio/effects/back.wav" id="10"]
+[ext_resource type="AudioStream" uid="uid://bjdomk6fvs8ts" path="res://audio/effects/next.wav" id="11"]
+
+[sub_resource type="SpriteFrames" id="1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}],
+"loop": true,
+"name": &"blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4")
+}],
+"loop": true,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
+"loop": true,
+"name": &"red",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 26.7374
+
+[sub_resource type="FontFile" id="3"]
+fallbacks = Array[Font]([ExtResource("6")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="SpriteFrames" id="5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9")
+}],
+"loop": true,
+"name": &"arts",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8")
+}],
+"loop": true,
+"name": &"humanities",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7")
+}],
+"loop": true,
+"name": &"science",
+"speed": 5.0
+}]
+
+[node name="CapturedElcitrap" type="RigidBody2D"]
+collision_layer = 2
+input_pickable = true
+gravity_scale = 0.0
+script = ExtResource("2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("1")
+animation = &"green"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("2")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -24.0
+offset_top = -8.0
+offset_right = 24.0
+offset_bottom = 6.0
+theme_override_fonts/font = SubResource("3")
+
+[node name="Popup" type="Popup" parent="."]
+visible = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Popup"]
+self_modulate = Color(1, 1, 1, 0.356863)
+position = Vector2(29.8628, 29.457)
+scale = Vector2(0.07, 0.07)
+sprite_frames = SubResource("5")
+animation = &"humanities"
+
+[node name="Select" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11")
+volume_db = -11.0
+
+[node name="Deselect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10")
+volume_db = -11.0
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

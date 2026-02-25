@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="The Domino Effect"
-run/main_scene="res://Scenes/GAME_START.tscn"
+run/main_scene="res://Scenes/Core/GAME_START.tscn"
 config/features=PackedStringArray("4.6")
 config/icon="res://UI/sprites/gameboard.png"
 

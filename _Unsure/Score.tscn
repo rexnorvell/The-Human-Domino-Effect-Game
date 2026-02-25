@@ -1,8 +1,8 @@
 [gd_scene load_steps=13 format=3 uid="uid://cx43fxqtn64eq"]
 
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="1"]
-[ext_resource type="Script" uid="uid://df0eaecey1h31" path="res://Scripts/Button.gd" id="2"]
-[ext_resource type="Script" uid="uid://bygek8blv5iec" path="res://Scripts/Dismiss.gd" id="3"]
+[ext_resource type="Script" uid="uid://df0eaecey1h31" path="res://_Unsure/Button.gd" id="2"]
+[ext_resource type="Script" uid="uid://bygek8blv5iec" path="res://_Unsure/Dismiss.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://bc7xpn3jmgg3s" path="res://UI/sprites/character_sprites/bodies/0.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://danf0e72y7l2m" path="res://Scenes/Components/StaticElcitrap.tscn" id="5"]
 [ext_resource type="Texture2D" uid="uid://c0nnyko54qexu" path="res://UI/sprites/character_sprites/clothes/0.png" id="7"]

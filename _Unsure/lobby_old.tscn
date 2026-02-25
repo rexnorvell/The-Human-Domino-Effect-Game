@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bmvuifcpuv061"]
 
-[ext_resource type="Script" uid="uid://w1chnog6n33y" path="res://Scripts/Multiplayer_Scripts/lobby.gd" id="1"]
+[ext_resource type="Script" uid="uid://w1chnog6n33y" path="res://_Unsure/lobby_multiplayer.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://s4baw754xk74" path="res://audio/background/main.ogg" id="2"]
 [ext_resource type="Texture2D" uid="uid://dib1w1judeeb2" path="res://UI/Menu_Sprites/background.png" id="3"]
 [ext_resource type="FontFile" path="res://UI/Miscellaneous/Font.tres" id="4"]
@@ -8,9 +8,9 @@
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="6"]
 [ext_resource type="PackedScene" uid="uid://cyb1ooqucssw0" path="res://_Unsure/LevelSelect.tscn" id="7"]
 [ext_resource type="FontFile" path="res://addons/gdUnit3/src/update/assets/fonts/RobotoMono-h5.tres" id="8"]
-[ext_resource type="Script" uid="uid://bao2v77n1vinx" path="res://Scripts/Menu_Scripts/Menu.gd" id="9"]
-[ext_resource type="Script" uid="uid://fya3yuj65wsc" path="res://Scripts/Menu_Scripts/Checklist.gd" id="11"]
-[ext_resource type="PackedScene" uid="uid://dj43t4jxdkqut" path="res://Scenes/LoadButton.tscn" id="12"]
+[ext_resource type="Script" uid="uid://bao2v77n1vinx" path="res://_Unsure/Menu.gd" id="9"]
+[ext_resource type="Script" uid="uid://fya3yuj65wsc" path="res://_Unsure/Checklist.gd" id="11"]
+[ext_resource type="PackedScene" uid="uid://dj43t4jxdkqut" path="res://_Unsure/LoadButton.tscn" id="12"]
 
 [sub_resource type="FontFile" id="5"]
 subpixel_positioning = 0

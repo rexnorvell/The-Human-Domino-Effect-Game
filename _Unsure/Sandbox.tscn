@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dmv3bhev4mclq"]
 
 [ext_resource type="PackedScene" uid="uid://bhfrwjqgni8xo" path="res://Scenes/Components/Player.tscn" id="1"]
-[ext_resource type="Script" uid="uid://dbrf0y8cswl88" path="res://Scripts/Level_Scripts/Sandbox.gd" id="2"]
+[ext_resource type="Script" uid="uid://dbrf0y8cswl88" path="res://_Unsure/Sandbox.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://cqq544vjcr0t3" path="res://Scenes/Core/GUI.tscn" id="3"]
 
 [node name="World" type="Node3D"]

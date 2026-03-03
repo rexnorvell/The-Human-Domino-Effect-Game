@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://clj23haf5g65i"]
+
+[ext_resource type="Theme" uid="uid://dlygu0mhr0ual" path="res://UI/button.tres" id="1_u7l6n"]
+[ext_resource type="Script" uid="uid://bd51678tnfgro" path="res://Scenes/Components/animated_button.gd" id="2_ytncc"]
+
+[node name="Button" type="Button" unique_id=170246650]
+offset_right = 52.0
+offset_bottom = 39.0
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_u7l6n")
+text = "Text"
+script = ExtResource("2_ytncc")

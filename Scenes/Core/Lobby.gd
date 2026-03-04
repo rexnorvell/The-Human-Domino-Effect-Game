@@ -185,16 +185,20 @@ func _update_start_button_state() -> void:
 		print("ERROR: Start button node not found!")
 		return
 
-	# never hide it
-	start_button.visible = true
-	start_button.show()
+	# Only the host is allowed to see and click the Start button
+	if multiplayer.multiplayer_peer != null and multiplayer.is_server():
+		start_button.visible = true
+		start_button.show()
+		
+		# Enable only if an icon is chosen
+		var has_selected_icon := selected_icon != null and selected_icon != ""
+		start_button.disabled = not has_selected_icon
 
-	# enable only if an icon is chosen
-	var has_selected_icon := selected_icon != null and selected_icon != ""
-	start_button.disabled = not has_selected_icon
-
-	print("Start button visible. Disabled? ", start_button.disabled)
-
+		print("Start button visible. Disabled? ", start_button.disabled)
+	else:
+		# Hide it completely for clients
+		start_button.visible = false
+		start_button.hide()
 
 # Returns the Texture2D for an icon name like "basket.png",
 # or null if we can't resolve it.

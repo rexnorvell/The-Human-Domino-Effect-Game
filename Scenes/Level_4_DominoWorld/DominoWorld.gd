@@ -339,7 +339,6 @@ func _on_Start_pressed() -> void:
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	
-	# (Fall 2025)
 	_help_Flag()
 
 # initialize everyone's dominos
@@ -539,7 +538,7 @@ func place_domino(num):
 			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 
 			# if helped another player on their path, get a wellness bead
-			var path_node = get_node_or_null("Path2D" + str(num + 1))
+			var path_node = get_node_or_null("Path" + str(num + 1))
 			if num < 6 and (path_node and path_node.temp == true):
 				increment_wellness_beads(self_num + 1)
 				rpc("increment_wellness_beads", self_num + 1)
@@ -875,16 +874,20 @@ func _on_Help_pressed() -> void:
 		$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
-# add player's path denoted by num to all player's screens
+# Add player's path denoted by num to all player's screens
 @rpc("any_peer") func add_path(num):
 	turn = (turn + 1) % len(gamestate.players)
 	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
-	get_node("Path2D" + str(num)).visible = true
+	var path_node = get_node_or_null("Path" + str(num))
+	if path_node:
+		path_node.visible = true
 
-# remove player's path denoted by num from all player's screens
+# Remove player's path denoted by num from all player's screens
 @rpc("any_peer") func remove_path(num):
-	if get_node("Path2D" + str(num)).temp:
-		get_node("Path2D" + str(num)).visible = false
+	var path_node = get_node_or_null("Path" + str(num))
+	# Safely check if the node exists and if temp is true
+	if path_node and "temp" in path_node and path_node.temp:
+		path_node.visible = false
 
 func _close_WellnessBead_popup() -> void:
 	$WellnessBeadPopup.visible = false

@@ -8,18 +8,28 @@ extends Control
 @onready var waitroom_host_ip = $WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Host_IP
 
 var local_ip = get_local_ip()
-var selected_icon: String = "basket.png"  
+var selected_icon: String = ""  
 var player_icon_buttons: Dictionary[String, Button] = {}
 var icons_loaded: bool = false
 
+const ICON_NAMES: Array[String] = [
+	"basket.png", "boat.png", "bowandarrow.png", "campfire.png",
+	"fire.png", "spear.png", "stone.png", "sun.png", "sunshine.png", "wheel.png"
+]
 
 func _ready():
-			
 	LevelSelectContainer.visible = false
 	WaitRoomContainer.visible = false
 	
 	# gamestate.gd signal event listeners
 	gamestate.connect("player_list_changed", Callable(self, "refresh_lobby"))
+	
+	# Listen for the back button being clicked so we can cleanly disconnect
+	if has_node("Back_Button"):
+		$Back_Button.pressed.connect(_on_back_button_pressed)
+		
+	# Set the placeholder text to your local IP address
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.placeholder_text = get_local_ip()
 
 func _on_Host_pressed():
 	if get_player_name() == "":
@@ -37,31 +47,21 @@ func _on_Join_Button_pressed():
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
 	
-	var ip =  $Connect/JoinBox/IPAddress.text # $Connect/JoinBox/IPAddress is null
-	if not ip.is_valid_ip_address():
-		set_error_label("Invalid IP Address")
-		return
-		
-	#get host name
-	var host_ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
-	#if host_ip == $Lobby_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text:
-		#set_error_label("Host and player can not have the same name.")
-		#SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
-		#return
+	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
+	if ip.is_empty():
+			ip = str(local_ip)
 
-	set_error_label("")
-	
 	# Disable Host and Join buttons
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Host.disabled = true
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Join/Join_Button.disabled = true
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = true
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = true
 
 	var player_name = get_player_name()
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: ")
-	waitroom_host_ip.set_text("Host IP: " + host_ip)
+	waitroom_host_ip.set_text("Host IP: " + ip)
 	
 	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
-	gamestate.join_game(host_ip, player_name)
+	gamestate.join_game(ip, player_name)
 	
 	# Wait for animation to finish and everything to settle
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
@@ -79,9 +79,6 @@ func _on_Join_Button_pressed():
 	print("=== Loading player icons (Join) ===")
 	load_player_icons()
 	print("=== Icons loaded. Total buttons: ", player_icon_buttons.size(), " ===")
-	
-	# Set initial icon for joining player
-	set_player_icon(selected_icon)
 	
 	# Ensure Start button is visible and configured
 	_update_start_button_state()
@@ -107,6 +104,9 @@ func refresh_lobby():
 
 	# Ensure Start button is visible and properly configured
 	_update_start_button_state()
+	
+	if multiplayer.is_server():
+		rpc("sync_all_icons", gamestate.player_icon)
 
 # handle which level to begin at / randomize dominos
 func handle_level(level):
@@ -149,9 +149,6 @@ func handle_level(level):
 	load_player_icons()
 	print("=== Icons loaded. Total buttons: ", player_icon_buttons.size(), " ===")
 	
-	# Set initial icon for host
-	set_player_icon(selected_icon)
-	
 	# Ensure Start button is visible and enabled (host always can start after selecting icon)
 	_update_start_button_state()
 
@@ -164,15 +161,13 @@ func set_player_name(name: String):
 func set_error_label(text: String):
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/Error_Label.set_text(text)
 
-func get_local_ip():
-	var ip_address = "null"
-	
-	if OS.has_feature("Windows"):
-		ip_address = IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),1)
-	elif OS.has_feature("X11") or OS.has_feature("OSX"):
-		ip_address = IP.resolve_hostname(str(OS.get_environment("HOSTNAME")),1)
-
-	return ip_address
+func get_local_ip() -> String:
+	for addr in IP.get_local_addresses():
+		# Look for standard physical home network ranges
+		if addr.begins_with("192.168.") or addr.begins_with("10."):
+			return addr
+	# Fallback if disconnected from all networks
+	return "127.0.0.1"
 
 # Update Start button visibility and enabled state
 func _update_start_button_state() -> void:
@@ -231,22 +226,9 @@ func load_player_icons() -> void:
 		child.queue_free()
 	player_icon_buttons.clear()
 
-	var icon_names: Array[String] = [
-		"basket.png",
-		"boat.png",
-		"bowandarrow.png",
-		"campfire.png",
-		"fire.png",
-		"spear.png",
-		"stone.png",
-		"sun.png",
-		"sunshine.png",
-		"wheel.png"
-	]
-
 	print("Loading icons into IconGrid...")
 
-	for icon_name in icon_names:
+	for icon_name in ICON_NAMES:
 		var tex: Texture2D = _get_icon_texture(icon_name)
 		if tex == null:
 			continue  # skip this one, we already logged why
@@ -324,13 +306,54 @@ func set_player_icon(icon_name: String):
 
 @rpc("any_peer") func sync_player_icon(player_id: int, icon_name: String):
 	gamestate.player_icon[player_id] = icon_name
+	if multiplayer.is_server():
+		for peer in multiplayer.get_peers():
+			if peer != player_id: # Don't echo it back to the client who just sent it
+				rpc_id(peer, "sync_player_icon", player_id, icon_name)
+	_highlight_selected_icon()
 
 func _highlight_selected_icon() -> void:
+	var taken_icons = gamestate.player_icon.values()
+	
 	for icon_file: String in player_icon_buttons.keys():
 		var btn: Button = player_icon_buttons[icon_file]
 		if not is_instance_valid(btn):
 			continue
 		btn.button_pressed = (icon_file == selected_icon)
+		
+		if icon_file in taken_icons and icon_file != selected_icon:
+			btn.disabled = true
+			btn.modulate = Color(0.4, 0.4, 0.4, 0.8) # Darkens the texture
+		else:
+			btn.disabled = false
+			btn.modulate = Color.WHITE
+
+@rpc("any_peer", "call_local") func sync_all_icons(full_icon_dict: Dictionary):
+	# Update local dictionary to match the host
+	gamestate.player_icon = full_icon_dict
+	var my_id = multiplayer.get_unique_id()
+	
+	# If I haven't picked an icon yet, pick a random unique one
+	if not gamestate.player_icon.has(my_id):
+		var available = _get_available_icons()
+		if available.size() > 0:
+			selected_icon = available.pick_random()
+		else:
+			selected_icon = "basket.png"
+		set_player_icon(selected_icon)
+	if icons_loaded:
+		_highlight_selected_icon()
+
+func _get_available_icons() -> Array[String]:
+	var taken = gamestate.player_icon.values()
+	var available: Array[String] = []
+	for icon in ICON_NAMES:
+		if not icon in taken:
+			available.append(icon)
+	return available
+	
+func _on_back_button_pressed() -> void:
+	gamestate.disconnect_network()
 
 func _on_Char_Creation_pressed():
 	handle_level("Agency")

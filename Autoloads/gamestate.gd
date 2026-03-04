@@ -214,29 +214,39 @@ func _connected_fail():
 					wellness_beads[id] = SaveManager.Save["0"].wellness_beads[keys[i]]
 				if(SaveManager.Save["0"].player_icon.keys().find(keys[i]) != -1):
 					player_icon[id] = SaveManager.Save["0"].player_icon[keys[i]]
-				else:
-					player_icon[id] = "basket.png"
 		if(not CharacterFound):
 			total_points[id] = 0
 			elcitraps[id] = []
 			hair[id] = 0
 			clothes[id] = 0
 			body[id] = 0
-			player_icon[id] = "basket.png"
 	else:
 		total_points[id] = 0
 		elcitraps[id] = []
 		hair[id] = 0
 		clothes[id] = 0
 		body[id] = 0
-		player_icon[id] = "basket.png"
 	emit_signal("player_list_changed")
 
 
 func unregister_player(id):
 	players.erase(id)
+	if player_icon.has(id):
+		player_icon.erase(id)
 	emit_signal("player_list_changed")
 
+func disconnect_network():
+	# Explicitly close the ENet connection so the server knows we left
+	if peer != null:
+		peer.close()
+		peer = null
+		
+	multiplayer.multiplayer_peer = null
+	
+	# Scrub the local data for the next time they join
+	players.clear()
+	player_icon.clear()
+	players_ready.clear()
 
 @rpc("any_peer") func pre_start_game():
 	# Change scene.
@@ -301,7 +311,7 @@ func join_game(ip, new_player_name):
 	
 # host sends level to player who asked
 @rpc("any_peer") func get_level():
-	var id = get_tree().get_remote_sender_id()
+	var id = multiplayer.get_remote_sender_id()
 	rpc_id(id, "set_level", first_level)
 	
 # player sets their level
@@ -310,7 +320,7 @@ func join_game(ip, new_player_name):
 	
 # host sends random seed to player who asked
 @rpc("any_peer") func get_random_seed():
-	var id = get_tree().get_remote_sender_id()
+	var id = multiplayer.get_remote_sender_id()
 	rpc_id(id, "set_random_seed", random_seed)
 	
 # player sets their random seed
@@ -363,8 +373,8 @@ func save_scene_path(scene_path):
 	prev_scene = scene_path
 
 func _ready():
-	get_tree().connect("peer_connected", Callable(self, "_player_connected"))
-	get_tree().connect("peer_disconnected", Callable(self, "_player_disconnected"))
-	get_tree().connect("connected_to_server", Callable(self, "_connected_ok"))
-	get_tree().connect("connection_failed", Callable(self, "_connected_fail"))
-	get_tree().connect("server_disconnected", Callable(self, "_server_disconnected"))
+	multiplayer.peer_connected.connect(_player_connected)
+	multiplayer.peer_disconnected.connect(_player_disconnected)
+	multiplayer.connected_to_server.connect(_connected_ok)
+	multiplayer.connection_failed.connect(_connected_fail)
+	multiplayer.server_disconnected.connect(_server_disconnected)

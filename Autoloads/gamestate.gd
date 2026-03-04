@@ -302,11 +302,15 @@ func host_game(new_player_name):
 	var id = multiplayer.get_unique_id()
 	
 	rpc("register_player", player_name, 0)
-
+	
 func join_game(ip, new_player_name):
 	player_name = new_player_name
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(ip, DEFAULT_PORT)
+	var err = peer.create_client(ip, DEFAULT_PORT)
+	# If it fails instantly (e.g., invalid IP format), abort and notify UI
+	if err != OK:
+		_connected_fail()
+		return
 	multiplayer.multiplayer_peer = peer
 	
 # host sends level to player who asked

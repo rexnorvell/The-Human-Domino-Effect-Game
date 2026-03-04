@@ -23,6 +23,8 @@ func _ready():
 	
 	# gamestate.gd signal event listeners
 	gamestate.connect("player_list_changed", Callable(self, "refresh_lobby"))
+	gamestate.connection_succeeded.connect(_on_connection_success)
+	gamestate.connection_failed.connect(_on_connection_failed)
 	
 	# Listen for the back button being clicked so we can cleanly disconnect
 	if has_node("Back_Button"):
@@ -51,37 +53,44 @@ func _on_Join_Button_pressed():
 	if ip.is_empty():
 			ip = str(local_ip)
 
+	set_error_label("Connecting...")
+
 	# Disable Host and Join buttons
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = true
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = true
 
-	var player_name = get_player_name()
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
 	
+	gamestate.join_game(ip, get_player_name())
+	get_tree().create_timer(2.0).timeout.connect(_on_join_timeout)
+
+func _on_join_timeout():
+	if $Lobby_Container/HBoxContainer/MenuContainer/Menu/Error_Label.text == "Connecting...":
+		gamestate.disconnect_network() # Abort the attempt under the hood
+		_on_connection_failed() # Reset the UI buttons and show error
+
+func _on_connection_success():
+	set_error_label("")
 	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
-	gamestate.join_game(ip, player_name)
 	
-	# Wait for animation to finish and everything to settle
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
-	# Additional frame waits to ensure nodes are ready
 	await get_tree().process_frame
 	await get_tree().process_frame
 	
-	# Refresh lobby first
 	refresh_lobby()
-	
-	# Wait one more frame after refresh
 	await get_tree().process_frame
 	
-	# Load icons immediately
-	print("=== Loading player icons (Join) ===")
 	load_player_icons()
-	print("=== Icons loaded. Total buttons: ", player_icon_buttons.size(), " ===")
-	
-	# Ensure Start button is visible and configured
+	set_player_icon(selected_icon)
 	_update_start_button_state()
+
+func _on_connection_failed():
+	set_error_label("Connection failed. Server not found.")
+	# Re-enable the buttons so they can try a different IP
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = false
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = false
 
 func change_menu_smoothly(prev, target):
 	var prev_animation = prev.get_node("AnimationPlayer")

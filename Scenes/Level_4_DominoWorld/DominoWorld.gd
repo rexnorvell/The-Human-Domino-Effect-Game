@@ -15,6 +15,8 @@ const STEP_PIXELS := 24.0 # tune for your art scale
 
 # Keep a per-path step count; replaces placed_domino_offset
 var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
+# Tracks which player trains (0-5) are currently open for anyone to play on
+var train_open := [false, false, false, false, false, false, false, false]
 
 @export var Domino: PackedScene
 # NOTE: If domino game performance is low, try switching to preload
@@ -53,7 +55,6 @@ func _ready() -> void:
 	$Start.visible = false
 	$Next.visible = false
 	# (Fall 2025) set the visibility of added buttons accordingly
-	$NextTurn.visible = false
 	$Help.visible = false
 	$Reset.visible = false
 	intialize_tower()
@@ -341,7 +342,6 @@ func _on_Start_pressed() -> void:
 	
 	if (self_num == 0):
 		$Next.visible = true
-		$NextTurn.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	
@@ -458,137 +458,84 @@ func place_domino(num):
 	_verify_anchors_ready()
 	var flip = false
 	# check if it is your turn and you have selected a domino
-	if turn == self_num and selected_domino:
-		print("Domino placed at ", num)
-		# check if domino can be placed here
-		if (
-			selected_domino.bottom_num == path_ends[num]
-			or selected_domino.top_num == path_ends[num]
-		):
-			# flip domino if the top number matches instead of the bottom
-			# or if flipping could create an alloy (top number matches but
-			# element doesn't)
-			if (
-				selected_domino.bottom_num != path_ends[num]
-				or (selected_domino.top_num == path_ends[num]
-				and selected_domino.top_element != end_dominos[num].top_element)
-			):
-				selected_domino.init(
-					selected_domino.top_num,
-					selected_domino.bottom_num,
-					selected_domino.top_element,
-					selected_domino.bottom_element,
-					false
-				)
-				selected_domino.get_node("Sprite2D").rotation_degrees = 180
-				flip = true
-			# check for alloy
-			if end_dominos[num] and end_dominos[num].top_element != selected_domino.bottom_element:
-				rpc(
-					"increment_alloys",
-					self_num + 1,
-					curriculum.element_to_alloy[selected_domino.bottom_element]
-				)
-				increment_alloys(
-					self_num + 1, curriculum.element_to_alloy[selected_domino.bottom_element]
-				)
-
-			# check for footprint tile
-			if selected_domino.top_num == selected_domino.bottom_num:
-				rpc(
-					"increment_footprint_tiles",
-					self_num + 1,
-					center_num,
-					selected_domino.bottom_num
-				)
-				increment_footprint_tiles(
-					self_num + 1,
-					center_num,
-					selected_domino.bottom_num
-				)
-
-			# remove old domino on path if there was one
-			#if end_dominos[num]:
-			#	end_dominos[num].queue_free()
-
-			# place domino; update screen and update turn
-
-			# Place locally
-			# selected_domino.placed = true
-			# selected_domino.scale  = PLACED_SCALE
-			selected_domino.mark_as_placed(PLACED_SCALE)
-
-			# If your anchors are GLOBAL positions:
-			selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
-			# If your anchors are LOCAL to this node, use this instead:
-			# selected_domino.position = _path_position_for_step(num, path_step_count[num])
-
-			# Optional facing
-			_orient_to_path(selected_domino, num)
-
-			path_ends[num] = selected_domino.top_num
-			end_dominos[num] = selected_domino
-
-			# Advance step AFTER using the current slot
-			path_step_count[num] += 1
-			num_placed += 1
+	# Only proceed if it is your turn AND you have a domino selected
+	if turn != self_num or !selected_domino:
+		return
+	# If it's a player path (0-5), it's NOT our path, and it's NOT open, block placement
+	if num < 6 and num != self_num and not train_open[num]:
+		print("Cannot play here. Train is closed!")
+		return
+	
+	# Check if domino can be placed here
+	if (selected_domino.bottom_num == path_ends[num] or selected_domino.top_num == path_ends[num]):
+		print("DOMINO Placed at ", num) 
+		
+		# flip domino if the top number matches instead of the bottom...
+		if (selected_domino.bottom_num != path_ends[num] or (selected_domino.top_num == path_ends[num] and selected_domino.top_element != end_dominos[num].top_element)):
+			selected_domino.init(selected_domino.top_num, selected_domino.bottom_num, selected_domino.top_element, selected_domino.bottom_element, false)
+			selected_domino.get_node("Sprite2D").rotation_degrees = 180
+			flip = true
 			
-			# (Fall 2025) logic to check if the placed domino is a double, if it was then set the condition
-			if (selected_domino.top_num == selected_domino.bottom_num):
-				can_place = true
-			else:
-				can_place = false
-			# print(can_place) # debug
+		# check for alloy
+		if end_dominos[num] and end_dominos[num].top_element != selected_domino.bottom_element:
+			rpc("increment_alloys", self_num + 1, curriculum.element_to_alloy[selected_domino.bottom_element])
+			increment_alloys(self_num + 1, curriculum.element_to_alloy[selected_domino.bottom_element])
 
+		# check for footprint tile
+		if selected_domino.top_num == selected_domino.bottom_num:
+			rpc("increment_footprint_tiles", self_num + 1, center_num, selected_domino.bottom_num)
+			increment_footprint_tiles(self_num + 1, center_num, selected_domino.bottom_num)
+
+		# Place locally
+		selected_domino.mark_as_placed(PLACED_SCALE)
+		selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
+		_orient_to_path(selected_domino, num)
+
+		path_ends[num] = selected_domino.top_num
+		end_dominos[num] = selected_domino
+		path_step_count[num] += 1
+		num_placed += 1
+		
+		# Close our train if we played on it
+		if num == self_num and train_open[self_num]:
+			rpc("set_train_open", self_num, false)
+		
+		# Give a bead if we helped play on someone else's open train
+		if num < 6 and num != self_num and train_open[num]:
+			increment_wellness_beads(self_num + 1)
+			rpc("increment_wellness_beads", self_num + 1)
+			display_wellness_prompt()
+
+		# update other player screens
+		rpc("update_domino_path", [selected_domino.bottom_num, selected_domino.top_num], [selected_domino.bottom_element, selected_domino.top_element], position_table[num], num, flip)
+
+		var placed_domino = []
+		if (flip):
+			placed_domino = [selected_domino.top_num, selected_domino.bottom_num]
+		else:
+			placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
+			
+		hand_dominos.erase(placed_domino) 
+		
+		# Check if it was a double
+		if (selected_domino.top_num == selected_domino.bottom_num):
+			can_place = true
+		else:
+			can_place = false
+			
+		clear_selected_domino()
+		$Place.playing = true
+		
+		# Auto-advance turn if we are done playing
+		if not can_place:
 			rpc("advance_turn")
 			advance_turn()
+			can_place = true
 
-			# if helped another player on their path, get a wellness bead
-			var path_node = get_node_or_null("Path" + str(num + 1))
-			if num < 6 and (path_node and path_node.temp == true):
-				increment_wellness_beads(self_num + 1)
-				rpc("increment_wellness_beads", self_num + 1)
-				display_wellness_prompt()
+@rpc("any_peer", "call_local") func set_train_open(num: int, is_open: bool):
+	train_open[num] = is_open
+	# TODO: visual indication of open trains
 
-				# remove the other player's path now that they have been helped
-				rpc("remove_path", num + 1)
-				remove_path(num + 1)
-
-			# remove one's one path from others if no longer need help
-			if num < 6:
-				rpc("remove_path", num + 1)
-
-			# update other player screens
-			rpc(
-				"update_domino_path",
-				[selected_domino.bottom_num, selected_domino.top_num],
-				[selected_domino.bottom_element, selected_domino.top_element],
-				position_table[num],
-				num,
-				flip
-			)
-
-			# get new domino from deck
-			# replace_domino()                   # UNCOMMENT IF WANT TO REPLACE DOMINOS
-			
-			# (Fall 2025) logic for when the player needs help, track the currently placed domino
-			var placed_domino = []
-			# flip how the domino tuple is stored in the hand array based on orientation
-			if (flip):
-				placed_domino = [selected_domino.top_num, selected_domino.bottom_num]
-			else:
-				placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
-				
-			print("Placed domino: ", placed_domino)
-			hand_dominos.erase(placed_domino) # remove the domino from the hand array
-			
-			if can_place: # check in the case of a played double if help needs to be raised
-				_help_Flag() 
-			
-			clear_selected_domino()
-			$Place.playing = true
-			
-		
 # increment total score for player
 func increment_total(num):
 	var path = "Character Bubble" + str(num) + "/Score/Button/Popup/Lydia_number"
@@ -684,9 +631,6 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	# Advance step AFTER placing (locks peers to host)
 	path_step_count[path_num] += 1
 
-	rpc("advance_turn")
-	advance_turn()
-
 # replace placed domino with one from the deck
 func replace_domino():
 	var domino_nums = draw_domino()
@@ -728,7 +672,6 @@ func replace_domino():
 		$Next.visible = false
 		# (Fall 2025) added visibility conditions for created buttons
 		$Help.visible = false
-		$NextTurn.visible = false
 		$Reset.visible = true
 		center_num += 1
 		return
@@ -787,6 +730,8 @@ func replace_domino():
 
 func _update_turn_label():
 	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+	# Only show the "Need Help" button if it is currently YOUR turn
+	$Help.visible = (turn == self_num)
 
 # handle when next round button pressed by host
 func _on_Next_pressed() -> void:
@@ -868,24 +813,12 @@ func add_tower(round_num):
 	elif round_num == 10:
 		$Tower/Sprite2D/Diamond.visible = true
 
-func _on_NextTurn_pressed() -> void:
-	# Ignore clicks if it isn't this player's turn
-	if turn != self_num:
-		return 
-	if hand_dominos.is_empty():
-		_on_Next_pressed()
-	can_place = true 
-	_help_Flag()
-	rpc("advance_turn")
-	advance_turn()
-
 func _on_Help_pressed() -> void:
 	if turn == self_num:
-		# Add their path to everyone else's screen
-		rpc("add_path", self_num + 1)
-		add_path(self_num + 1) # Do it locally too
+		rpc("set_train_open", self_num, true)
 		rpc("advance_turn")
 		advance_turn()
+		can_place = true
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 @rpc("any_peer") func add_path(num):
@@ -982,12 +915,6 @@ func _on_Next_mouse_entered():
 	$Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
 func _on_Next_mouse_exited():
 	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-# (Fall 2025) added color on hover for added next turn, help, and reset buttons
-func _on_NextTurn_mouse_entered():
-	$NextTurn/MarginContainer/Label.set("theme_override_colors/font_color", green)
-func _on_NextTurn_mouse_exited():
-	$NextTurn/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 func _on_Help_mouse_entered():
 	$Help/MarginContainer/Label.set("theme_override_colors/font_color", green)

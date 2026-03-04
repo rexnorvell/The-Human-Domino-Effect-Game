@@ -319,7 +319,6 @@ func _init_players() -> void:
 		$Start.visible = true
 		print("Host detected, Start button visible")
 
-	$Turn.text = gamestate.players[1] + "'s\nTurn"
 	print("Turn label set to ", $Turn.text)
 	print("=== _init_players() END ===")
 
@@ -330,8 +329,14 @@ func _on_Start_pressed() -> void:
 			next_round()
 	else:
 		SaveManager.Save["0"].Current_Round = 0
-	setup_dominos()
 	
+	# Randomize the starting turn and sync with everyone
+	randomize()
+	turn = randi() % gamestate.players.size()
+	rpc("sync_turn", turn)
+	_update_turn_label()
+		
+	setup_dominos()
 	$Start.queue_free()
 	
 	if (self_num == 0):
@@ -450,11 +455,11 @@ func select_domino(domino) -> bool:
 
 # handles placing of domino onto a path
 func place_domino(num):
-	print("DOMINO Placed at ", num)
 	_verify_anchors_ready()
 	var flip = false
 	# check if it is your turn and you have selected a domino
 	if turn == self_num and selected_domino:
+		print("Domino placed at ", num)
 		# check if domino can be placed here
 		if (
 			selected_domino.bottom_num == path_ends[num]
@@ -535,8 +540,8 @@ func place_domino(num):
 				can_place = false
 			# print(can_place) # debug
 
-			turn = (turn + 1) % len(gamestate.players)
-			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+			rpc("advance_turn")
+			advance_turn()
 
 			# if helped another player on their path, get a wellness bead
 			var path_node = get_node_or_null("Path" + str(num + 1))
@@ -679,8 +684,8 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	# Advance step AFTER placing (locks peers to host)
 	path_step_count[path_num] += 1
 
-	turn = (turn + 1) % len(gamestate.players)
-	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+	rpc("advance_turn")
+	advance_turn()
 
 # replace placed domino with one from the deck
 func replace_domino():
@@ -772,6 +777,17 @@ func replace_domino():
 				for child in get_children():
 					print("Found child node: ", child.name)
 
+@rpc("any_peer") func sync_turn(new_turn):
+	turn = new_turn
+	_update_turn_label()
+
+@rpc("any_peer") func advance_turn():
+	turn = (turn + 1) % len(gamestate.players)
+	_update_turn_label()
+
+func _update_turn_label():
+	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+
 # handle when next round button pressed by host
 func _on_Next_pressed() -> void:
 	# reset field for host
@@ -792,19 +808,6 @@ func _on_Next_pressed() -> void:
 	# (Fall 2025) added seperately from above condition for differentiation
 	if center_num < 9:
 		_help_Flag()
-
-# (Fall 2025) new function added for next turn
-# button is pressed when player is done with their turn
-func _on_NextTurn_pressed() -> void:
-	print("Next turn") # debugs
-	print(hand_dominos)
-	
-	# if all dominos have been exhausted then call next_round (TEMP CONDITION)
-	if hand_dominos.is_empty():
-		_on_Next_pressed()
-		
-	can_place = true # as only 1 domino can be placed unless a double was played
-	_help_Flag()
 					
 # (Fall 2025) use current dominos to check if you have a playable domino by comparing to all end dominos
 func _help_Check() -> bool:
@@ -865,28 +868,33 @@ func add_tower(round_num):
 	elif round_num == 10:
 		$Tower/Sprite2D/Diamond.visible = true
 
-# if player cannot play a domino on their paths
+func _on_NextTurn_pressed() -> void:
+	# Ignore clicks if it isn't this player's turn
+	if turn != self_num:
+		return 
+	if hand_dominos.is_empty():
+		_on_Next_pressed()
+	can_place = true 
+	_help_Flag()
+	rpc("advance_turn")
+	advance_turn()
+
 func _on_Help_pressed() -> void:
 	if turn == self_num:
-		# add their path to everyone else's screen
+		# Add their path to everyone else's screen
 		rpc("add_path", self_num + 1)
-		# change turn
-		turn = (turn + 1) % len(gamestate.players)
-		$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+		add_path(self_num + 1) # Do it locally too
+		rpc("advance_turn")
+		advance_turn()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
-# Add player's path denoted by num to all player's screens
 @rpc("any_peer") func add_path(num):
-	turn = (turn + 1) % len(gamestate.players)
-	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 	var path_node = get_node_or_null("Path" + str(num))
 	if path_node:
 		path_node.visible = true
 
-# Remove player's path denoted by num from all player's screens
 @rpc("any_peer") func remove_path(num):
 	var path_node = get_node_or_null("Path" + str(num))
-	# Safely check if the node exists and if temp is true
 	if path_node and "temp" in path_node and path_node.temp:
 		path_node.visible = false
 

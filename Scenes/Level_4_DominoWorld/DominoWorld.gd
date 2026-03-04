@@ -50,6 +50,7 @@ var usedBonus = ["ABC123"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$Start.visible = false
 	$Next.visible = false
 	# (Fall 2025) set the visibility of added buttons accordingly
 	$NextTurn.visible = false

@@ -147,13 +147,14 @@ const types = {
 # Signals to let lobby GUI know what's going on.
 signal player_list_changed()
 signal connection_failed()
-signal connection_succeeded()
 signal game_ended()
 signal game_error(what)
+signal join_accepted_signal
+var game_in_progress = false
 
 # Callback from SceneTree.
-func _player_connected(id):
-	# Registration of a client beginss here, tell the connected player that we are here.
+func _player_connected(_id):
+	# Registration of a client begins here, tell the connected player that we are here.
 	
 	# ask host for level and random seed
 	rpc_id(1, "get_level")
@@ -172,26 +173,33 @@ func _player_disconnected(id):
 		unregister_player(id)
 
 # Callback from SceneTree, only for clients (not server).
-func _connected_ok():
-	# We just connected to a server
-	emit_signal("connection_succeeded")
-
-
-# Callback from SceneTree, only for clients (not server).
 func _server_disconnected():
 	emit_signal("game_error", "Server disconnected")
 	end_game()
-
 
 # Callback from SceneTree, only for clients (not server).
 func _connected_fail():
 	multiplayer.multiplayer_peer = null # Remove peer
 	emit_signal("connection_failed")
 
-
 # Lobby management functions.
 @rpc("any_peer", "call_local") func register_player(new_player_name,cpunum):
-	var id = multiplayer.get_remote_sender_id()+cpunum
+	var id = multiplayer.get_remote_sender_id()
+	
+	if id == 0:
+		id = multiplayer.get_unique_id()
+
+	# --- Server Handshake Gatekeeper ---
+	if multiplayer.is_server():
+		if game_in_progress:
+			if id != 1: # Don't kick the host!
+				rpc_id(id, "join_rejected", "Game already in progress!")
+			return # Abort registration completely!
+		else:
+			if id != 1:
+				rpc_id(id, "join_accepted")
+	
+	id += cpunum
 	var CharacterFound = false
 	players[id] = new_player_name
 	if(SaveManager.loaded_data):
@@ -227,7 +235,6 @@ func _connected_fail():
 		clothes[id] = 0
 		body[id] = 0
 	emit_signal("player_list_changed")
-
 
 func unregister_player(id):
 	players.erase(id)
@@ -312,7 +319,16 @@ func join_game(ip, new_player_name):
 		_connected_fail()
 		return
 	multiplayer.multiplayer_peer = peer
-	
+
+@rpc("authority", "call_local") func join_accepted():
+	# Only clients care about this signal (the host handles their own UI)
+	if not multiplayer.is_server():
+		emit_signal("join_accepted_signal")
+
+@rpc("authority", "call_local") func join_rejected(reason: String):
+	disconnect_network()
+	emit_signal("game_error", reason)
+
 # host sends level to player who asked
 @rpc("any_peer") func get_level():
 	var id = multiplayer.get_remote_sender_id()
@@ -340,6 +356,7 @@ func get_player_name():
 
 # host tells everyone to start the game
 func begin_game():
+	game_in_progress = true
 	if tutorial_mode:
 		start_tutorial()
 	else:
@@ -365,6 +382,7 @@ func get_tutorial_mode():
 	return tutorial_mode
 
 func end_game():
+	game_in_progress = false
 	if has_node("/root/World"): # Game is in progress.
 		# End it
 		get_node("/root/World").queue_free()
@@ -379,6 +397,5 @@ func save_scene_path(scene_path):
 func _ready():
 	multiplayer.peer_connected.connect(_player_connected)
 	multiplayer.peer_disconnected.connect(_player_disconnected)
-	multiplayer.connected_to_server.connect(_connected_ok)
 	multiplayer.connection_failed.connect(_connected_fail)
 	multiplayer.server_disconnected.connect(_server_disconnected)

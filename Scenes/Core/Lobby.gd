@@ -23,8 +23,9 @@ func _ready():
 	
 	# gamestate.gd signal event listeners
 	gamestate.connect("player_list_changed", Callable(self, "refresh_lobby"))
-	gamestate.connection_succeeded.connect(_on_connection_success)
 	gamestate.connection_failed.connect(_on_connection_failed)
+	gamestate.join_accepted_signal.connect(_on_join_accepted)
+	gamestate.game_error.connect(_on_game_error)
 	
 	# Listen for the back button being clicked so we can cleanly disconnect
 	if has_node("Back_Button"):
@@ -71,8 +72,16 @@ func _on_join_timeout():
 		gamestate.disconnect_network() # Abort the attempt under the hood
 		_on_connection_failed() # Reset the UI buttons and show error
 
-func _on_connection_success():
+func _on_join_accepted():
 	set_error_label("")
+	
+	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
+	if ip.is_empty():
+		ip = str(local_ip)
+		
+	waitroom_host_name.set_text("Host: ")
+	waitroom_host_ip.set_text("Host IP: " + ip)
+	
 	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
@@ -87,8 +96,11 @@ func _on_connection_success():
 	_update_start_button_state()
 
 func _on_connection_failed():
-	set_error_label("Connection failed. Server not found.")
-	# Re-enable the buttons so they can try a different IP
+	_on_game_error("Connection failed. Server not found.")
+
+func _on_game_error(what: String):
+	set_error_label(what)
+	# Turn the buttons back on for retry purposes
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = false
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = false
 

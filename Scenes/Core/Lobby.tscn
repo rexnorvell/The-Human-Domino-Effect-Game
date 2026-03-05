@@ -640,7 +640,6 @@ stretch_mode = 4
 libraries/ = SubResource("AnimationLibrary_u6tgg")
 
 [node name="WaitRoom_Container" type="MarginContainer" parent="." unique_id=287395699]
-visible = false
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -798,10 +797,10 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
-offset_left = 28.8889
-offset_top = 8.66663
-offset_right = 162.889
-offset_bottom = 61.6666
+offset_left = 27.777779
+offset_top = -8.888855
+offset_right = 161.7779
+offset_bottom = 44.111145
 grow_vertical = 0
 
 [connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" to="." method="_on_Host_pressed"]

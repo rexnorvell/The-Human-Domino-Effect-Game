@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bsxfyv5bnqpoo"]
+[gd_scene format=3 uid="uid://bsxfyv5bnqpoo"]
 
 [ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="2"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="3"]
@@ -6,6 +6,15 @@
 
 [sub_resource type="FontFile" id="2"]
 fallbacks = Array[Font]([ExtResource("3")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -331,28 +340,44 @@ _data = {
 &"fade out": SubResource("4")
 }
 
-[sub_resource type="Animation" id="5"]
-resource_name = "Transition"
-length = 0.3
+[sub_resource type="Animation" id="Animation_ck488"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
+tracks/0/path = NodePath("../../../..:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, 700)]
+"values": [Vector2(235.99998, 1)]
+}
+
+[sub_resource type="Animation" id="5"]
+resource_name = "Transition"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../../..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.03, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(235.99998, 1), Vector2(236, 560)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k2au8"]
 _data = {
+&"RESET": SubResource("Animation_ck488"),
 &"Transition": SubResource("5")
 }
 
-[node name="Title_Scene" type="Control"]
+[node name="Title_Scene" type="Control" unique_id=1501407706]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -361,15 +386,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4")
 
-[node name="Title_Container" type="MarginContainer" parent="."]
+[node name="Title_Container" type="MarginContainer" parent="." unique_id=1705217716]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.229
 anchor_right = 0.781
 anchor_bottom = 1.0
-offset_left = 1.50398
+offset_left = 1.5039825
 offset_top = 1.0
-offset_right = 484.256
+offset_right = 484.25598
 offset_bottom = 499.0
 scale = Vector2(0.54, 0.54)
 theme_override_constants/margin_left = 24
@@ -377,21 +402,21 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Title_Container"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Title_Container" unique_id=109084432]
 layout_mode = 2
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Title_Container/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Title_Container/HBoxContainer" unique_id=38031083]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = -20
 alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Title_Container/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Title_Container/HBoxContainer/VBoxContainer" unique_id=1378086843]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Title_Container/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="Title_Container/HBoxContainer/VBoxContainer/MarginContainer" unique_id=371443718]
 custom_minimum_size = Vector2(500, 1000)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -399,23 +424,22 @@ size_flags_vertical = 4
 texture = ExtResource("2")
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="Title_Container/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Title_Container/HBoxContainer/VBoxContainer" unique_id=1805358946]
 layout_mode = 2
 size_flags_horizontal = 7
 size_flags_vertical = 7
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = SubResource("2")
 theme_override_font_sizes/font_size = 58
 text = "Press anywhere to start."
 horizontal_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container/HBoxContainer/VBoxContainer/Label"]
-libraries = {
-&"": SubResource("AnimationLibrary_m3d3c")
-}
-autoplay = "Text shine"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container/HBoxContainer/VBoxContainer/Label" unique_id=531663924]
+libraries/ = SubResource("AnimationLibrary_m3d3c")
+autoplay = &"Text shine"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container" unique_id=1337218037]
 root_node = NodePath("../HBoxContainer/VBoxContainer/MarginContainer/TextureRect")
-libraries = {
-&"": SubResource("AnimationLibrary_k2au8")
-}
+libraries/ = SubResource("AnimationLibrary_k2au8")

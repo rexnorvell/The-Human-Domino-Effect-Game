@@ -6,40 +6,56 @@
 
 [sub_resource type="Animation" id="6"]
 resource_name = "fall into place"
-length = 0.2
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, -600), Vector2(0, 0)]
+"values": [Vector2(0, -550), Vector2(0, 0)]
 }
 
 [sub_resource type="Animation" id="7"]
 resource_name = "transition_out"
-length = 0.2
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, 600)]
+"values": [Vector2(0, 0), Vector2(0, 550)]
+}
+
+[sub_resource type="Animation" id="Animation_mie7g"]
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -550)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_85wkk"]
 _data = {
-&"fall into place": SubResource("6"),
-&"transition_out": SubResource("7")
+&"in": SubResource("6"),
+&"next": SubResource("7"),
+&"previous": SubResource("Animation_mie7g")
 }
 
 [node name="Menu_Scene" type="Control" unique_id=120761563]
@@ -56,7 +72,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -2.0
+offset_right = 2.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -128,7 +144,7 @@ border_color = Color(0.8862745, 0, 0, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Menu_Container" unique_id=1286665814]
 libraries/ = SubResource("AnimationLibrary_85wkk")
-autoplay = &"fall into place"
+autoplay = &"in"
 
 [connection signal="pressed" from="Menu_Container/HBoxContainer/MarginContainer2/VBoxContainer/Button_Container/Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="pressed" from="Menu_Container/HBoxContainer/MarginContainer2/VBoxContainer/Button_Container/Tutorial_Button" to="." method="_on_Tutorial_Button_pressed"]

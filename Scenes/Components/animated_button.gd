@@ -31,7 +31,6 @@ func _ready():
 	var base_style = get_theme_stylebox("normal", "Button")
 	animated_style = base_style.duplicate()
 
-	# Start with no border
 	animated_style.border_width_left = 0
 	animated_style.border_width_right = 0
 	animated_style.border_width_top = 0

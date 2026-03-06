@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bsxfyv5bnqpoo"]
+[gd_scene format=3 uid="uid://bsxfyv5bnqpoo"]
 
 [ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="2"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="3"]
@@ -6,6 +6,15 @@
 
 [sub_resource type="FontFile" id="2"]
 fallbacks = Array[Font]([ExtResource("3")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -292,67 +301,139 @@ cache/0/58/0/underline_position = 0.0
 cache/0/58/0/underline_thickness = 0.0
 cache/0/58/0/scale = 1.0
 
-[sub_resource type="Animation" id="3"]
-resource_name = "Text shine"
-length = 3.0
-loop_mode = 1
+[sub_resource type="Animation" id="Animation_ck488"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
+tracks/0/path = NodePath("../..:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5, 3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:custom_minimum_size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(500, 500)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Label:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../..:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
 }
 
-[sub_resource type="Animation" id="4"]
-resource_name = "fade out"
-length = 0.3
+[sub_resource type="Animation" id="Animation_51vco"]
+resource_name = "in"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
+tracks/0/path = NodePath(".:custom_minimum_size")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
+"times": PackedFloat32Array(1, 2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Vector2(0, 0), Vector2(500, 500)]
 }
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_m3d3c"]
-_data = {
-&"Text shine": SubResource("3"),
-&"fade out": SubResource("4")
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Label:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../..:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-3.141592653589793, 0.0]
 }
 
 [sub_resource type="Animation" id="5"]
 resource_name = "Transition"
-length = 0.3
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
+tracks/0/path = NodePath("../..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 550)]
+}
+
+[sub_resource type="Animation" id="Animation_ggl1p"]
+resource_name = "pulse_text"
+length = 2.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Label:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.5, 2, 2.5),
+"transitions": PackedFloat32Array(2, 1, 0.5, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, 700)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k2au8"]
 _data = {
-&"Transition": SubResource("5")
+&"RESET": SubResource("Animation_ck488"),
+&"in": SubResource("Animation_51vco"),
+&"out": SubResource("5"),
+&"pulse_text": SubResource("Animation_ggl1p")
 }
 
-[node name="Title_Scene" type="Control"]
+[node name="Title_Scene" type="Control" unique_id=1501407706]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -361,61 +442,48 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4")
 
-[node name="Title_Container" type="MarginContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=446058027]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.229
-anchor_right = 0.781
-anchor_bottom = 1.0
-offset_left = 1.50398
-offset_top = 1.0
-offset_right = 484.256
-offset_bottom = 499.0
-scale = Vector2(0.54, 0.54)
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -300.0
+offset_right = 512.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(512, 300)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Title_Container"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=38031083]
 layout_mode = 2
-alignment = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Title_Container/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/separation = -20
-alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Title_Container/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="Title_Container/HBoxContainer/VBoxContainer/MarginContainer"]
-custom_minimum_size = Vector2(500, 1000)
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer" unique_id=371443718]
+custom_minimum_size = Vector2(500, 500)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2")
-stretch_mode = 6
+expand_mode = 1
+stretch_mode = 4
 
-[node name="Label" type="Label" parent="Title_Container/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1805358946]
 layout_mode = 2
 size_flags_horizontal = 7
 size_flags_vertical = 7
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = SubResource("2")
-theme_override_font_sizes/font_size = 58
+theme_override_font_sizes/font_size = 40
 text = "Press anywhere to start."
 horizontal_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container/HBoxContainer/VBoxContainer/Label"]
-libraries = {
-&"": SubResource("AnimationLibrary_m3d3c")
-}
-autoplay = "Text shine"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title_Container"]
-root_node = NodePath("../HBoxContainer/VBoxContainer/MarginContainer/TextureRect")
-libraries = {
-&"": SubResource("AnimationLibrary_k2au8")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CenterContainer" unique_id=1337218037]
+root_node = NodePath("../VBoxContainer/TextureRect")
+libraries/ = SubResource("AnimationLibrary_k2au8")
+autoplay = &"in"
+next/in = &"pulse_text"

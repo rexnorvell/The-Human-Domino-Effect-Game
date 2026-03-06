@@ -191,65 +191,58 @@ cache/0/50/0/underline_position = 0.0
 cache/0/50/0/underline_thickness = 0.0
 cache/0/50/0/scale = 1.0
 
-[sub_resource type="Animation" id="5"]
+[sub_resource type="Animation" id="Animation_8im4j"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_3amy7"]
+resource_name = "fly_in"
 length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(1, 1),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, 334), Vector2(0, 900)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Label:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0, 74), Vector2(0, -500)]
+"values": [Vector2(0, 450), Vector2(0, 0)]
 }
 
-[sub_resource type="Animation" id="4"]
-resource_name = "rise into place"
-length = 0.2
+[sub_resource type="Animation" id="Animation_1wjtl"]
+resource_name = "out"
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
 "update": 0,
-"values": [Vector2(0, 900), Vector2(0, 334)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Label:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0, -500), Vector2(0, 74)]
+"values": [Vector2(0, 0), Vector2(0, 450)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ag0r0"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1wjtl"]
 _data = {
-&"RESET": SubResource("5"),
-&"rise into place": SubResource("4")
+&"RESET": SubResource("Animation_8im4j"),
+&"in": SubResource("Animation_3amy7"),
+&"out": SubResource("Animation_1wjtl")
 }
 
 [node name="Quit_Scene" type="Control" unique_id=498559685]
@@ -265,6 +258,7 @@ script = ExtResource("7")
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = 0.00061035156
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
@@ -272,21 +266,19 @@ theme_override_constants/margin_bottom = 24
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1675471655]
 layout_mode = 2
+theme_override_constants/separation = 150
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1568165465]
 layout_mode = 2
-size_flags_vertical = 6
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = SubResource("1")
 theme_override_font_sizes/font_size = 50
 text = "Quit Game?"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Separator" type="Control" parent="MarginContainer/VBoxContainer" unique_id=1537161834]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1168455765]
 layout_mode = 2
@@ -307,9 +299,9 @@ text = "Quit"
 font_color = Color(0.8862745, 0, 0, 1)
 border_color = Color(0.8862745, 0, 0, 1)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=766812540]
-libraries/ = SubResource("AnimationLibrary_ag0r0")
-autoplay = &"rise into place"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MarginContainer" unique_id=1625497780]
+libraries/ = SubResource("AnimationLibrary_1wjtl")
+autoplay = &"in"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Cancel_Button" to="." method="_on_Cancel_Button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Quit_Button" to="." method="_on_Quit_Button_pressed"]

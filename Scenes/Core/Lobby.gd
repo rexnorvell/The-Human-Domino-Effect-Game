@@ -18,7 +18,9 @@ const ICON_NAMES: Array[String] = [
 ]
 
 func _ready():
-	LevelSelectContainer.visible = false
+	# Start on the Level Select screen
+	LobbyContainer.visible = false
+	LevelSelectContainer.visible = true
 	WaitRoomContainer.visible = false
 	
 	# gamestate.gd signal event listeners
@@ -41,8 +43,9 @@ func _on_Host_pressed():
 		return
 
 	set_error_label("")
-	# Load the level select menu with transition
-	change_menu_smoothly(LobbyContainer, LevelSelectContainer)
+	
+	# Set up dominos, create the host, and go to the Wait Room
+	handle_level(gamestate.first_level)
 
 func _on_Join_Button_pressed():
 	if get_player_name() == "":
@@ -129,7 +132,6 @@ func refresh_lobby():
 	if multiplayer.is_server():
 		rpc("sync_all_icons", gamestate.player_icon)
 
-# handle which level to begin at / randomize dominos
 func handle_level(level):
 	gamestate.first_level = level
 
@@ -147,21 +149,17 @@ func handle_level(level):
 	waitroom_host_name.set_text("Host: " + get_player_name())
 	waitroom_host_ip.set_text("Host IP: " + str(local_ip))
 	
-	var player_name = get_player_name()
-	
-	var err = gamestate.host_game(player_name)
+	# Attempt to host the game first
+	var err = gamestate.host_game(get_player_name())
 	
 	if err != OK:
-		# If it fails, send them back to the main lobby and show the error
-		change_menu_smoothly(LevelSelectContainer, LobbyContainer)
+		# We are already in the LobbyContainer, so just show the error
 		_on_game_error("Port already in use. Cannot host.")
 		return
 	
-	change_menu_smoothly(LevelSelectContainer, WaitRoomContainer)
+	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
 	
-	# Wait for animation to finish and everything to settle
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
-	# Additional frame waits to ensure nodes are ready
 	await get_tree().process_frame
 	await get_tree().process_frame
 	
@@ -177,8 +175,8 @@ func handle_level(level):
 func get_player_name() -> String:
 	return $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.text
 	
-func set_player_name(name: String):
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.set_text(name)
+func set_player_name(pname: String):
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/Name/NinePatchRect/MarginContainer/LineEdit.set_text(pname)
 
 func set_error_label(text: String):
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/Error_Label.set_text(text)
@@ -382,17 +380,25 @@ func _on_back_button_pressed() -> void:
 	gamestate.disconnect_network()
 
 func _on_Char_Creation_pressed():
-	handle_level("Agency")
+	start_single_player("Agency")
 
 func _on_Pond_Choices_pressed():
-	handle_level("Pond")
-
-func _on_Domino_Game_pressed():
-	handle_level("DominoWorld")
+	start_single_player("Pond")
 
 func _on_Virtual_World_pressed():
-	handle_level("VW0")
-	
+	start_single_player("VW0")
+
+func _on_Domino_Game_pressed():
+	# Set the level, then transition to the Host/Join screen
+	gamestate.first_level = "DominoWorld"
+	change_menu_smoothly(LevelSelectContainer, LobbyContainer)
+
+func start_single_player(level_name: String):
+	gamestate.first_level = level_name
+	# Host a local server behind the scenes on a random port
+	gamestate.host_single_player("Player") 
+	gamestate.begin_game() # Skip the wait room and go straight in
+
 func _on_Start_Button_pressed():
 	if selected_icon == null or selected_icon == "":
 		print("ERROR: Cannot start game - no icon selected!")

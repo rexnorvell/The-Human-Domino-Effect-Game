@@ -300,6 +300,21 @@ func disconnect_network():
 				rpc_id(p, "post_start_game")
 		post_start_game()
 
+func host_single_player(new_player_name):
+	# Because the code assumes a multiplayer network setup, it is easiest
+	# to create a "singleplayer server" with just one player for singleplayer
+	# games
+	player_name = new_player_name
+	peer = ENetMultiplayerPeer.new()
+	
+	# Using port 0 tells the OS to pick an available ephemeral port
+	# Set MAX_PEERS to 1 since it's singleplayer
+	peer.create_server(0, 1) 
+	multiplayer.multiplayer_peer = peer
+	
+	var id = multiplayer.get_unique_id()
+	rpc("register_player", player_name, 0)
+
 func host_game(new_player_name) -> Error:
 	player_name = new_player_name
 	peer = ENetMultiplayerPeer.new()

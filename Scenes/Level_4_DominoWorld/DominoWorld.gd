@@ -670,7 +670,13 @@ func replace_domino():
 		$Next.visible = false
 		# (Fall 2025) added visibility conditions for created buttons
 		$Help.visible = false
-		$Reset.visible = true
+		
+		# Only show the reset button to the host
+		if multiplayer.is_server():
+			$Reset.visible = true
+		else:
+			$Reset.visible = false
+
 		center_num += 1
 		return
 
@@ -751,10 +757,14 @@ func _on_Next_pressed() -> void:
 		setup_dominos()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
-# (Fall 2025) called at the end of the game when reset button becomes visible 
 func _on_Reset_pressed() -> void:
-	get_tree().reload_current_scene() # reload the entirety of the scene
-	
+	if multiplayer.is_server():
+		# Broadcast the reset command to all peers
+		rpc("sync_reset_game")
+
+@rpc("authority", "call_local") func sync_reset_game():
+	get_tree().reload_current_scene()
+
 #intialize tower as not seen
 func intialize_tower():
 	$Tower/Sprite2D/Energy.visible = false

@@ -147,11 +147,17 @@ func handle_level(level):
 	waitroom_host_name.set_text("Host: " + get_player_name())
 	waitroom_host_ip.set_text("Host IP: " + str(local_ip))
 	
-	# Change menu to waiting room
-	change_menu_smoothly(LevelSelectContainer, WaitRoomContainer)
-	
 	var player_name = get_player_name()
-	gamestate.host_game(player_name)
+	
+	var err = gamestate.host_game(player_name)
+	
+	if err != OK:
+		# If it fails, send them back to the main lobby and show the error
+		change_menu_smoothly(LevelSelectContainer, LobbyContainer)
+		_on_game_error("Port already in use. Cannot host.")
+		return
+	
+	change_menu_smoothly(LevelSelectContainer, WaitRoomContainer)
 	
 	# Wait for animation to finish and everything to settle
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
@@ -159,18 +165,13 @@ func handle_level(level):
 	await get_tree().process_frame
 	await get_tree().process_frame
 	
-	# Refresh lobby first
 	refresh_lobby()
-	
-	# Wait one more frame after refresh
 	await get_tree().process_frame
 	
-	# Load icons immediately
 	print("=== Loading player icons (Host) ===")
 	load_player_icons()
 	print("=== Icons loaded. Total buttons: ", player_icon_buttons.size(), " ===")
 	
-	# Ensure Start button is visible and enabled (host always can start after selecting icon)
 	_update_start_button_state()
 
 func get_player_name() -> String:

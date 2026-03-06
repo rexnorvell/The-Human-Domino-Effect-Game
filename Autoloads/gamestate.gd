@@ -300,15 +300,17 @@ func disconnect_network():
 				rpc_id(p, "post_start_game")
 		post_start_game()
 
-func host_game(new_player_name):
+func host_game(new_player_name) -> Error:
 	player_name = new_player_name
 	peer = ENetMultiplayerPeer.new()
-	peer.create_server(DEFAULT_PORT, MAX_PEERS)
+	var err = peer.create_server(DEFAULT_PORT, MAX_PEERS)
+	# If the port is in use or creation fails, abort!
+	if err != OK:
+		peer = null
+		return err
 	multiplayer.multiplayer_peer = peer
-	
-	var id = multiplayer.get_unique_id()
-	
 	rpc("register_player", player_name, 0)
+	return OK
 	
 func join_game(ip, new_player_name):
 	player_name = new_player_name

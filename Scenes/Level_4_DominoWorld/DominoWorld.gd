@@ -39,7 +39,6 @@ var num_placed = 0
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
 var hand_dominos = [] # track dominos in hand numerically
-var needs_help = false # track if player needs help
 
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
@@ -344,8 +343,6 @@ func _on_Start_pressed() -> void:
 		$Next.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
-	
-	_help_Flag()
 
 # initialize everyone's dominos
 func setup_dominos():
@@ -749,29 +746,7 @@ func _on_Next_pressed() -> void:
 	if center_num <= 9:
 		setup_dominos()
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
-	
-	# (Fall 2025) added seperately from above condition for differentiation
-	if center_num < 9:
-		_help_Flag()
-					
-# (Fall 2025) use current dominos to check if you have a playable domino by comparing to all end dominos
-func _help_Check() -> bool:
-	for end_domino in path_ends:
-		for domino in hand_dominos:
-			if domino.has(end_domino): # if a playable end domino is found
-				print("Value of the domino to play on: ", end_domino) # debug
-				print("This is a playable domino: ", domino)
-				return true
-	return false # no playable dominos
 
-# (Fall 2025) called whenever help needs to be checked, ie at the start of the game, next turn, or next round
-# currently just toggles the visibility of the button (MULTIPLAYER REINTEGRATION NEEDED)
-func _help_Flag() -> void:
-	if !_help_Check():
-		print("Player needs help!") # debug
-		$Help.visible = true # toggle on visibility 
-		needs_help = true
-		
 # (Fall 2025) called at the end of the game when reset button becomes visible 
 func _on_Reset_pressed() -> void:
 	get_tree().reload_current_scene() # reload the entirety of the scene

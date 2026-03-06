@@ -330,11 +330,7 @@ func _on_Start_pressed() -> void:
 	else:
 		SaveManager.Save["0"].Current_Round = 0
 	
-	# Randomize the starting turn and sync with everyone
-	randomize()
-	turn = randi() % gamestate.players.size()
-	rpc("sync_turn", turn)
-	_update_turn_label()
+	randomize_turn()
 		
 	setup_dominos()
 	$Start.queue_free()
@@ -344,6 +340,11 @@ func _on_Start_pressed() -> void:
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
+func randomize_turn():
+	turn = randi() % gamestate.players.size()
+	rpc("sync_turn", turn)
+	sync_turn(turn)
+	
 # initialize everyone's dominos
 func setup_dominos():
 	# host domino set up
@@ -716,6 +717,9 @@ func replace_domino():
 				# Print all child nodes to see what's actually available
 				for child in get_children():
 					print("Found child node: ", child.name)
+	
+	# Set a new random player's turn
+	randomize_turn()
 
 @rpc("any_peer") func sync_turn(new_turn):
 	turn = new_turn

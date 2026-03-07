@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dq5f7r63drllb"]
+[gd_scene format=3 uid="uid://dq5f7r63drllb"]
 
 [ext_resource type="Script" uid="uid://cj4jg36t0e65a" path="res://Scenes/Components/Domino.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cxr8qbu56i4u4" path="res://UI/sprites/dominos/00.png" id="2"]
@@ -13,25 +13,34 @@ fallbacks = Array[Font]([ExtResource("3"), ExtResource("3")])
 subpixel_positioning = 0
 msdf_pixel_range = 14
 msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
-[node name="Domino" type="Node2D"]
+[node name="Domino" type="Node2D" unique_id=484891409]
 script = ExtResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1727582070]
 scale = Vector2(1.3, 1.3)
 texture = ExtResource("2")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1374037218]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=923412705]
 shape = SubResource("1")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1273022472]
 visible = false
 offset_left = 48.0
 offset_top = -88.0

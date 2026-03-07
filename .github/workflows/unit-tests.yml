@@ -34,7 +34,7 @@ jobs:
 
         steps:
             - name: "Checkout GdUnit Repository"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   lfs: true
                   submodules: "recursive"

@@ -707,11 +707,11 @@ position = Vector2(-192, 0)
 scale = Vector2(0.5, 0.5)
 placed = true
 
-[node name="Sprite2D" parent="CentralDomino" index="0"]
+[node name="Sprite2D" parent="CentralDomino" index="0" unique_id=1727582070]
 position = Vector2(8, -112)
 scale = Vector2(0.5, 0.5)
 
-[node name="CollisionShape2D" parent="CentralDomino/Area2D" index="0"]
+[node name="CollisionShape2D" parent="CentralDomino/Area2D" parent_id_path=PackedInt32Array(20014381, 1374037218) index="0" unique_id=923412705]
 position = Vector2(8, -112)
 scale = Vector2(0.8, 0.8)
 

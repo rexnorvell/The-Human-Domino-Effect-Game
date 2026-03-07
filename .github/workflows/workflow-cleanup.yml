@@ -1,11 +1,21 @@
 # This workflow prunes old workflow runs for an entire repository.
 
-name: cleanup-workflow-runs
+name: Workflow Cleanup
 
 on:
   schedule:
-    - cron: "0 0 * * *" # GMT
+    - cron: "0 0 * * *"
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run cleanup without deleting runs"
+        type: boolean
+        default: true
+
+      retention_days:
+        description: "Workflow run retention days"
+        type: number
+        default: 5
 
 jobs:
   cleanup:
@@ -13,14 +23,110 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Cleanup of obsolete workflow runs
-        uses: actions/github-script@v4
+      - name: Cleanup workflow runs
+        uses: actions/github-script@v7
         with:
           script: |
-            const script = require('./.github/actions/workflow-cleanup/index.js')
-            await script({ github, context, core, exec });
+            const retentionDays = Number(process.env.RETENTION_DAYS || 5);
+            const dryRun = process.env.DRY_RUN === 'true';
+
+            const now = Date.now();
+            const retentionMs = retentionDays * 86400000;
+
+            const { owner, repo } = context.repo;
+
+            core.info(`Retention policy: ${retentionDays} days`);
+            core.info(`Dry run mode: ${dryRun}`);
+
+            // Default protected branches
+            const protectedBranches = new Set([
+              "main",
+              "master",
+              "develop"
+            ]);
+
+            /**
+             * Fetch workflow runs
+             */
+            const runs = await github.paginate(
+              github.rest.actions.listWorkflowRunsForRepo,
+              {
+                owner,
+                repo,
+                per_page: 100
+              }
+            );
+
+            if (!runs.length) {
+              core.info("No workflow runs found.");
+              return;
+            }
+
+            /**
+             * Identify latest run per workflow + branch
+             */
+            const latestRuns = new Map();
+
+            for (const run of runs) {
+              const key = `${run.name}:${run.head_branch}`;
+
+              if (!latestRuns.has(key)) {
+                latestRuns.set(key, run.id);
+              }
+            }
+
+            const deletableRuns = [];
+
+            for (const run of runs) {
+              if (run.status !== "completed") continue;
+
+              if (!run.created_at) continue;
+
+              const age = now - Date.parse(run.created_at);
+
+              // Retention window protection
+              if (age < retentionMs) continue;
+
+              // Protect latest runs
+              const key = `${run.name}:${run.head_branch}`;
+              if (latestRuns.get(key) === run.id) continue;
+
+              // Protect important branches
+              if (protectedBranches.has(run.head_branch)) continue;
+
+              deletableRuns.push(run);
+            }
+
+            core.info(`Found ${deletableRuns.length} workflow runs eligible for cleanup`);
+
+            if (dryRun) {
+              core.notice("Dry run enabled — no deletions performed");
+              deletableRuns.forEach(run => {
+                core.info(`Would delete: ${run.html_url}`);
+              });
+              return;
+            }
+
+            core.startGroup("Deleting workflow runs");
+
+            for (const run of deletableRuns) {
+              try {
+                core.info(`Deleting run ${run.id}`);
+
+                await github.rest.actions.deleteWorkflowRun({
+                  owner,
+                  repo,
+                  run_id: run.id
+                });
+
+              } catch (err) {
+                core.error(`Failed deleting run ${run.id}: ${err.message}`);
+              }
+            }
+
+            core.endGroup();
+
+            core.notice(`Deleted ${deletableRuns.length} workflow runs`);
+        env:
+          RETENTION_DAYS: ${{ inputs.retention_days }}
+          DRY_RUN: ${{ inputs.dry_run }}

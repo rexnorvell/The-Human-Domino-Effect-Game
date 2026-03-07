@@ -15,8 +15,9 @@ runs:
         - name: "Unit Test Linux"
           if: ${{ runner.OS == 'Linux' }}
           env:
-              GODOT_BIN: "/home/runner/godot-linux/godot"
+              GODOT_BIN: ${{ inputs.godot-bin }}
           shell: bash
           run: |
-              chmod +x ./runtest.sh
-              xvfb-run --auto-servernum ./runtest.sh --add ${{ inputs.test-includes }} --continue --audio-driver Dummy --verbose
+              "$GODOT_BIN" --headless --import --path .
+              chmod +x addons/gdUnit4/runtest.sh
+              xvfb-run --auto-servernum addons/gdUnit4/runtest.sh --add ${{ inputs.test-includes }} --continue --audio-driver Dummy --verbose

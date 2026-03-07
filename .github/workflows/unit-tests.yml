@@ -1,4 +1,4 @@
-name: unit-tests
+name: Unit Tests
 run-name: ${{ github.head_ref || github.ref_name }}-unit-tests
 
 on:
@@ -34,7 +34,7 @@ jobs:
 
         steps:
             - name: "Checkout GdUnit Repository"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   lfs: true
                   submodules: "recursive"
@@ -51,17 +51,17 @@ jobs:
             - name: "Update Project"
               if: ${{ !cancelled() }}
               timeout-minutes: 1
-              continue-on-error: true # we still ignore the timeout, the script is not quit and we run into a timeout
+              continue-on-error: true
               shell: bash
               run: |
-                  xvfb-run --auto-servernum ~/godot-linux/godot -e --path . -s res://addons/gdUnit3/src/core/scan_project.gd --audio-driver Dummy --no-window
+                "$HOME/godot-linux/godot" --headless --import --path .
 
             - name: "Run Unit Tests"
               if: ${{ !cancelled() }}
               timeout-minutes: 8
               uses: ./.github/actions/unit-test
               with:
-                  godot-bin: "~/godot-linux/godot"
+                  godot-bin: /home/runner/godot-linux/godot
                   test-includes: "res://test/"
 
             - name: "Set Report Name"

@@ -15,7 +15,7 @@ runs:
               git config --global --add safe.directory '*'
 
         - name: "Publish Test Results"
-          uses: dorny/test-reporter@v1.6.0
+          uses: dorny/test-reporter@v2.6.0
           with:
               name: test_report_${{ inputs.report-name }}
               path: "reports/**/results.xml"

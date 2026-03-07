@@ -344,32 +344,46 @@ func randomize_turn():
 	turn = randi() % gamestate.players.size()
 	rpc("sync_turn", turn)
 	sync_turn(turn)
-	
-# initialize everyone's dominos
-func setup_dominos():
-	# host domino set up
-	draw_7()
 
-	# tell everyone else to draw 7 dominos, in turn
+func setup_dominos():
+	# Only the host is allowed to deal dominoes
+	if not multiplayer.is_server():
+		return
+		
+	# 1. Deal for the Host
+	var my_hand = []
+	for i in range(7):
+		my_hand.append(dominos.pop_front())
+		
+	# 2. Deal for the Clients
 	for p in gamestate.players:
 		if p != 1:
-			rpc_id(p, "get_starting_hand")
-
-
-@rpc("any_peer") func get_starting_hand():
-	draw_7()
-
-
-# initialize 7 dominos from main deck on player's screen
-func draw_7():
-	# draw 7 dominos
-	# sort by lowest number, low to high
-	var drawn_dominos = []
-
-	for i in range(7):
-		var nums = draw_domino()
-		drawn_dominos.append(nums)
+			var client_hand = []
+			for i in range(7):
+				client_hand.append(dominos.pop_front())
+			# Send the specific hand to the client
+			rpc_id(p, "receive_hand", client_hand)
+			
+	# 3. Sync the remaining deck to everyone so future mid-game draws work
+	rpc("sync_full_deck", dominos)
 	
+	# 4. Render the host's hand locally
+	render_hand(my_hand)
+
+@rpc("any_peer") func receive_hand(hand):
+	render_hand(hand)
+
+@rpc("authority", "call_remote") func sync_full_deck(new_deck):
+	dominos = new_deck
+
+# Takes an array of 7 dominoes and renders them on screen
+func render_hand(drawn_dominos):
+	# Ensure the numbers are formatted correctly before sorting
+	for i in range(drawn_dominos.size()):
+		if drawn_dominos[i][0] < drawn_dominos[i][1]:
+			drawn_dominos[i].reverse()
+			
+	# Sort by lowest number, low to high
 	drawn_dominos.sort_custom(func(a, b):
 		var min_a = min(a[0], a[1])
 		var min_b = min(b[0], b[1])
@@ -387,8 +401,6 @@ func draw_7():
 		add_child(domino)
 
 		# set domino position and scale
-		# placed at bottom of screen, with spacing
-		# rotate 90 degrees counter-clockwise to lie flat
 		var domino_spacing = 85
 		domino.position = Vector2((i * domino_spacing) - (192 + domino_spacing * 3), 175)
 		domino.scale = HAND_SCALE
@@ -404,7 +416,7 @@ func draw_7():
 			true
 		)
 	
-	# (Fall 2025) set the hand array to the drawn dominos
+	# set the hand array to the drawn dominos
 	hand_dominos = drawn_dominos
 
 # path set-up

@@ -4,7 +4,7 @@ run-name: ${{ github.head_ref || github.ref_name }}-ci-dev
 on:
     push:
         branches:
-            - master
+            - main
         paths-ignore:
             - "**.yml"
             - "**.jpg"

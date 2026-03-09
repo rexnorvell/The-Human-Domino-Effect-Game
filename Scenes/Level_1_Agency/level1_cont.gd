@@ -76,7 +76,15 @@ func _process(delta: float) -> void:
 
 # Handle proceeding to the next scene
 func _on_Button_pressed() -> void:
-#	print("id", get_tree().get_network_unique_id())
+	# Sync the data to the gamestate
+	rpc("set_elcitraps", selected)
+	
+	# Use the Manager's global fade to switch levels
+	if get_parent().has_method("change_level"):
+		get_parent().change_level(next_scene)
+	else:
+		# Fallback just in case the parent isn't the Manager
+		get_tree().change_scene_to_packed(next_scene)
 	# Synchronize selected traits across the network
 	rpc("set_elcitraps", selected)
 #	print("debug: ", gamestate.elcitraps)

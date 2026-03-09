@@ -27,7 +27,10 @@ var page = 0
 
 func _ready() -> void:
 	$Oauabae/AnimatedSprite2D.animation = "default"
-	#$Narration.text = "This O-shaped tool that looks like a magnifying glass is you. Well, it's you for this game, for the first part of the game, before you create your own avatar. You are controlling this magnifying tool." 
+	
+	# Add a half-second delay so the graphics load smoothly before the audio blasts
+	await get_tree().create_timer(0.5).timeout
+	
 	dialogue_label.text = dialogue[page]
 	dialogue_label.set_visible_characters(0)
 	timer.start()  # Start text reveal effect

@@ -1,17 +1,12 @@
 # node for moving elcitrap wave
-
 extends RigidBody2D
 
-
-# Declare member variables here. Examples:
 @export var min_speed = 150  # Minimum speed range.
 @export var max_speed = 250  # Maximum speed range.
 
 var current_type = null
 var captured = false
 var end_pos = null 
-
-var t = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,32 +24,36 @@ func _on_visibility_notifier_2d_screen_exited():
 	get_parent().trait_queue.append(current_type)
 	queue_free()
 
-# if elcitrap has been captured, play captured animation
-func _physics_process(delta):
-	if captured:
-		$AnimatedSprite2D.stop()
-		$AnimatedSprite2D.animation = "static_" + current_type[0]
-		$AnimatedSprite2D.scale.x = 0.3
-		$Label.visible = true
-		self.rotation = 0
-		self.linear_velocity = Vector2(0, 0)
-		
-		t += delta * 0.05
-		
-		self.position = self.position.lerp(Vector2(end_pos[0], end_pos[1]), t)
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	get_parent().trait_queue.append(current_type)
+	queue_free()
 
 # Handle mouse input to capture the elcitrap
 func _input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton and event.pressed:
 		capture_elcitrap()
 
-# Captures an elcitrap
+# Captures an elcitrap AND animates it
 func capture_elcitrap() -> void:
-	if not captured:
-		get_parent().total_captured += 1
+	if captured:
+		return # Stop here if it's already captured so we don't double-count
+		
+	# Update the level's score
+	get_parent().total_captured += 1
 	captured = true
-
-
-func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	get_parent().trait_queue.append(current_type)
-	queue_free()
+	
+	# Shut off the physics engine for this node to save CPU
+	set_deferred("freeze", true)
+	
+	# Instantly update the visuals
+	$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.animation = "static_" + current_type[0]
+	$AnimatedSprite2D.scale.x = 0.3
+	$Label.visible = true
+	self.rotation = 0
+	
+	# Use a Tween to glide the trait to its final spot smoothly
+	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", Vector2(end_pos[0], end_pos[1]), 1.5)

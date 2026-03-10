@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://2kb7jdtcgrfm"]
+[gd_scene format=3 uid="uid://2kb7jdtcgrfm"]
 
 [ext_resource type="Texture2D" uid="uid://c607vhgg8so8d" path="res://UI/sprites/character_creation_background.jpeg" id="1"]
 [ext_resource type="Script" uid="uid://yks12t3egsw3" path="res://Scenes/Level_2_CharacterCreation/CharacterCreation.gd" id="2"]
@@ -71,12 +71,12 @@ _data = {
 &"Zoom": SubResource("4")
 }
 
-[node name="CharacterCreation" type="Node2D"]
+[node name="CharacterCreation" type="Node2D" unique_id=1530156521]
 script = ExtResource("2")
 next_scene = ExtResource("10")
 Elcitrap = ExtResource("3")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2019257240]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -84,32 +84,32 @@ scale = Vector2(0.235, 0.246)
 texture = ExtResource("1")
 stretch_mode = 5
 
-[node name="Animated_Fire_Texture" parent="." instance=ExtResource("7")]
+[node name="Animated_Fire_Texture" parent="." unique_id=1822813550 instance=ExtResource("7")]
 
-[node name="clothes" type="Sprite2D" parent="."]
+[node name="clothes" type="Sprite2D" parent="." unique_id=1193374521]
 light_mask = 2
 z_index = 2
 position = Vector2(512, 332)
 texture = ExtResource("6")
 
-[node name="body" type="Sprite2D" parent="."]
+[node name="body" type="Sprite2D" parent="." unique_id=1678151513]
 light_mask = 2
 z_index = 1
 position = Vector2(512, 319.5)
 texture = ExtResource("4")
 
-[node name="front_hair" type="Sprite2D" parent="."]
+[node name="front_hair" type="Sprite2D" parent="." unique_id=75860904]
 light_mask = 2
 z_index = 2
 position = Vector2(512, 332)
 texture = ExtResource("11")
 
-[node name="back_hair" type="Sprite2D" parent="."]
+[node name="back_hair" type="Sprite2D" parent="." unique_id=2080733531]
 light_mask = 2
 position = Vector2(512, 332)
 texture = ExtResource("11")
 
-[node name="hair_left" type="TextureButton" parent="."]
+[node name="hair_left" type="TextureButton" parent="." unique_id=1211170015]
 offset_left = 328.0
 offset_top = 24.0
 offset_right = 840.0
@@ -117,7 +117,7 @@ offset_bottom = 468.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("5")
 
-[node name="hair_right" type="TextureButton" parent="."]
+[node name="hair_right" type="TextureButton" parent="." unique_id=778510786]
 offset_left = 584.0
 offset_top = 24.0
 offset_right = 1096.0
@@ -125,7 +125,7 @@ offset_bottom = 468.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("8")
 
-[node name="body_left" type="TextureButton" parent="."]
+[node name="body_left" type="TextureButton" parent="." unique_id=748332577]
 offset_left = 280.0
 offset_top = 136.0
 offset_right = 792.0
@@ -133,7 +133,7 @@ offset_bottom = 580.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("5")
 
-[node name="body_right" type="TextureButton" parent="."]
+[node name="body_right" type="TextureButton" parent="." unique_id=2034885537]
 offset_left = 632.0
 offset_top = 136.0
 offset_right = 1144.0
@@ -141,7 +141,7 @@ offset_bottom = 580.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("8")
 
-[node name="clothes_left" type="TextureButton" parent="."]
+[node name="clothes_left" type="TextureButton" parent="." unique_id=411276875]
 offset_left = 256.0
 offset_top = 264.0
 offset_right = 768.0
@@ -149,7 +149,7 @@ offset_bottom = 708.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("5")
 
-[node name="clothes_right" type="TextureButton" parent="."]
+[node name="clothes_right" type="TextureButton" parent="." unique_id=20336173]
 offset_left = 656.0
 offset_top = 264.0
 offset_right = 1168.0
@@ -157,7 +157,7 @@ offset_bottom = 708.0
 scale = Vector2(0.214384, 0.214384)
 texture_normal = ExtResource("8")
 
-[node name="next" type="TextureButton" parent="."]
+[node name="next" type="TextureButton" parent="." unique_id=2091303618]
 offset_left = 832.0
 offset_top = 392.0
 offset_right = 1464.0
@@ -165,28 +165,24 @@ offset_bottom = 1129.0
 scale = Vector2(0.2, 0.2)
 texture_normal = ExtResource("9")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_k4fbn")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1285652551]
+libraries/ = SubResource("AnimationLibrary_k4fbn")
 script = ExtResource("13")
 
-[node name="ZIndexSetter" type="Node2D" parent="."]
+[node name="ZIndexSetter" type="Node2D" parent="." unique_id=2111210301]
 z_index = 6
 
-[node name="ColorRect" type="ColorRect" parent="ZIndexSetter"]
+[node name="ColorRect" type="ColorRect" parent="ZIndexSetter" unique_id=1041505382]
 offset_right = 1024.0
 offset_bottom = 600.0
 color = Color(0, 0, 0, 1)
 script = ExtResource("12")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1087057255]
 offset = Vector2(512, 300)
 
-[node name="ZoomPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_pgici")
-}
+[node name="ZoomPlayer" type="AnimationPlayer" parent="." unique_id=1306376140]
+libraries/ = SubResource("AnimationLibrary_pgici")
 script = ExtResource("14")
 
 [connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_CharacterCreation_trigger_animation"]

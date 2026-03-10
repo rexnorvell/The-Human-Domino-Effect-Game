@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dtfwm3j3judh2"]
+[gd_scene format=3 uid="uid://dtfwm3j3judh2"]
 
 [ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
 [ext_resource type="Script" uid="uid://bibgt27a0gvq" path="res://Scenes/Components/CapturedElcitrap.gd" id="2"]
@@ -43,6 +43,18 @@ radius = 26.7374
 
 [sub_resource type="FontFile" id="3"]
 fallbacks = Array[Font]([ExtResource("6")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -76,42 +88,43 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="CapturedElcitrap" type="RigidBody2D"]
+[node name="CapturedElcitrap" type="RigidBody2D" unique_id=1824816417]
 collision_layer = 2
 input_pickable = true
 gravity_scale = 0.0
 script = ExtResource("2")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1594638757]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("1")
 animation = &"green"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=291961464]
 shape = SubResource("2")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=899001910]
 offset_left = -24.0
 offset_top = -8.0
 offset_right = 24.0
 offset_bottom = 6.0
 theme_override_fonts/font = SubResource("3")
 
-[node name="Popup" type="Popup" parent="."]
+[node name="Popup" type="Popup" parent="." unique_id=2052712314]
+oversampling_override = 1.0
 visible = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Popup"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Popup" unique_id=1616342431]
 self_modulate = Color(1, 1, 1, 0.356863)
 position = Vector2(29.8628, 29.457)
 scale = Vector2(0.07, 0.07)
 sprite_frames = SubResource("5")
 animation = &"humanities"
 
-[node name="Select" type="AudioStreamPlayer" parent="."]
+[node name="Select" type="AudioStreamPlayer" parent="." unique_id=64976224]
 stream = ExtResource("11")
 volume_db = -11.0
 
-[node name="Deselect" type="AudioStreamPlayer" parent="."]
+[node name="Deselect" type="AudioStreamPlayer" parent="." unique_id=2141573930]
 stream = ExtResource("10")
 volume_db = -11.0
 

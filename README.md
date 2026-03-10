@@ -9,15 +9,15 @@ Welcome to the official GitHub repository for the Human Domino Effect (HDE) virt
 -   Title screen with parallax background scrolling
 -   Basic debug menu with game mode selection for developers
 -   Character Creation Mode
-    -   Introductory cutscene
-    -   Player customization
+	-   Introductory cutscene
+	-   Player customization
 -   Pond Choices Mode
 -   Domino Game Mode
-    -   Alloy and footprint tile scoring
-    -   Population of domino turns
-    -   Template for entering bonus codes
+	-   Alloy and footprint tile scoring
+	-   Population of domino turns
+	-   Template for entering bonus codes
 -   Virtual World Mode
-    -   Work-in-progress version of interactible "campfire" cutscene
+	-   Work-in-progress version of interactible "campfire" cutscene
 
 ---
 

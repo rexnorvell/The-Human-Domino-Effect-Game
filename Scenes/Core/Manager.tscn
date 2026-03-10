@@ -1,10 +1,79 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0w7nvyfiwm1h"]
+[gd_scene format=3 uid="uid://d0w7nvyfiwm1h"]
 
 [ext_resource type="AudioStream" uid="uid://b7f2rqpd6d3eg" path="res://audio/background/quantum.ogg" id="1"]
 [ext_resource type="Script" uid="uid://dsnj8gvlp47q5" path="res://Scenes/Core/Manager.gd" id="2"]
 
-[node name="Manager" type="Node2D"]
+[sub_resource type="Animation" id="Animation_m4km7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FadeRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+
+[sub_resource type="Animation" id="Animation_ewn46"]
+resource_name = "fade_one_shot"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FadeRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_2a1bi"]
+resource_name = "fade_to_black"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FadeRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uvhlb"]
+_data = {
+&"RESET": SubResource("Animation_m4km7"),
+&"fade_one_shot": SubResource("Animation_ewn46"),
+&"fade_to_black": SubResource("Animation_2a1bi")
+}
+
+[node name="Manager" type="Node2D" unique_id=31374706]
 script = ExtResource("2")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1068399312]
 stream = ExtResource("1")
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1238648514]
+layer = 100
+
+[node name="FadeRect" type="ColorRect" parent="TransitionLayer" unique_id=1527441083]
+modulate = Color(0, 0, 0, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TransitionLayer" unique_id=1879927634]
+libraries/ = SubResource("AnimationLibrary_uvhlb")

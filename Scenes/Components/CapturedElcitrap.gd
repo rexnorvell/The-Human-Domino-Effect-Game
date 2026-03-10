@@ -29,17 +29,46 @@ func _on_mouse_exited() -> void:
 
 # when clicked add to chosen elcitraps or remove from chosen elcitraps
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed:
-			if selected or len(get_parent().selected) < 5:
-				selected = not selected
-			if selected:
-				self.position = Vector2(500 + randf_range(-125, 125), 300 + randf_range(-125, 125))
-				get_parent().selected.append(current_type)
-				$Select.playing = true
+	if event is InputEventMouseButton and event.is_pressed():
+		
+		var parent = get_parent()
+		
+		if not selected:
+			# We want to select it, but check the limit first!
+			if len(parent.selected) >= 5:
+				# Max hit. Play a sound and STOP.
+				# (We could add an error sound here later if we have one)
+				return
 				
-			if not selected:
-				self.position = original_pos
-				var ind = get_parent().selected.find(current_type)
-				get_parent().selected.remove_at(ind)
-				$Deselect.playing = true
+			# We have room, Select it.
+			selected = true
+			
+			# Use set_deferred to safely teleport the physics body without lagging
+			set_deferred("position", Vector2(500 + randf_range(-125, 125), 300 + randf_range(-125, 125)))
+			
+			# Freeze physics math while it's captured to save CPU
+			set_deferred("freeze", true) 
+			
+			# If you have a particle node emitting, uncomment the line below to save GPU!
+			# if has_node("Particles2D"): $Particles2D.emitting = false
+			
+			parent.selected.append(current_type)
+			$Select.playing = true
+			
+		else:
+			# It IS already selected, so we are deselecting it.
+			selected = false
+			
+			# Safely teleport it back and turn physics back on
+			set_deferred("position", original_pos)
+			set_deferred("freeze", false)
+			
+			# Turn particles back on if you disabled them above
+			# if has_node("Particles2D"): $Particles2D.emitting = true
+			
+			# Find it and remove it safely
+			var ind = parent.selected.find(current_type)
+			if ind != -1: # Double check it actually exists before removing
+				parent.selected.remove_at(ind)
+			
+			$Deselect.playing = true

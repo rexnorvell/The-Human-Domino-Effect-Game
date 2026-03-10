@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://h5lyfqvnawki"]
+[gd_scene format=3 uid="uid://h5lyfqvnawki"]
 
 [ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
 [ext_resource type="Script" uid="uid://3udsnc7iq026" path="res://Scenes/Components/Elcitrap1.gd" id="2"]
@@ -102,13 +102,25 @@ height = 181.983
 
 [sub_resource type="FontFile" id="3"]
 fallbacks = Array[Font]([ExtResource("17")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
-[node name="Elcitrap1" type="RigidBody2D"]
+[node name="Elcitrap1" type="RigidBody2D" unique_id=1786526479]
 collision_layer = 2
 input_pickable = true
 gravity_scale = 0.0
@@ -116,20 +128,20 @@ script = ExtResource("2")
 min_speed = 300
 max_speed = 400
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=531727593]
 scale = Vector2(0.6, 0.3)
 sprite_frames = SubResource("1")
 animation = &"static_blue"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1427233796]
 rotation = 1.57079
 shape = SubResource("2")
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=2118162884]
 position = Vector2(1.18501, 2.04959)
 scale = Vector2(1.44224, 1.42331)
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=949155029]
 visible = false
 offset_left = -24.0
 offset_top = -8.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://b6ky8kh2dry7v"]
+[gd_scene format=3 uid="uid://b6ky8kh2dry7v"]
 
 [ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Components/Oauabae.tscn" id="2"]
@@ -23,6 +23,15 @@
 
 [sub_resource type="FontFile" id="5"]
 fallbacks = Array[Font]([ExtResource("6")])
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -65,46 +74,24 @@ tracks/1/keys = {
 "values": [Vector2(502.432, 266.664), Vector2(503.294, 224)]
 }
 
-[sub_resource type="Animation" id="4"]
-resource_name = "Reveal"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:percent_visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.6, 1.9, 4),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 1.0, 1.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:theme_override_colors/default_color")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3mkvk"]
+_data = {
+&"Bounce": SubResource("2"),
+&"Color": SubResource("3")
 }
 
-[node name="Agency" type="Node"]
+[node name="Agency" type="Node" unique_id=868952280]
 script = ExtResource("5")
 next_scene = ExtResource("10")
 
-[node name="DialogueBox" type="Polygon2D" parent="."]
+[node name="DialogueBox" type="Polygon2D" parent="." unique_id=1300350090]
+z_index = 1
 position = Vector2(0, -162)
 scale = Vector2(1, 1.42188)
-z_index = 1
 color = Color(0.117647, 0.117647, 0.117647, 0.745098)
 polygon = PackedVector2Array(64, 384, 960, 384, 960, 530.286, 64, 530.286)
 
-[node name="DialogueText" type="RichTextLabel" parent="DialogueBox"]
+[node name="DialogueText" type="RichTextLabel" parent="DialogueBox" unique_id=1069087025]
 offset_left = 88.0
 offset_top = 396.0
 offset_right = 936.0
@@ -112,101 +99,95 @@ offset_bottom = 530.0
 theme_override_fonts/normal_font = SubResource("5")
 text = "helllohello"
 
-[node name="Timer" type="Timer" parent="DialogueBox"]
-wait_time = 0.005
+[node name="Timer" type="Timer" parent="DialogueBox" unique_id=1439920539]
+wait_time = 0.05
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=84483248]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 texture = ExtResource("1")
-expand = true
+expand_mode = 1
 stretch_mode = 7
 
-[node name="Oauabae" parent="." instance=ExtResource("2")]
+[node name="Oauabae" parent="." unique_id=1593543245 instance=ExtResource("2")]
 position = Vector2(204, -35)
 
-[node name="String" type="RigidBody2D" parent="."]
+[node name="String" type="RigidBody2D" parent="." unique_id=89921930]
 visible = false
 position = Vector2(502.432, 266.664)
 gravity_scale = 0.0
 script = ExtResource("4")
 
-[node name="Sprite2D" type="Sprite2D" parent="String"]
+[node name="Sprite2D" type="Sprite2D" parent="String" unique_id=1723266870]
 modulate = Color(1, 1, 0.724254, 1)
 position = Vector2(0.862095, 8)
 scale = Vector2(0.33, 0.33)
 texture = ExtResource("3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="String"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="String" unique_id=1466810972]
 position = Vector2(0.862099, 8.33353)
 shape = SubResource("1")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="String"]
-anims/Bounce = SubResource("2")
-anims/Color = SubResource("3")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="String" unique_id=303181846]
+libraries/ = SubResource("AnimationLibrary_3mkvk")
 
-[node name="End" type="Timer" parent="."]
+[node name="End" type="Timer" parent="." unique_id=824834698]
 wait_time = 2.0
 
-[node name="Narration" parent="." instance=ExtResource("7")]
+[node name="Narration" parent="." unique_id=635612606 instance=ExtResource("7")]
 visible = false
-theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/default_color = Color(1, 1, 1, 0)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 visible_characters = -1
-percent_visible = 1.0
 
-[node name="TextAnimationPlayer" parent="Narration" index="1"]
-anims/Reveal = SubResource("4")
-
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=422300326]
 visible = false
 offset_left = 920.0
 offset_top = 32.0
 offset_right = 992.0
 offset_bottom = 104.0
 
-[node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="." unique_id=1526734099]
 stream = ExtResource("9")
-bus = "Narration"
 
-[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." unique_id=1324135404]
 stream = ExtResource("8")
-bus = "Narration"
 
-[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="." unique_id=2123718064]
 stream = ExtResource("11")
 
-[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="." unique_id=1231617446]
 stream = ExtResource("13")
 
-[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="." unique_id=270468470]
 stream = ExtResource("12")
 
-[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="." unique_id=1494336143]
 stream = ExtResource("14")
 
-[node name="AudioStreamPlayer7" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer7" type="AudioStreamPlayer" parent="." unique_id=2038305732]
 stream = ExtResource("16")
 
-[node name="AudioStreamPlayer8" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer8" type="AudioStreamPlayer" parent="." unique_id=357836442]
 stream = ExtResource("15")
 
-[node name="AudioStreamPlayer9" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer9" type="AudioStreamPlayer" parent="." unique_id=1014139836]
 stream = ExtResource("17")
 
-[node name="AudioStreamPlayer10" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer10" type="AudioStreamPlayer" parent="." unique_id=1270546515]
 stream = ExtResource("19")
 
-[node name="AudioStreamPlayer11" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer11" type="AudioStreamPlayer" parent="." unique_id=758447741]
 stream = ExtResource("20")
 
-[node name="AudioStreamPlayer12" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer12" type="AudioStreamPlayer" parent="." unique_id=1234059569]
 stream = ExtResource("18")
 
-[node name="AudioStreamPlayer13" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer13" type="AudioStreamPlayer" parent="." unique_id=2091922461]
 
-[node name="AudioStreamPlayer14" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer14" type="AudioStreamPlayer" parent="." unique_id=1847773894]
 
 [connection signal="timeout" from="DialogueBox/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="String" to="Oauabae" method="_on_String_mouse_entered"]

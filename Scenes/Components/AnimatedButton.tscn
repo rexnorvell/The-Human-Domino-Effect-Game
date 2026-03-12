@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://clj23haf5g65i"]
 
 [ext_resource type="Theme" uid="uid://dlygu0mhr0ual" path="res://UI/button.tres" id="1_u7l6n"]
-[ext_resource type="Script" uid="uid://bd51678tnfgro" path="res://Scenes/Components/animated_button.gd" id="2_ytncc"]
+[ext_resource type="Script" uid="uid://bd51678tnfgro" path="res://Scenes/Components/AnimatedButton.gd" id="2_ytncc"]
 
 [node name="Button" type="Button" unique_id=170246650]
 offset_right = 52.0

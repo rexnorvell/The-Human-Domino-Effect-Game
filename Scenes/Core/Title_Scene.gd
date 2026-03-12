@@ -1,20 +1,25 @@
 extends Control
 
 var input_flag: bool = false
-
+var accept_input: bool = false
 
 func _ready():
 	MusicController.playMusic(ReferenceManager.get_reference("quantum.ogg"))
 
 
+func timer_end():
+	accept_input = true
+
+
 func _input(event):
-	if event is InputEventMouseButton:
-		if event.is_pressed():
+	if accept_input:
+		if event is InputEventMouseButton:
+			if event.is_pressed():
+				handle_change_to_menu_scene()
+		elif event is InputEventKey:
 			handle_change_to_menu_scene()
-	elif event is InputEventKey:
-		handle_change_to_menu_scene()
-	elif event is InputEventScreenTouch:
-		handle_change_to_menu_scene()
+		elif event is InputEventScreenTouch:
+			handle_change_to_menu_scene()
 
 
 func handle_change_to_menu_scene():

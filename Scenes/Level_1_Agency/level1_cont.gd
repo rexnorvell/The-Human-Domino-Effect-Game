@@ -63,10 +63,6 @@ func _ready() -> void:
 		
 		# Add Elcitrap to the scene
 		add_child(elcitrap)
-	
-	# Set initial narration text and start animation
-	$Narration.text = narration_text[0]
-	$Narration/TextAnimationPlayer.play("Reveal", -1, 2)
 
 # Check for trait selection completion each frame
 func _process(delta: float) -> void:
@@ -76,8 +72,6 @@ func _process(delta: float) -> void:
 
 # Handle proceeding to the next scene
 func _on_Button_pressed() -> void:
-	# Sync the data to the gamestate
-	rpc("set_elcitraps", selected)
 	
 	# Use the Manager's global fade to switch levels
 	if get_parent().has_method("change_level"):
@@ -85,32 +79,18 @@ func _on_Button_pressed() -> void:
 	else:
 		# Fallback just in case the parent isn't the Manager
 		get_tree().change_scene_to_packed(next_scene)
-	# Synchronize selected traits across the network
-	rpc("set_elcitraps", selected)
-#	print("debug: ", gamestate.elcitraps)
 	
 	# Hide button and narration
 	$Button.visible = false
-	$Narration.visible = false
+	#$Narration.visible = false
 	
 	# Trigger scene transition animation
 	emit_signal("trigger_animation", "Fade")
 
-# Network RPC to set selected Elcitraps for each player
-@rpc("any_peer", "call_local") func set_elcitraps(elcitraps):
-	gamestate.elcitraps[multiplayer.get_remote_sender_id()] = elcitraps
 
-# Network RPC to start the next scene
-@rpc("any_peer") func start_game():
+func start_game():
 	get_parent().change_level(next_scene)
 
-# Handle narration text progression
-func _on_TextAnimationPlayer_animation_finished(anim_name: String) -> void:
-	# Cycle through narration text
-	if narration_count < len(narration_text):
-		$Narration.text = narration_text[narration_count]
-		$Narration/TextAnimationPlayer.play("Reveal")
-		narration_count += 1
 
 # Handle scene transition animations
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:

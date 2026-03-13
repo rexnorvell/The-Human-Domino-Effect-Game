@@ -1,6 +1,7 @@
-# node for static elcitrap on choosing personality screen
-
 extends RigidBody2D
+
+signal hover_started(sprite: String)
+signal hover_ended()
 
 var current_type = null
 var original_pos = Vector2(0,0)
@@ -9,38 +10,34 @@ var t = 0.0
 
 var anim_table = {"red": "arts", "green": "science", "blue": "humanities"}
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
 	original_pos = self.position
+
 	
 func init(type, pos):
 	$AnimatedSprite2D.animation = type[0]
 	$Label.text = type[1]
 	current_type = type
 	original_pos = pos
-	$Popup/AnimatedSprite2D.animation = anim_table[current_type[0]]
+	$AnimatedSprite2D2.animation = anim_table[current_type[0]]
+
 
 func _on_mouse_entered() -> void:
-	if not selected:
-		$Popup.visible = true
+	hover_started.emit(anim_table[current_type[0]])
+
 
 func _on_mouse_exited() -> void:
-	$Popup.visible = false
+	hover_ended.emit()
 
-# when clicked add to chosen elcitraps or remove from chosen elcitraps
-func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
-		
 		var parent = get_parent()
-		
 		if not selected:
-			# We want to select it, but check the limit first!
 			if len(parent.selected) >= 5:
-				# Max hit. Play a sound and STOP.
-				# (We could add an error sound here later if we have one)
+				$Deselect.playing = true
 				return
-				
-			# We have room, Select it.
 			selected = true
 			
 			# Use set_deferred to safely teleport the physics body without lagging

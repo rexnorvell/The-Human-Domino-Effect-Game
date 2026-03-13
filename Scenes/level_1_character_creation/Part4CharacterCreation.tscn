@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://2kb7jdtcgrfm"]
 
 [ext_resource type="Texture2D" uid="uid://c607vhgg8so8d" path="res://UI/sprites/character_creation_background.jpeg" id="1"]
-[ext_resource type="Script" uid="uid://yks12t3egsw3" path="res://Scenes/Level_2_CharacterCreation/CharacterCreation.gd" id="2"]
+[ext_resource type="Script" uid="uid://yks12t3egsw3" path="res://Scenes/level_1_character_creation/Part4CharacterCreation.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://danf0e72y7l2m" path="res://Scenes/Components/StaticElcitrap.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://bc7xpn3jmgg3s" path="res://UI/sprites/character_sprites/bodies/0.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://7eimaelymx4d" path="res://UI/sprites/left_arrow.png" id="5"]
@@ -9,11 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://bifgc6bc832oq" path="res://Scenes/Components/Animated_Fire.tscn" id="7"]
 [ext_resource type="Texture2D" uid="uid://dbwuwes6pfjfm" path="res://UI/sprites/right_arrow.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="9"]
-[ext_resource type="PackedScene" uid="uid://cudgvg65rtqfj" path="res://Scenes/Level_3_Pond/Pond.tscn" id="10"]
+[ext_resource type="PackedScene" uid="uid://cudgvg65rtqfj" path="res://Scenes/Level_2_Pond/Pond.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://b0exrp8j8euyr" path="res://UI/sprites/character_sprites/front_hair/0.png" id="11"]
-[ext_resource type="Script" uid="uid://bcsycki4udhu" path="res://Scenes/Level_2_CharacterCreation/CreationRect.gd" id="12"]
-[ext_resource type="Script" uid="uid://cmmswogjh6xad" path="res://Scenes/Level_2_CharacterCreation/CreationAnimations.gd" id="13"]
-[ext_resource type="Script" uid="uid://cjlfr3j6cmixr" path="res://Scenes/Level_2_CharacterCreation/CreationZoom.gd" id="14"]
+[ext_resource type="Script" uid="uid://bcsycki4udhu" path="res://Scenes/level_1_character_creation/Part4CreationRect.gd" id="12"]
+[ext_resource type="Script" uid="uid://cmmswogjh6xad" path="res://Scenes/level_1_character_creation/Part4CreationAnimations.gd" id="13"]
+[ext_resource type="Script" uid="uid://cjlfr3j6cmixr" path="res://Scenes/level_1_character_creation/Part4CreationZoom.gd" id="14"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Fade"

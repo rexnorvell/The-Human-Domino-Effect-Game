@@ -1,42 +1,25 @@
 [gd_scene format=3 uid="uid://b6ky8kh2dry7v"]
 
-[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
-[ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Components/Oauabae.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://cwxg0v7yskwd2" path="res://UI/sprites/agency_string.png" id="3"]
-[ext_resource type="Script" uid="uid://b31nbh4uncwuv" path="res://Scenes/Level_1_Agency/String.gd" id="4"]
-[ext_resource type="Script" uid="uid://dkth7ilyfx2e1" path="res://Scenes/Level_1_Agency/Agency.gd" id="5"]
-[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
-[ext_resource type="AudioStream" uid="uid://fa0eyrag6po5" path="res://audio/Agency_Audio/1.a This O shaped tool that looks like a magnifying glass is you...wav" id="9"]
-[ext_resource type="PackedScene" uid="uid://bu6qhfu5krfht" path="res://Scenes/Level_1_Agency/level1.tscn" id="10"]
-[ext_resource type="AudioStream" uid="uid://dyk4bxtybt01u" path="res://audio/Agency_Audio/2a. This O shaped magnifying glass has a special name… .wav" id="10_ohbg3"]
-[ext_resource type="AudioStream" uid="uid://bwnjnctuhiryq" path="res://audio/Agency_Audio/2b. This word, Oauabae comes from our oldest human family language… .wav" id="11"]
-[ext_resource type="AudioStream" uid="uid://c4xtp1hmuysnf" path="res://audio/Agency_Audio/2d. The things that you choose to put into your Oauabae...wav" id="12"]
-[ext_resource type="AudioStream" uid="uid://byfxqorpyj0vm" path="res://audio/Agency_Audio/2c. The word Abu...wav" id="13"]
-[ext_resource type="AudioStream" uid="uid://cpty427hc0p1a" path="res://audio/Agency_Audio/3a.-This-magnifying-glass-that-looks-like-the-letter-O…-Energy-of-your-mind..wav" id="14"]
-[ext_resource type="AudioStream" uid="uid://djm8qclhmnyql" path="res://audio/Agency_Audio/3c. Only you knows the real you… .wav" id="15_cnwlf"]
-[ext_resource type="AudioStream" uid="uid://si3602ynmml1" path="res://audio/Agency_Audio/3b.-The-little-spark-of-energy-in-your-Oauabae....wav" id="16"]
-[ext_resource type="AudioStream" uid="uid://bvvrcgbvihf6t" path="res://audio/Agency_Audio/5.-In-this-game-world_-the-world-is-full-of-strings…-.wav" id="17"]
-[ext_resource type="AudioStream" uid="uid://bxf4ylywnnbgo" path="res://audio/Agency_Audio/3d. Move your Oauabae around the shoreline… .wav" id="18"]
-[ext_resource type="AudioStream" uid="uid://d1rhsxxedu31q" path="res://audio/Agency_Audio/6.-It-represents-your-agency…-.wav" id="19"]
-[ext_resource type="AudioStream" uid="uid://bmo81h2gowlwl" path="res://audio/Agency_Audio/7.-You-deserve-to-have-a-vision-for-your-life….wav" id="20"]
-[ext_resource type="AudioStream" uid="uid://c2evu7cv0rbw6" path="res://audio/Agency_Audio/3e.-Observe-each-Elcitrap-by-hovering-over-them...-.wav" id="20_3mkvk"]
-
-[sub_resource type="FontFile" id="5"]
-fallbacks = Array[Font]([ExtResource("6")])
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
+[ext_resource type="Script" uid="uid://dkth7ilyfx2e1" path="res://Scenes/level_1_character_creation/Part1Agency.gd" id="1_nr4s8"]
+[ext_resource type="PackedScene" uid="uid://bu6qhfu5krfht" path="res://Scenes/level_1_character_creation/Part2Elcitraps.tscn" id="2_dlw6n"]
+[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="4_4ffhu"]
+[ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Components/Oauabae.tscn" id="5_rj67u"]
+[ext_resource type="Script" uid="uid://b31nbh4uncwuv" path="res://Scenes/level_1_character_creation/String.gd" id="6_66hom"]
+[ext_resource type="Texture2D" uid="uid://cwxg0v7yskwd2" path="res://UI/sprites/agency_string.png" id="7_pj2v4"]
+[ext_resource type="AudioStream" uid="uid://fa0eyrag6po5" path="res://audio/Agency_Audio/1.a This O shaped tool that looks like a magnifying glass is you...wav" id="8_0l5b4"]
+[ext_resource type="PackedScene" uid="uid://c4jjb2xyeclpw" path="res://Scenes/level_1_character_creation/Dialogue.tscn" id="8_dlw6n"]
+[ext_resource type="AudioStream" uid="uid://dyk4bxtybt01u" path="res://audio/Agency_Audio/2a. This O shaped magnifying glass has a special name… .wav" id="9_cg1gr"]
+[ext_resource type="AudioStream" uid="uid://bwnjnctuhiryq" path="res://audio/Agency_Audio/2b. This word, Oauabae comes from our oldest human family language… .wav" id="10_yxntm"]
+[ext_resource type="AudioStream" uid="uid://byfxqorpyj0vm" path="res://audio/Agency_Audio/2c. The word Abu...wav" id="11_kd460"]
+[ext_resource type="AudioStream" uid="uid://cpty427hc0p1a" path="res://audio/Agency_Audio/3a.-This-magnifying-glass-that-looks-like-the-letter-O…-Energy-of-your-mind..wav" id="12_cea23"]
+[ext_resource type="AudioStream" uid="uid://si3602ynmml1" path="res://audio/Agency_Audio/3b.-The-little-spark-of-energy-in-your-Oauabae....wav" id="13_5cw6n"]
+[ext_resource type="AudioStream" uid="uid://djm8qclhmnyql" path="res://audio/Agency_Audio/3c. Only you knows the real you… .wav" id="14_fdwdw"]
+[ext_resource type="AudioStream" uid="uid://bvvrcgbvihf6t" path="res://audio/Agency_Audio/5.-In-this-game-world_-the-world-is-full-of-strings…-.wav" id="15_k6ut3"]
+[ext_resource type="AudioStream" uid="uid://d1rhsxxedu31q" path="res://audio/Agency_Audio/6.-It-represents-your-agency…-.wav" id="16_enf8t"]
+[ext_resource type="AudioStream" uid="uid://bmo81h2gowlwl" path="res://audio/Agency_Audio/7.-You-deserve-to-have-a-vision-for-your-life….wav" id="17_ck8yu"]
+[ext_resource type="AudioStream" uid="uid://c4xtp1hmuysnf" path="res://audio/Agency_Audio/2d. The things that you choose to put into your Oauabae...wav" id="18_qi5g7"]
+[ext_resource type="AudioStream" uid="uid://bxf4ylywnnbgo" path="res://audio/Agency_Audio/3d. Move your Oauabae around the shoreline… .wav" id="19_k2mt0"]
+[ext_resource type="AudioStream" uid="uid://c2evu7cv0rbw6" path="res://audio/Agency_Audio/3e.-Observe-each-Elcitrap-by-hovering-over-them...-.wav" id="20_41wpu"]
 
 [sub_resource type="Animation" id="3"]
 length = 2.0
@@ -129,25 +112,8 @@ _data = {
 radius = 63.6427
 
 [node name="Agency" type="Node" unique_id=868952280]
-script = ExtResource("5")
-next_scene = ExtResource("10")
-
-[node name="DialogueBox" type="Polygon2D" parent="." unique_id=1300350090]
-z_index = 1
-position = Vector2(0, -162)
-scale = Vector2(1, 1.42188)
-color = Color(0.117647, 0.117647, 0.117647, 0.745098)
-polygon = PackedVector2Array(64, 384, 960, 384, 960, 530.286, 64, 530.286)
-
-[node name="DialogueText" type="RichTextLabel" parent="DialogueBox" unique_id=1069087025]
-offset_left = 88.0
-offset_top = 396.0
-offset_right = 936.0
-offset_bottom = 530.0
-theme_override_fonts/normal_font = SubResource("5")
-
-[node name="Timer" type="Timer" parent="DialogueBox" unique_id=1439920539]
-wait_time = 0.05
+script = ExtResource("1_nr4s8")
+next_scene = ExtResource("2_dlw6n")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=84483248]
 anchors_preset = 15
@@ -156,17 +122,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("1")
+texture = ExtResource("4_4ffhu")
 expand_mode = 1
 
-[node name="Oauabae" parent="." unique_id=1593543245 instance=ExtResource("2")]
-position = Vector2(204, -35)
+[node name="Oauabae" parent="." unique_id=1593543245 instance=ExtResource("5_rj67u")]
+position = Vector2(-100, -100)
 
 [node name="String" type="RigidBody2D" parent="." unique_id=89921930]
 visible = false
 position = Vector2(512, 266.664)
 gravity_scale = 0.0
-script = ExtResource("4")
+script = ExtResource("6_66hom")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="String" unique_id=303181846]
 libraries/ = SubResource("AnimationLibrary_3mkvk")
@@ -176,7 +142,7 @@ autoplay = &"Color"
 modulate = Color(1, 1, 0.724254, 1)
 position = Vector2(0.862095, 8)
 scale = Vector2(1e-05, 1e-05)
-texture = ExtResource("3")
+texture = ExtResource("7_pj2v4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="String/Sprite2D" unique_id=970239876]
 root_node = NodePath("../..")
@@ -190,48 +156,49 @@ shape = SubResource("1")
 [node name="Next" type="Timer" parent="." unique_id=824834698]
 one_shot = true
 
+[node name="Dialogue" parent="." unique_id=1412795768 instance=ExtResource("8_dlw6n")]
+
 [node name="Audio" type="Node" parent="." unique_id=1245403051]
 
 [node name="AudioStreamPlayer1" type="AudioStreamPlayer" parent="Audio" unique_id=1526734099]
-stream = ExtResource("9")
+stream = ExtResource("8_0l5b4")
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="Audio" unique_id=1324135404]
-stream = ExtResource("10_ohbg3")
+stream = ExtResource("9_cg1gr")
 
 [node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="Audio" unique_id=2123718064]
-stream = ExtResource("11")
+stream = ExtResource("10_yxntm")
 
 [node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="Audio" unique_id=1231617446]
-stream = ExtResource("13")
+stream = ExtResource("11_kd460")
 
 [node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="Audio" unique_id=270468470]
-stream = ExtResource("14")
+stream = ExtResource("12_cea23")
 
 [node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="Audio" unique_id=1494336143]
-stream = ExtResource("16")
+stream = ExtResource("13_5cw6n")
 
 [node name="AudioStreamPlayer7" type="AudioStreamPlayer" parent="Audio" unique_id=2038305732]
-stream = ExtResource("15_cnwlf")
+stream = ExtResource("14_fdwdw")
 
 [node name="AudioStreamPlayer8" type="AudioStreamPlayer" parent="Audio" unique_id=357836442]
-stream = ExtResource("17")
+stream = ExtResource("15_k6ut3")
 
 [node name="AudioStreamPlayer9" type="AudioStreamPlayer" parent="Audio" unique_id=1014139836]
-stream = ExtResource("19")
+stream = ExtResource("16_enf8t")
 
 [node name="AudioStreamPlayer10" type="AudioStreamPlayer" parent="Audio" unique_id=1270546515]
-stream = ExtResource("20")
+stream = ExtResource("17_ck8yu")
 
 [node name="AudioStreamPlayer11" type="AudioStreamPlayer" parent="Audio" unique_id=1907800121]
-stream = ExtResource("12")
+stream = ExtResource("18_qi5g7")
 
 [node name="AudioStreamPlayer12" type="AudioStreamPlayer" parent="Audio" unique_id=1388588327]
-stream = ExtResource("18")
+stream = ExtResource("19_k2mt0")
 
 [node name="AudioStreamPlayer13" type="AudioStreamPlayer" parent="Audio" unique_id=1681095777]
-stream = ExtResource("20_3mkvk")
+stream = ExtResource("20_41wpu")
 
-[connection signal="timeout" from="DialogueBox/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="String" to="Oauabae" method="_on_String_mouse_entered"]
 [connection signal="mouse_entered" from="String" to="String" method="_on_String_mouse_entered"]
-[connection signal="timeout" from="Next" to="." method="next_phase"]
+[connection signal="timeout" from="Next" to="." method="_on_next_timeout"]

@@ -113,7 +113,7 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 
 # Network RPC to start the game
 @rpc("any_peer") func start_game():
-	get_parent().change_level(next_scene)
+	get_parent().change_level(next_scene, true)
 
 # Network RPC to track player readiness and start the game when all players are ready
 @rpc("any_peer") func ready_to_start(id):

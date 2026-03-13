@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://bu6qhfu5krfht"]
+
+[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
+[ext_resource type="PackedScene" uid="uid://ravepkthb08j" path="res://Scenes/Components/Oauabae.tscn" id="2"]
+[ext_resource type="Script" uid="uid://bjywnsiwfjwcj" path="res://Scenes/level_1_character_creation/Part2Elcitraps.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://h5lyfqvnawki" path="res://Scenes/Components/Elcitrap1.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://dm6jp5f5emk6y" path="res://Scenes/level_1_character_creation/Part3ElcitrapSelection.tscn" id="5"]
+
+[sub_resource type="Curve2D" id="1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1024, 0, 0, 0, 0, 0, 1024, 600, 0, 0, 0, 0, 0, 600, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[node name="level1" type="Node" unique_id=2057617940]
+script = ExtResource("3")
+Elcitrap = ExtResource("4")
+next_scene = ExtResource("5")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1432950561]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Oauabae" parent="." unique_id=1820764614 instance=ExtResource("2")]
+position = Vector2(-200, -200)
+
+[node name="EPath" type="Path2D" parent="." unique_id=1999709911]
+curve = SubResource("1")
+
+[node name="EPathFollow" type="PathFollow2D" parent="EPath" unique_id=1983267622]
+
+[node name="ElcitrapTimer" type="Timer" parent="." unique_id=1086712872]
+wait_time = 0.5
+
+[node name="EndTimer" type="Timer" parent="." unique_id=464070816]
+wait_time = 2.5
+one_shot = true
+
+[connection signal="timeout" from="ElcitrapTimer" to="." method="_on_ElcitrapTimer_timeout"]
+[connection signal="timeout" from="EndTimer" to="." method="_on_EndTimer_timeout"]

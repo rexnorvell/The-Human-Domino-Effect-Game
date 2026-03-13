@@ -6,7 +6,7 @@ func _physics_process(delta):
 
 
 func _on_String_mouse_entered() -> void:
-	$AnimatedSprite2D.animation = 'agencied'
+	$AnimatedSprite2D.animation = "agencied"
 
 
 func _on_Oauabae_body_entered(body):

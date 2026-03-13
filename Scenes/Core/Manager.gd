@@ -32,25 +32,22 @@ func _ready() -> void:
 	anim_player.play_backwards("fade_one_shot")
 
 # Method to change the current level using a Dip-To-Black
-func change_level(next_scene_resource):
-	# 1. Start the animation from transparent
-	fade_rect.modulate.a = 0.0
-	fade_rect.visible = true
-	anim_player.play("fade_one_shot")
-	
-	# 2. Wait exactly 0.5s for the screen to be pitch black
-	await get_tree().create_timer(0.5).timeout
-	
-	# --- SWAP THE SCENES IN THE DARK ---
-	if current_level:
+func change_level(next_scene_resource, transition: bool) -> void:
+	if transition:
+		fade_rect.modulate.a = 0.0
+		fade_rect.visible = true
+		anim_player.play("fade_one_shot")
+		await anim_player.animation_finished
+		if current_level:
+			current_level.queue_free()
+		await get_tree().process_frame
+		current_level = next_scene_resource.instantiate()
+		add_child(current_level)
+		anim_player.play("fade_to_black")
+		await anim_player.animation_finished
+		fade_rect.visible = false
+	else:
 		current_level.queue_free()
-	
-	await get_tree().process_frame
-	
-	current_level = next_scene_resource.instantiate()
-	add_child(current_level)
-	# -----------------------------------
-	
-	# 3. Wait for the animation to finish fading out
-	await anim_player.animation_finished
-	fade_rect.visible = false
+		await get_tree().process_frame
+		current_level = next_scene_resource.instantiate()
+		add_child(current_level)

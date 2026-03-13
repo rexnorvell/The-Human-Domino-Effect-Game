@@ -28,23 +28,23 @@ const refDict = {
 	"Chunk.tscn": "res://Scenes/Level_5_VirtualWorld/Chunk.tscn",
 	
 	
-	"Agency.tscn": "res://Scenes/Level_1_Agency/Agency.tscn",
-	"CharacterCreation.tscn": "res://Scenes/Level_2_CharacterCreation/CharacterCreation.tscn",
+	"Agency.tscn": "res://Scenes/level_1_character_creation/Part1Agency.tscn",
+	"CharacterCreation.tscn": "res://Scenes/level_1_character_creation/Part4CharacterCreation.tscn",
 	"DominoWorld.tscn": "res://Scenes/Level_4_DominoWorld/DominoWorld.tscn",
 	"Tutorial.tscn": "res://Scenes/Core/Tutorial.tscn",
 	
-	"AgencyTutorial.tscn": "res://Scenes/Level_1_Agency/AgencyTutorial.tscn",
+	#"AgencyTutorial.tscn": "res://Scenes/Level_1_Agency/AgencyTutorial.tscn",
 	"CharacterCreationTutorial.tscn": "res://Scenes/Level_2_CharacterCreation/CharacterCreationTutorial.tscn",
 	"DominoWorldTutorial.tscn": "res://Scenes/Level_4_DominoWorld/DominoWorldTutorial.tscn",
 	
-	"level1.tscn": "res://Scenes/Level_1_Agency/level1.tscn",
-	"level1_cont.tscn": "res://Scenes/Level_1_Agency/level1_cont.tscn",
+	#"level1.tscn": "res://Scenes/Level_1_Agency/level1.tscn",
+	#"level1_cont.tscn": "res://Scenes/Level_1_Agency/level1_cont.tscn",
 	"LevelSelect.tscn": "res://_Unsure/LevelSelect.tscn",
 	"Manager.tscn": "res://Scenes/Core/Manager.tscn",
 	"Pond.tscn": "res://Scenes/Level_3_Pond/Pond.tscn",
 	"Sandbox.tscn": "res://_Unsure/Sandbox.tscn",
 	"Stone.tscn": "res://Scenes/Level_3_Pond/Stone.tscn",
-	"String.tscn": "res://Scenes/Level_1_Agency/String.tscn",
+	#"String.tscn": "res://Scenes/Level_1_Agency/String.tscn",
 	"VW0.tscn": "res://Scenes/Level_5_VirtualWorld/VW0.tscn",
 	
 	"Parallax1.tscn": "res://Scenes/Parallax/Parallax1.tscn",

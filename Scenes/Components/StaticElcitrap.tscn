@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://danf0e72y7l2m"]
+[gd_scene format=3 uid="uid://danf0e72y7l2m"]
 
 [ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
 [ext_resource type="Script" uid="uid://bioeviklf58kq" path="res://Scenes/Components/StaticElcitrap.gd" id="2"]
@@ -41,36 +41,45 @@ fallbacks = Array[Font]([ExtResource("6")])
 subpixel_positioning = 0
 msdf_pixel_range = 14
 msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
-[node name="StaticElcitrap" type="RigidBody2D"]
+[node name="StaticElcitrap" type="RigidBody2D" unique_id=7625596]
 collision_layer = 2
 input_pickable = true
 gravity_scale = 0.0
 script = ExtResource("2")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=522358887]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("1")
 animation = &"green"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1825253718]
 shape = SubResource("2")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=2081871864]
 offset_left = -24.0
 offset_top = -8.0
 offset_right = 24.0
 offset_bottom = 6.0
 theme_override_fonts/font = SubResource("3")
 
-[node name="Popup" type="Popup" parent="."]
+[node name="Popup" type="Popup" parent="." unique_id=1962299453]
 
-[node name="Label" type="Label" parent="Popup"]
+[node name="Label" type="Label" parent="Popup" unique_id=1793050098]
 offset_left = 9.73785
 offset_top = 9.08866
 offset_right = 49.7379

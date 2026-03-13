@@ -109,12 +109,8 @@ offset_right = 24.0
 offset_bottom = 6.0
 theme_override_fonts/font = SubResource("3")
 
-[node name="Popup" type="Popup" parent="." unique_id=2052712314]
-oversampling_override = 1.0
-visible = true
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Popup" unique_id=1616342431]
-self_modulate = Color(1, 1, 1, 0.356863)
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=1616342431]
+visible = false
 position = Vector2(29.8628, 29.457)
 scale = Vector2(0.07, 0.07)
 sprite_frames = SubResource("5")

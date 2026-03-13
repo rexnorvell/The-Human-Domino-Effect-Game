@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://dm6jp5f5emk6y"]
 
-[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="1"]
-[ext_resource type="PackedScene" uid="uid://cb20uqao6w7e2" path="res://Scenes/Components/StaticOauabae.tscn" id="2"]
-[ext_resource type="Script" uid="uid://chpyhuas5lxkx" path="res://Scenes/Level_1_Agency/level1_cont.gd" id="3"]
-[ext_resource type="PackedScene" uid="uid://dtfwm3j3judh2" path="res://Scenes/Components/CapturedElcitrap.tscn" id="4"]
-[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="5"]
-[ext_resource type="PackedScene" uid="uid://dsuv41blblnbi" path="res://Scenes/Parallax/Parallax4.tscn" id="6"]
-[ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://csr4hlqkrmt0f" path="res://Scenes/Components/Narration.tscn" id="8"]
-[ext_resource type="Script" uid="uid://diar4q3wstj4n" path="res://Scenes/Level_1_Agency/Level1Animations.gd" id="9"]
-[ext_resource type="Script" uid="uid://cnidc0wdr76rn" path="res://Scenes/Level_1_Agency/Level1Button.gd" id="10"]
+[ext_resource type="Script" uid="uid://chpyhuas5lxkx" path="res://Scenes/level_1_character_creation/Part3ElcitrapSelection.gd" id="1_mvoa2"]
+[ext_resource type="PackedScene" uid="uid://dtfwm3j3judh2" path="res://Scenes/Components/CapturedElcitrap.tscn" id="2_2nvss"]
+[ext_resource type="PackedScene" uid="uid://dsuv41blblnbi" path="res://Scenes/Parallax/Parallax4.tscn" id="3_sqqyf"]
+[ext_resource type="Texture2D" uid="uid://1mgywdxallwm" path="res://UI/sprites/beachbg.png" id="4_egf1i"]
+[ext_resource type="PackedScene" uid="uid://cb20uqao6w7e2" path="res://Scenes/Components/StaticOauabae.tscn" id="5_vfti4"]
+[ext_resource type="Texture2D" uid="uid://d1au4cr5e8ljx" path="res://UI/sprites/next.png" id="6_2vp2u"]
+[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="7_5lkar"]
+[ext_resource type="Texture2D" uid="uid://b1rrei01e0vjg" path="res://UI/sprites/arts_icon.png" id="8_2ent5"]
+[ext_resource type="Texture2D" uid="uid://da4biu7ur7m2m" path="res://UI/sprites/humanities_icon.png" id="9_podex"]
+[ext_resource type="Texture2D" uid="uid://cjubjlib62b5g" path="res://UI/sprites/science_icon.png" id="10_rulwk"]
 
 [sub_resource type="FontFile" id="1"]
-fallbacks = Array[Font]([ExtResource("5")])
+fallbacks = Array[Font]([ExtResource("7_5lkar")])
 subpixel_positioning = 0
 msdf_pixel_range = 14
 msdf_size = 128
@@ -68,21 +68,70 @@ _data = {
 &"Screen_Wipe": SubResource("3")
 }
 
+[sub_resource type="GDScript" id="GDScript_8f82m"]
+script/source = "extends AnimationPlayer
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+	
+func _on_level1_cont_trigger_animation(anim_name: String):
+	print(\"Playing \", anim_name)
+	play(anim_name)
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_s411t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_2ent5")
+}],
+"loop": true,
+"name": &"arts",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_podex")
+}],
+"loop": true,
+"name": &"humanities",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_rulwk")
+}],
+"loop": true,
+"name": &"science",
+"speed": 5.0
+}]
+
 [node name="level1_cont" type="Node" unique_id=1769364983]
-script = ExtResource("3")
-Elcitrap = ExtResource("4")
-next_scene = ExtResource("6")
+script = ExtResource("1_mvoa2")
+Elcitrap = ExtResource("2_2nvss")
+next_scene = ExtResource("3_sqqyf")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=170248533]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-texture = ExtResource("1")
+texture = ExtResource("4_egf1i")
 expand_mode = 1
-stretch_mode = 7
 
-[node name="Oauabae" parent="." unique_id=192215551 instance=ExtResource("2")]
+[node name="Oauabae" parent="." unique_id=192215551 instance=ExtResource("5_vfti4")]
 position = Vector2(506.921, 272.615)
 scale = Vector2(2.49937, 2.49937)
 gravity = 1024.0
@@ -94,8 +143,7 @@ offset_top = 384.0
 offset_right = 1432.0
 offset_bottom = 1121.0
 scale = Vector2(0.2, 0.2)
-texture_normal = ExtResource("7")
-script = ExtResource("10")
+texture_normal = ExtResource("6_2vp2u")
 
 [node name="Label" type="Label" parent="Button" unique_id=2093954026]
 layout_mode = 0
@@ -108,16 +156,9 @@ text = "Continue"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=275346137]
 libraries/ = SubResource("AnimationLibrary_l8nhg")
-script = ExtResource("9")
+script = SubResource("GDScript_8f82m")
 
 [node name="End" type="Timer" parent="." unique_id=931557727]
-
-[node name="Narration" parent="." unique_id=1866210011 instance=ExtResource("8")]
-offset_left = 16.0
-offset_top = 64.0
-offset_right = 232.0
-offset_bottom = 512.0
-theme_override_colors/default_color = Color(1, 1, 1, 0)
 
 [node name="ZIndexSetter" type="Node2D" parent="." unique_id=549702521]
 z_index = 1
@@ -129,11 +170,13 @@ offset_right = 1024.0
 offset_bottom = 600.0
 color = Color(0, 0, 0, 1)
 
-[connection signal="five_selected" from="." to="Button" method="_on_level1_cont_five_selected" flags=6]
-[connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_level1_cont_trigger_animation"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=229713871]
+visible = false
+position = Vector2(29.8628, 29.457)
+scale = Vector2(0.07, 0.07)
+sprite_frames = SubResource("SpriteFrames_s411t")
+animation = &"humanities"
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="End" to="." method="_on_End_timeout"]
-[connection signal="animation_finished" from="Narration/TextAnimationPlayer" to="." method="_on_TextAnimationPlayer_animation_finished"]
-
-[editable path="Narration"]

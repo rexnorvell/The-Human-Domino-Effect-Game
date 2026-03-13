@@ -442,6 +442,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4")
 
+[node name="Timer" type="Timer" parent="." unique_id=1758291620]
+wait_time = 2.5
+one_shot = true
+autostart = true
+
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=446058027]
 layout_mode = 1
 anchors_preset = 8
@@ -487,3 +492,5 @@ root_node = NodePath("../VBoxContainer/TextureRect")
 libraries/ = SubResource("AnimationLibrary_k2au8")
 autoplay = &"in"
 next/in = &"pulse_text"
+
+[connection signal="timeout" from="Timer" to="." method="timer_end"]

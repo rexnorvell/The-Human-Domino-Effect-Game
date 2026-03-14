@@ -14,7 +14,7 @@ var icons_loaded: bool = false
 
 const ICON_NAMES: Array[String] = [
 	"basket.png", "boat.png", "bowandarrow.png", "campfire.png",
-	"fire.png", "spear.png", "stone.png", "sun.png", "sunshine.png", "wheel.png"
+	"fire.png", "spear.png", "stone.png", "wheel.png"
 ]
 
 func _ready():

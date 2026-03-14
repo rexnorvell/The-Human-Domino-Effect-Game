@@ -8,7 +8,8 @@ const ROTATION_OFFSET_DEG := 90.0 # rotate pieces 90° clockwise
 
 # --- Hardcoded step directions by path, in degrees ---
 # Order requested: Path1, Path2, Path3?, Path4, Path5, Path6, ?, SunsetPath
-const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
+#const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
+const PATH_ANGLE_DEGREES := [292.5, 202.5, 337.5, 157.5, 112.5, 22.5, 247.5, 67.5]
 
 # How far to move each successive domino along that direction
 const STEP_PIXELS := 24.0 # tune for your art scale
@@ -279,13 +280,12 @@ func _init_players() -> void:
 			print(" removed unused ", unused_path)
 
 	# Replace decorative board faces with unused player icons
-	var board_face_nodes := ["sunrise", "sunset"]
+	var board_face_nodes = {"sunrise": "sun.png", "sunset": "sunshine.png"}
 	for node_name in board_face_nodes:
 		var face_sprite := get_node_or_null(node_name)
 		if face_sprite and face_sprite is Sprite2D:
 			var assigned_icon_name: String = my_icon_name
-			if remaining_icon_pool.size() > 0:
-				assigned_icon_name = remaining_icon_pool.pop_front()
+			assigned_icon_name = board_face_nodes[node_name]
 			var ref_key_board := "player_icons/" + assigned_icon_name
 			if ReferenceManager.refDict.has(ref_key_board):
 				var icon_path_board: String = str(ReferenceManager.get_reference(ref_key_board))

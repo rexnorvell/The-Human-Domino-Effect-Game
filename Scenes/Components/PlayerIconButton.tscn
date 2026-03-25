@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://31cxwpf6raj0"]
+
+[ext_resource type="Theme" uid="uid://dlygu0mhr0ual" path="res://UI/button.tres" id="1_yuy87"]
+[ext_resource type="Script" uid="uid://dxeo6grjej8q7" path="res://Scenes/Components/PlayerIconButton.gd" id="2_k2861"]
+
+[node name="Button" type="Button" unique_id=170246650]
+offset_right = 215.0
+offset_bottom = 215.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_yuy87")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("2_k2861")

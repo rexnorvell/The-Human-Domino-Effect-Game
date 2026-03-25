@@ -14,8 +14,16 @@
 [ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://1v4s7y3mtnon" path="res://UI/sprites/level4.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://cvync24oqcy7k" path="res://UI/Control/green_button00.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://byy16ybwc3qjx" path="res://UI/Control/green_button01.png" id="16"]
+[ext_resource type="PackedScene" uid="uid://31cxwpf6raj0" path="res://Scenes/Components/PlayerIconButton.tscn" id="14_ba6iy"]
+[ext_resource type="PackedScene" uid="uid://clj23haf5g65i" path="res://Scenes/Components/AnimatedButton.tscn" id="14_ubiko"]
+[ext_resource type="Texture2D" uid="uid://1w07vb343b3f" path="res://UI/sprites/player_icons/basket.png" id="15_sjikb"]
+[ext_resource type="Texture2D" uid="uid://mao4vk4fwq8a" path="res://UI/sprites/player_icons/boat.png" id="16_cannh"]
+[ext_resource type="Texture2D" uid="uid://cswuhouqxcn3a" path="res://UI/sprites/player_icons/bowandarrow.png" id="17_3yrp3"]
+[ext_resource type="Texture2D" uid="uid://v6g2anopv4k6" path="res://UI/sprites/player_icons/campfire.png" id="18_s12ko"]
+[ext_resource type="Texture2D" uid="uid://dsgqatv7iudbs" path="res://UI/sprites/player_icons/fire.png" id="19_s12ko"]
+[ext_resource type="Texture2D" uid="uid://b5p4phhdl6xe4" path="res://UI/sprites/player_icons/spear.png" id="20_8x7hx"]
+[ext_resource type="Texture2D" uid="uid://cxkeaarsn10wc" path="res://UI/sprites/player_icons/stone.png" id="21_qqykm"]
+[ext_resource type="Texture2D" uid="uid://cin1wie3tnu2j" path="res://UI/sprites/player_icons/wheel.png" id="22_pbwek"]
 
 [sub_resource type="Animation" id="7"]
 resource_name = "start"
@@ -308,23 +316,6 @@ cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
-[sub_resource type="FontFile" id="10"]
-fallbacks = Array[Font]([ExtResource("6")])
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
 [sub_resource type="Animation" id="11"]
 resource_name = "start"
 length = 0.2
@@ -358,6 +349,7 @@ mouse_filter = 1
 script = ExtResource("10")
 
 [node name="Lobby_Container" type="MarginContainer" parent="." unique_id=1329336948]
+visible = false
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -562,6 +554,7 @@ libraries/ = SubResource("AnimationLibrary_yqok8")
 autoplay = &"start"
 
 [node name="LevelSelect_Container" type="MarginContainer" parent="." unique_id=160266583]
+visible = false
 layout_mode = 0
 offset_top = 50.0
 offset_right = 5472.0
@@ -666,12 +659,11 @@ stretch_mode = 5
 [node name="MenuContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer" unique_id=1896801901]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 75
+theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 75
+theme_override_constants/margin_bottom = 50
 
 [node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer" unique_id=995136705]
 layout_mode = 2
@@ -699,25 +691,57 @@ theme_override_constants/separation = 5
 [node name="Host_Username" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=904878268]
 layout_mode = 2
 theme = ExtResource("9")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Host: "
 
 [node name="Host_IP" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=724048394]
 layout_mode = 2
 theme = ExtResource("9")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Host IP: "
 
 [node name="IconLabel" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=1845461292]
 layout_mode = 2
 theme = ExtResource("9")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Select Your Icon:"
 
-[node name="IconGrid" type="GridContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=1359665383]
-custom_minimum_size = Vector2(0, 90)
+[node name="GridContainer" type="GridContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=318008554]
 layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/h_separation = 5
-theme_override_constants/v_separation = 5
+size_flags_vertical = 3
 columns = 4
+
+[node name="Basket" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=170246650 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("15_sjikb")
+
+[node name="Boat" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1190705217 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("16_cannh")
+
+[node name="BowAndArrow" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=210408158 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("17_3yrp3")
+
+[node name="Campfire" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=613162762 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("18_s12ko")
+
+[node name="Fire" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1570258091 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("19_s12ko")
+
+[node name="Spear" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=301183463 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("20_8x7hx")
+
+[node name="Stone" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1829906624 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("21_qqykm")
+
+[node name="Wheel" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1247869017 instance=ExtResource("14_ba6iy")]
+layout_mode = 2
+icon = ExtResource("22_pbwek")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=349297613]
 custom_minimum_size = Vector2(0, 150)
@@ -727,6 +751,7 @@ size_flags_vertical = 3
 [node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer" unique_id=2009841681]
 layout_mode = 2
 theme = ExtResource("9")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Awaiting Players..."
 
 [node name="Menu" type="NinePatchRect" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer" unique_id=248582657]
@@ -755,28 +780,11 @@ theme = ExtResource("9")
 theme_override_colors/font_color = Color(0.490196, 0.490196, 0.490196, 1)
 theme_override_fonts/font = SubResource("12")
 
-[node name="Start_Button" type="TextureButton" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=2142748404]
+[node name="StartButton" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer" unique_id=1575033482 instance=ExtResource("14_ubiko")]
 layout_mode = 2
-size_flags_horizontal = 6
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("15")
-texture_pressed = ExtResource("16")
-texture_hover = ExtResource("16")
-
-[node name="MarginContainer" type="MarginContainer" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button" unique_id=581071129]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button/MarginContainer" unique_id=1505953497]
-layout_mode = 2
-theme = ExtResource("9")
-theme_override_fonts/font = SubResource("10")
 text = "Start"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_color = Color(0, 0.6862745, 0, 1)
+border_color = Color(0, 0.6862745, 0, 1)
 
 [node name="Error_Label" type="Label" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu" unique_id=12817687]
 layout_mode = 0
@@ -809,4 +817,12 @@ grow_vertical = 0
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Virtual_World" to="." method="_on_Virtual_World_pressed"]
-[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/Start_Button" to="." method="_on_Start_Button_pressed"]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Basket" to="." method="_on_icon_selected" binds= ["basket.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Boat" to="." method="_on_icon_selected" binds= ["boat.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/BowAndArrow" to="." method="_on_icon_selected" binds= ["bowandarrow.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Campfire" to="." method="_on_icon_selected" binds= ["campfire.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Fire" to="." method="_on_icon_selected" binds= ["fire.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Spear" to="." method="_on_icon_selected" binds= ["spear.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Stone" to="." method="_on_icon_selected" binds= ["stone.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Wheel" to="." method="_on_icon_selected" binds= ["wheel.png"]]
+[connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/StartButton" to="." method="_on_Start_Button_pressed"]

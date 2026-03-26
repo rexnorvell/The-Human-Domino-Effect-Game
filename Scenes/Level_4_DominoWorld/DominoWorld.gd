@@ -5,6 +5,7 @@ extends Node2D
 const HAND_SCALE = Vector2(0.22, 0.22)
 const PLACED_SCALE = Vector2(0.08, 0.08)
 const ROTATION_OFFSET_DEG := 90.0 # rotate pieces 90° clockwise
+const HAND_SPACING := 85 # pixels between hand dominoes
 
 # --- Hardcoded step directions by path, in degrees ---
 # Order requested: Path1, Path2, Path3?, Path4, Path5, Path6, ?, SunsetPath
@@ -45,6 +46,7 @@ var end_dominos = [null, null, null, null, null, null, null, null] # last domino
 
 var position_table: Array[Vector2] = []
 var prev_domino_size = 0
+var _next_slot_indicators: Array[Node2D] = []
 
 var bonusWords = ["Bonus", "Bonus2"]
 var usedBonus = ["ABC123"]
@@ -345,21 +347,22 @@ func randomize_turn():
 	rpc("sync_turn", turn)
 	sync_turn(turn)
 
+#Modified values to give out 9 dominos rather than 7.
 func setup_dominos():
 	# Only the host is allowed to deal dominoes
 	if not multiplayer.is_server():
 		return
-		
+
 	# 1. Deal for the Host
 	var my_hand = []
-	for i in range(7):
+	for i in range(9):
 		my_hand.append(dominos.pop_front())
-		
+
 	# 2. Deal for the Clients
 	for p in gamestate.players:
 		if p != 1:
 			var client_hand = []
-			for i in range(7):
+			for i in range(9):
 				client_hand.append(dominos.pop_front())
 			# Send the specific hand to the client
 			rpc_id(p, "receive_hand", client_hand)
@@ -376,7 +379,7 @@ func setup_dominos():
 @rpc("authority", "call_remote") func sync_full_deck(new_deck):
 	dominos = new_deck
 
-# Takes an array of 7 dominoes and renders them on screen
+# Takes an array of dominoes and renders them on screen
 func render_hand(drawn_dominos):
 	# Ensure the numbers are formatted correctly before sorting
 	for i in range(drawn_dominos.size()):
@@ -392,7 +395,7 @@ func render_hand(drawn_dominos):
 		return min_a < min_b
 	)
 
-	for i in range(7):
+	for i in range(drawn_dominos.size()):
 		# get domino info
 		var domino_nums = drawn_dominos[i]
 		var domino = Domino.instantiate()
@@ -401,8 +404,10 @@ func render_hand(drawn_dominos):
 		add_child(domino)
 
 		# set domino position and scale
-		var domino_spacing = 85
-		domino.position = Vector2((i * domino_spacing) - (192 + domino_spacing * 3), 175)
+		var hand_count = drawn_dominos.size()
+		var total_width = (hand_count - 1) * HAND_SPACING
+		var hand_center_x = -192.0
+		domino.position = Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
 		domino.scale = HAND_SCALE
 		domino.rotation_degrees = 270
 
@@ -418,6 +423,25 @@ func render_hand(drawn_dominos):
 	
 	# set the hand array to the drawn dominos
 	hand_dominos = drawn_dominos
+
+# Rearrange unplaced hand dominoes to fill gaps and stay centered after a placement
+func rearrange_hand() -> void:
+	var all_nodes = get_tree().get_nodes_in_group("dominos")
+	var unplaced: Array = []
+	for domino in all_nodes:
+		if not domino.placed:
+			unplaced.append(domino)
+	# Sort left to right by current x-position to preserve ordering
+	unplaced.sort_custom(func(a, b): return a.position.x < b.position.x)
+	var hand_count: int = unplaced.size()
+	if hand_count == 0:
+		return
+	var total_width: float = (hand_count - 1) * HAND_SPACING
+	var hand_center_x: float = -192.0
+	for i in range(hand_count):
+		var new_pos := Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
+		unplaced[i].position = new_pos
+		unplaced[i].original_pos = new_pos
 
 # path set-up
 func add_position(global_pos: Vector2) -> void:
@@ -440,6 +464,7 @@ func clear_selected_domino():
 	if selected_domino:
 		selected_domino.deselect()
 	selected_domino = null
+	_clear_placement_indicators()
 
 func get_selected_domino():
 	return selected_domino
@@ -457,7 +482,10 @@ func select_domino(domino) -> bool:
 		
 	if selected_domino == null:
 		selected_domino = domino
-	return selected_domino == domino
+	if selected_domino == domino:
+		_highlight_valid_placements(domino)
+		return true
+	return false
 
 # update deck from other player's drawing a domino
 @rpc("any_peer") func update_deck():
@@ -525,8 +553,9 @@ func place_domino(num):
 		else:
 			placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
 			
-		hand_dominos.erase(placed_domino) 
-		
+		hand_dominos.erase(placed_domino)
+		rearrange_hand()
+
 		# Check if it was a double
 		if (selected_domino.top_num == selected_domino.bottom_num):
 			can_place = true
@@ -544,7 +573,93 @@ func place_domino(num):
 
 @rpc("any_peer", "call_local") func set_train_open(num: int, is_open: bool):
 	train_open[num] = is_open
-	# TODO: visual indication of open trains
+	_update_train_indicator(num, is_open)
+
+# Highlight valid placement paths when a domino is selected.
+# Passes category-based color: green for player's own path, gold for sun paths, orange for open trains.
+func _highlight_valid_placements(domino) -> void:
+	_clear_next_slot_indicators()
+	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
+	for i in range(path_names.size()):
+		var path_node = get_node_or_null(path_names[i])
+		if path_node and path_node.has_method("set_placement_indicator"):
+			path_node.rotation = deg_to_rad(PATH_ANGLE_DEGREES[i] + ROTATION_OFFSET_DEG)
+			# Check if this domino can be placed on this path
+			var can_place_here := false
+			if domino.bottom_num == path_ends[i] or domino.top_num == path_ends[i]:
+				# Check train access rules
+				if i >= 6:  # Sunrise/Sunset -- always accessible
+					can_place_here = true
+				elif i == self_num:  # Own path -- always accessible
+					can_place_here = true
+				elif train_open[i]:  # Other player's open train
+					can_place_here = true
+			# Determine category-based color (green=player, gold=sun, orange=train)
+			var indicator_color: Color
+			if i >= 6:
+				indicator_color = Color(1.0, 0.84, 0.0, 0.8)   # gold for sun paths
+			elif i == self_num:
+				indicator_color = Color(0.1, 0.9, 0.1, 0.8)    # green for player's own path
+			else:
+				indicator_color = Color(1.0, 0.5, 0.0, 0.8)    # orange for open trains
+			path_node.set_placement_indicator(can_place_here, indicator_color)
+			if can_place_here and path_step_count[i] > 0:
+				_add_next_slot_indicator(i, indicator_color)
+
+# Clear all placement indicators from all path nodes.
+func _clear_placement_indicators() -> void:
+	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
+	for path_name in path_names:
+		var path_node = get_node_or_null(path_name)
+		if path_node and path_node.has_method("clear_indicators"):
+			path_node.clear_indicators()
+	_clear_next_slot_indicators()
+
+# Spawns a next-slot indicator at the next available step on the given path.
+# path_step_count is incremented after each placement, so it already equals the next
+# available slot index — no +1 needed.
+func _add_next_slot_indicator(path_num: int, color: Color) -> void:
+	var next_step: int = path_step_count[path_num]
+	var world_pos := _path_position_for_step(path_num, next_step)
+	var indicator := _NextSlotIndicator.new(color, path_num)
+	# IMPORTANT: add_child BEFORE setting global_position/rotation/scale.
+	# Godot only resolves global_position correctly when the node is already in the
+	# scene tree. Setting global_position before add_child treats the value as a
+	# local position (no parent transform applied), causing the indicator to appear
+	# at the wrong location when the parent node has a non-identity transform
+	# (e.g., World scale = Vector2(0.5, 0.5)).
+	add_child(indicator)
+	indicator.global_position = world_pos
+	indicator.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
+	# Use the same scale as Path nodes (0.03) — NOT PLACED_SCALE (0.08).
+	# Both Path._draw() and _NextSlotIndicator._draw() use identical base rect
+	# dimensions (half_w=180, half_h=320), so they need matching node scale.
+	# PLACED_SCALE is for Domino sprite instances which have different internal sizes.
+	indicator.scale = Vector2(0.03, 0.03)
+	_next_slot_indicators.append(indicator)
+
+# Cleans up all next-slot indicator nodes.
+func _clear_next_slot_indicators() -> void:
+	for ind in _next_slot_indicators:
+		if is_instance_valid(ind):
+			ind.queue_free()
+	_next_slot_indicators.clear()
+
+# Update the train indicator on a single path node when its open/closed state changes.
+func _update_train_indicator(path_num: int, is_open: bool) -> void:
+	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
+	if path_num < 0 or path_num >= path_names.size():
+		return
+	var path_node = get_node_or_null(path_names[path_num])
+	if path_node and path_node.has_method("set_train_indicator"):
+		path_node.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
+		# Pass category color for train indicator
+		var train_color: Color
+		if path_num >= 6:
+			train_color = Color(1.0, 0.84, 0.0, 0.8)   # gold for sun paths
+		else:
+			train_color = Color(1.0, 0.5, 0.0, 0.8)     # orange for trains
+		path_node.set_train_indicator(is_open, train_color)
 
 # increment total score for player
 func increment_total(num):
@@ -938,7 +1053,7 @@ func _on_Start_mouse_exited():
 func _on_HelpButton_pressed():
 	$HelpMenu/HelpImage.visible = true
 	$HelpMenu.move_to_front()
-	
+
 func _on_CloseButton_pressed():
 	$HelpMenu/HelpImage.visible = false
 	
@@ -977,3 +1092,48 @@ func set_anchor(path_index: int, global_pos: Vector2) -> void:
 	position_table[path_index] = global_pos
 	# Optional debug:
 	# print("Anchor[", path_index, "] = ", global_pos)
+
+# Inner class: animated outline shown at the next available slot on a valid path.
+# Renders at 0.85x the standard placed-domino footprint to signal "future/preview".
+# Clicking the indicator calls place_domino(path_num) on the parent DominoWorld.
+class _NextSlotIndicator extends Node2D:
+	var _color: Color
+	var _path_num: int
+	var _glow_time := 0.0
+
+	func _init(color: Color, path_num: int) -> void:
+		_color = color
+		_path_num = path_num
+
+	func _ready() -> void:
+		# Add an Area2D with a RectangleShape2D so mouse clicks are detected.
+		# The rect matches the drawn outline (0.85x of the standard 180x320 half-dims).
+		var area := Area2D.new()
+		var shape := CollisionShape2D.new()
+		var rect_shape := RectangleShape2D.new()
+		# half_w=153, half_h=272 in local coords; size is full extents.
+		rect_shape.size = Vector2(180.0 * 0.85 * 2.0, 320.0 * 0.85 * 2.0)
+		shape.shape = rect_shape
+		area.add_child(shape)
+		add_child(area)
+		area.input_event.connect(_on_area_input_event)
+
+	func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			get_parent().place_domino(_path_num)
+
+	func _process(delta: float) -> void:
+		_glow_time += delta
+		queue_redraw()
+
+	func _draw() -> void:
+		# Slightly smaller than Path.gd indicator (0.85x) to signal "preview/future"
+		var scale_factor := 0.85
+		var half_w := 180.0 * scale_factor
+		var half_h := 320.0 * scale_factor
+		var rect := Rect2(-half_w, -half_h, half_w * 2.0, half_h * 2.0)
+		var glow_alpha := 0.2 + 0.15 * sin(_glow_time * 3.0)
+		var glow_color := Color(_color.r, _color.g, _color.b, glow_alpha)
+		var line_width := 35.0
+		draw_rect(rect, glow_color, false, line_width + 20.0)
+		draw_rect(rect, Color(_color.r, _color.g, _color.b, 0.5), false, line_width)

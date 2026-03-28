@@ -321,7 +321,7 @@ texture = null
 
 [node name="Path2" parent="." unique_id=853339331 instance=ExtResource("9")]
 z_index = -2
-position = Vector2(-240, -180)
+position = Vector2(-318, -104.00002)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 1
@@ -349,21 +349,21 @@ num = 4
 
 [node name="Path6" parent="." unique_id=680097435 instance=ExtResource("9")]
 z_index = -2
-position = Vector2(-138, 86)
+position = Vector2(-57.999992, 9.999996)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 5
 
 [node name="SunrisePath" parent="." unique_id=453627861 instance=ExtResource("9")]
 z_index = -2
-position = Vector2(-318, -104)
+position = Vector2(-240.00003, -180)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 6
 
 [node name="SunsetPath" parent="." unique_id=61258073 instance=ExtResource("9")]
 z_index = -2
-position = Vector2(-58, 12)
+position = Vector2(-139, 86.67999)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 7
@@ -373,20 +373,23 @@ z_index = -1
 position = Vector2(-114, -174)
 scale = Vector2(0.4, 0.4)
 
-[node name="face" parent="Character Bubble1" index="0"]
-position = Vector2(-100, 115)
+[node name="face" parent="Character Bubble1" index="0" unique_id=707796254]
+position = Vector2(-60.9, 35)
 
-[node name="front_hair" parent="Character Bubble1" index="1"]
-position = Vector2(-100, 210)
+[node name="front_hair" parent="Character Bubble1" index="1" unique_id=633581683]
+position = Vector2(-60.9, 130)
 
-[node name="back_hair" parent="Character Bubble1" index="2"]
-position = Vector2(-100, 210)
+[node name="back_hair" parent="Character Bubble1" index="2" unique_id=1771050701]
+position = Vector2(-60.9, 130)
 texture = ExtResource("13")
 
-[node name="CollisionShape2D" parent="Character Bubble1/Area2D" index="0"]
+[node name="Area2D" parent="Character Bubble1" index="3" unique_id=1953206665]
+position = Vector2(39.099995, -79.99999)
+
+[node name="CollisionShape2D" parent="Character Bubble1/Area2D" index="0" unique_id=1168569297]
 position = Vector2(-100, 115)
 
-[node name="Score" parent="Character Bubble1" index="4"]
+[node name="Score" parent="Character Bubble1" index="4" unique_id=1386002985]
 z_index = 2
 
 [node name="Popup" parent="Character Bubble1/Score/Button" index="2"]
@@ -394,38 +397,38 @@ visible = false
 
 [node name="Character Bubble2" parent="." unique_id=917609711 instance=ExtResource("3")]
 z_index = -1
-position = Vector2(-222, -130)
+position = Vector2(-302, -98.00001)
 scale = Vector2(0.4, 0.4)
 
 [node name="Character Bubble3" parent="." unique_id=892282258 instance=ExtResource("3")]
 z_index = -1
-position = Vector2(-110, -78)
+position = Vector2(-72, -92)
 scale = Vector2(0.4, 0.4)
 
 [node name="Character Bubble4" parent="." unique_id=1105370240 instance=ExtResource("3")]
 z_index = -1
-position = Vector2(-270, -16)
+position = Vector2(-306, -9.536743e-07)
 scale = Vector2(0.4, 0.4)
 
 [node name="Character Bubble5" parent="." unique_id=1180595559 instance=ExtResource("3")]
 z_index = -1
-position = Vector2(-224, 30)
+position = Vector2(-240, 66)
 scale = Vector2(0.4, 0.4)
 
 [node name="Character Bubble6" parent="." unique_id=1836691644 instance=ExtResource("3")]
 z_index = -1
-position = Vector2(-160, 30)
+position = Vector2(-77.99999, -4.0000076)
 scale = Vector2(0.4, 0.4)
 
 [node name="sunrise" type="Sprite2D" parent="." unique_id=1731710693]
 z_index = -1
-position = Vector2(-272, -84)
+position = Vector2(-232, -166)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("4")
 
 [node name="sunset" type="Sprite2D" parent="." unique_id=338479446]
 z_index = -1
-position = Vector2(-112, -12)
+position = Vector2(-146, 66.00001)
 scale = Vector2(0.24, 0.24)
 texture = ExtResource("5")
 
@@ -711,7 +714,7 @@ placed = true
 position = Vector2(8, -112)
 scale = Vector2(0.5, 0.5)
 
-[node name="CollisionShape2D" parent="CentralDomino/Area2D" parent_id_path=PackedInt32Array(20014381, 1374037218) index="0" unique_id=923412705]
+[node name="CollisionShape2D" parent="CentralDomino/Area2D" parent_id_path=PackedInt32Array(2035090892, 1374037218) index="0" unique_id=923412705]
 position = Vector2(8, -112)
 scale = Vector2(0.8, 0.8)
 

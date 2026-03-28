@@ -113,6 +113,12 @@ func _init_players() -> void:
 
 		ind += 1
 
+	# Set rotation for all path preview boxes to match domino orientation
+	for i in range(6):  # Tutorial uses 6 paths (Path3D1 through Path3D6)
+		var pnode = get_node_or_null("Path3D" + str(i + 1))
+		if pnode:
+			pnode.rotation = deg_to_rad(DominoWorld.PATH_ANGLE_DEGREES[i] + DominoWorld.ROTATION_OFFSET_DEG)
+
 	# remove any unused character sprites
 	for i in range(ind, 7):
 		get_node("Character Bubble" + str(i)).queue_free()
@@ -156,7 +162,7 @@ func setup_dominos():
 
 # initialize 7 dominos from main deck on player's screen
 func draw_7():
-	for i in range(7):
+	for i in range(9):
 		# get domino info
 		var domino_nums = draw_domino()
 		var domino = Domino.instantiate()
@@ -164,11 +170,10 @@ func draw_7():
 		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
 		add_child(domino)
 
-		# set domino position
-		if i < 4:
-			domino.position = Vector2(2000, 400 * i - 600)
-		else:
-			domino.position = Vector2(2250, 400 * (i - 4) - 600)
+		# set domino position - adjusted for 9 dominoes (3 columns of 3)
+		var col = i / 3
+		var row = i % 3
+		domino.position = Vector2(2000 + col * 250, 400 * row - 600)
 
 		# initialize domino
 		domino.init(

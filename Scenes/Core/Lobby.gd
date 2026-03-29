@@ -57,7 +57,7 @@ func _on_Join_Button_pressed():
 	
 	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
-			ip = str(local_ip)
+		ip = str(local_ip)
 
 	set_error_label("Connecting...")
 
@@ -127,11 +127,13 @@ func change_menu_smoothly(prev, target):
 
 
 func refresh_lobby():
+	var item_list = $WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer/ItemList
 	var players = gamestate.get_player_list()
 	players.sort()
-	$WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer/ItemList.clear()
+	item_list.clear()
 	for p in players:
-		$WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/VBoxContainer/Menu/MarginContainer/ItemList.add_item(p)
+		var index = item_list.add_item(p)
+		item_list.set_item_tooltip(index, " ")
 
 	# Ensure Start button is visible and properly configured
 	_update_start_button_state()

@@ -304,6 +304,7 @@ visible = false
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1077432123]
 position = Vector2(-192, 0)
+zoom = Vector2(2.5, 2.5)
 
 [node name="Board" type="Sprite2D" parent="." unique_id=496976469]
 z_index = -3
@@ -440,6 +441,7 @@ position = Vector2(-528, -304)
 layer = -2
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=700266546]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -452,6 +454,21 @@ grow_vertical = 2
 scale = Vector2(8, 5)
 mouse_filter = 2
 texture = ExtResource("2")
+metadata/_edit_lock_ = true
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=704993846]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3000.0
+offset_top = -3000.0
+offset_right = -3000.0
+offset_bottom = -3000.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(8, 8)
+mouse_filter = 2
+color = Color(0.5882353, 0.5882353, 0.5882353, 1)
 metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=369789060]

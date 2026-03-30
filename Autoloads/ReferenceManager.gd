@@ -41,9 +41,9 @@ const refDict = {
 	#"level1_cont.tscn": "res://Scenes/Level_1_Agency/level1_cont.tscn",
 	"LevelSelect.tscn": "res://_Unsure/LevelSelect.tscn",
 	"Manager.tscn": "res://Scenes/Core/Manager.tscn",
-	"Pond.tscn": "res://Scenes/Level_3_Pond/Pond.tscn",
+	"Pond.tscn": "res://Scenes/Level_2_Pond/Pond.tscn",
 	"Sandbox.tscn": "res://_Unsure/Sandbox.tscn",
-	"Stone.tscn": "res://Scenes/Level_3_Pond/Stone.tscn",
+	"Stone.tscn": "res://Scenes/Level_2_Pond/Stone.tscn",
 	#"String.tscn": "res://Scenes/Level_1_Agency/String.tscn",
 	"VW0.tscn": "res://Scenes/Level_5_VirtualWorld/VW0.tscn",
 	

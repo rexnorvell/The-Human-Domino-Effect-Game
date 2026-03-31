@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
 [ext_resource type="Script" uid="uid://bibgt27a0gvq" path="res://Scenes/Components/CapturedElcitrap.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://c04xhcxj7ynfc" path="res://UI/sprites/elcitrap_r.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ma5lpxmr3jvg" path="res://UI/sprites/elcitrap_g.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dkf26o8k1mdag" path="res://UI/sprites/elcitrap_y.png" id="4_yvbws"]
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="6"]
 [ext_resource type="Texture2D" uid="uid://cjubjlib62b5g" path="res://UI/sprites/science_icon.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://da4biu7ur7m2m" path="res://UI/sprites/humanities_icon.png" id="8"]
@@ -23,18 +23,18 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4")
-}],
-"loop": true,
-"name": &"green",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": ExtResource("3")
 }],
 "loop": true,
 "name": &"red",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_yvbws")
+}],
+"loop": true,
+"name": &"yellow",
 "speed": 5.0
 }]
 
@@ -97,7 +97,7 @@ script = ExtResource("2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1594638757]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("1")
-animation = &"green"
+animation = &"yellow"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=291961464]
 shape = SubResource("2")
@@ -114,7 +114,7 @@ visible = false
 position = Vector2(29.8628, 29.457)
 scale = Vector2(0.07, 0.07)
 sprite_frames = SubResource("5")
-animation = &"humanities"
+animation = &"science"
 
 [node name="Select" type="AudioStreamPlayer" parent="." unique_id=64976224]
 stream = ExtResource("11")

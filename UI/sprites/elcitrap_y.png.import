@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l2uxh578f125"
-path="res://.godot/imported/green_wave3.png-8ea48b844192debc1b5dfe8122d45900.ctex"
+uid="uid://dkf26o8k1mdag"
+path="res://.godot/imported/elcitrap_y.png-724f5c9216d2bde32439efd0b5380819.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/sprites/green_wave3.png"
-dest_files=["res://.godot/imported/green_wave3.png-8ea48b844192debc1b5dfe8122d45900.ctex"]
+source_file="res://UI/sprites/elcitrap_y.png"
+dest_files=["res://.godot/imported/elcitrap_y.png-724f5c9216d2bde32439efd0b5380819.ctex"]
 
 [params]
 

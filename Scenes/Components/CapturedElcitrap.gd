@@ -8,7 +8,7 @@ var original_pos = Vector2(0,0)
 var selected = false
 var t = 0.0
 
-var anim_table = {"red": "arts", "green": "science", "blue": "humanities"}
+var anim_table = {"red": "arts", "yellow": "science", "blue": "humanities"}
 
 
 func _ready():

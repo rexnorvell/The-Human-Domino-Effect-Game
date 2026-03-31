@@ -9,7 +9,7 @@ signal trigger_animation(anim_name)
 
 var red_pos: Array = [[361, 121], [321, 163], [294, 214], [278, 272], [284, 333]]
 var blue_pos: Array = [[398, 500], [454, 519], [514, 528], [574, 519], [628, 499]]
-var green_pos: Array = [[663, 124], [700, 169], [726, 219], [738, 274], [736, 333]]
+var yellow_pos: Array = [[663, 124], [700, 169], [726, 219], [738, 274], [736, 333]]
 
 
 func _ready() -> void:
@@ -25,7 +25,7 @@ func _ready() -> void:
 			elcitrap.position = Vector2(blue_pos[b_i][0], blue_pos[b_i][1])
 			b_i += 1
 		elif i % 3 == 2:
-			elcitrap.position = Vector2(green_pos[g_i][0], green_pos[g_i][1])
+			elcitrap.position = Vector2(yellow_pos[g_i][0], yellow_pos[g_i][1])
 			g_i += 1
 		elcitrap.init(trait_queue[i], elcitrap.position)
 		elcitrap.hover_started.connect(_on_elcitrap_hover_started)

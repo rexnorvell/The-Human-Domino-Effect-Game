@@ -185,6 +185,21 @@ offset = Vector2(512, 300)
 libraries/ = SubResource("AnimationLibrary_pgici")
 script = ExtResource("14")
 
+[node name="NameInput" type="LineEdit" parent="."]
+offset_left = 384.0
+offset_top = 10.0
+offset_right = 640.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+flat = true
+placeholder_text = "Enter Name..."
+alignment = 1
+max_length = 15
+
+[connection signal="text_changed" from="NameInput" to="." method="_on_name_input_text_changed"]
 [connection signal="trigger_animation" from="." to="AnimationPlayer" method="_on_CharacterCreation_trigger_animation"]
 [connection signal="pressed" from="hair_left" to="." method="_on_hair_left_pressed"]
 [connection signal="pressed" from="hair_right" to="." method="_on_hair_right_pressed"]

@@ -118,6 +118,10 @@ func _init_players() -> void:
 	for player_id in sorted_players:
 		var bubble_path := "Character Bubble" + str(ind)
 		print("\n--- setting up ", bubble_path, " for player_id=", player_id, " ---")
+		
+		var bubble_node = get_node_or_null(bubble_path)
+		if bubble_node and bubble_node.has_method("setup_character"):
+			bubble_node.setup_character(player_id)
 
 		# Resolve icon filename for this player
 		var icon_name: String = ""
@@ -192,11 +196,7 @@ func _init_players() -> void:
 			"/front_hair",
 			"/back_hair",
 			"/body",
-			"/clothes",
-			"/Score/Button/Popup/front_hair",
-			"/Score/Button/Popup/back_hair",
-			"/Score/Button/Popup/body",
-			"/Score/Button/Popup/clothes"
+			"/clothes"
 		]
 		for rel in parts_to_hide:
 			var full_path: String = bubble_path + rel

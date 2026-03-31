@@ -8,6 +8,7 @@ var SaveFile
 #Variable containing the save Data
 var Save = {
 		"0": {
+			"PlayerName": "Player",
 			"Players": {},
 			"Points": {},
 			"lydia_lion": {},
@@ -18,6 +19,7 @@ var Save = {
 			"hair": {},
 			"body": {},
 			"clothes": {},
+			"player_icon": {},
 			"Current_Level": -1,
 			"Current_Round": -1
 		}
@@ -39,9 +41,8 @@ func _ready():
 #	pass
 
 # Function to run after the Save Button is pressed to manage the Data
-func save_button_pressed():
-	print("Save Button Pressed!")
-	SFXController.playSFX("res://audio/effects/select.wav")
+func save_game():
+	print("Saving Game locally...")
 	
 	# Make sure directory exists
 	var dir = DirAccess.open("user://")
@@ -49,6 +50,7 @@ func save_button_pressed():
 		dir.make_dir("Saves")
 	
 	Save["0"] = {
+			"PlayerName": gamestate.player_name,
 			"Players": gamestate.players,
 			"Points": gamestate.total_points,
 			"lydia_lion": gamestate.lydia_lion,
@@ -59,6 +61,7 @@ func save_button_pressed():
 			"hair": gamestate.hair,
 			"body": gamestate.body,
 			"clothes": gamestate.clothes,
+			"player_icon": gamestate.player_icon,
 			"Current_Level": Save["0"].Current_Level,
 			"Current_Round": Save["0"].Current_Round
 		}
@@ -71,14 +74,46 @@ func save_button_pressed():
 	SaveFile.store_string(JSON.stringify(Save, "\t"))
 	SaveFile.close()
 
-func load_button_pressed():
-	print("Load Button Pressed")
-	loaded_data = true
+func load_game() -> bool:
+	if not FileAccess.file_exists(SavePath):
+		return false
+		
 	SaveFile = FileAccess.open(SavePath, FileAccess.READ)
+	if SaveFile == null:
+		return false
+		
+	loaded_data = true
 	var test_json_conv = JSON.new()
-	test_json_conv.parse(SaveFile.get_as_text())
+	var error = test_json_conv.parse(SaveFile.get_as_text())
+	if error != OK:
+		return false
+
 	Save = test_json_conv.get_data()
-	if(Save["0"].Current_Level == "World"):
+	
+	# Migrate old save structures by filling missing dictionary keys
+	var template = {
+		"PlayerName": "Player",
+		"Players": {},
+		"Points": {},
+		"lydia_lion": {},
+		"alloys": {},
+		"footprint_tiles": {},
+		"wellness_beads": {},
+		"elcitraps": {},
+		"hair": {},
+		"body": {},
+		"clothes": {},
+		"player_icon": {},
+		"Current_Level": -1,
+		"Current_Round": -1
+	}
+	if Save.has("0"):
+		for key in template.keys():
+			if not Save["0"].has(key):
+				Save["0"][key] = template[key]
+	
+	if(str(Save["0"].Current_Level) == "World"):
 		Save["0"].Current_Level = "DominoWorld"
 	emit_signal("load_save_scene", Save["0"].Current_Level)
+	return true
 	

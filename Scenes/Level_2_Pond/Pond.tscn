@@ -289,10 +289,7 @@ theme_override_fonts/font = SubResource("8")
 text = "Make some
 healthy choices!"
 
-[node name="Character" parent="." instance=ExtResource("9")]
-visible = false
-position = Vector2(-1934.5, 16.0002)
-scale = Vector2(5, 5)
+
 
 [node name="Stone" type="Area2D" parent="."]
 scale = Vector2(2.5, 2.5)

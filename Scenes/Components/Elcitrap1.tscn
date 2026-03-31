@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://d2pv5eugukrxw" path="res://UI/sprites/yellow_wave2.png" id="14_ak1yl"]
 [ext_resource type="Texture2D" uid="uid://b8s7vhtncnlap" path="res://UI/sprites/yellow_wave3.png" id="15_xkq4u"]
 [ext_resource type="Texture2D" uid="uid://78xfwwc5bhcl" path="res://UI/sprites/yellow_wave4.png" id="16_e4p4t"]
-[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="17"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="17_13vk2"]
 
 [sub_resource type="SpriteFrames" id="1"]
 animations = [{
@@ -100,26 +100,6 @@ animations = [{
 radius = 25.1859
 height = 181.983
 
-[sub_resource type="FontFile" id="3"]
-fallbacks = Array[Font]([ExtResource("17")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
 [node name="Elcitrap1" type="RigidBody2D" unique_id=1786526479]
 collision_layer = 2
 input_pickable = true
@@ -131,7 +111,7 @@ max_speed = 400
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=531727593]
 scale = Vector2(0.6, 0.3)
 sprite_frames = SubResource("1")
-animation = &"blue"
+animation = &"static_yellow"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1427233796]
 rotation = 1.57079
@@ -143,11 +123,21 @@ scale = Vector2(1.44224, 1.42331)
 
 [node name="Label" type="Label" parent="." unique_id=949155029]
 visible = false
-offset_left = -24.0
-offset_top = -8.0
-offset_right = 24.0
-offset_bottom = 6.0
-theme_override_fonts/font = SubResource("3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -71.0
+offset_top = -11.5
+offset_right = 71.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("17_13vk2")
+theme_override_font_sizes/font_size = 13
+text = "Testing Testing 123"
+horizontal_alignment = 1
 
 [connection signal="body_entered" from="." to="." method="_on_Elcitrap1_body_entered"]
 [connection signal="body_shape_entered" from="." to="." method="_on_Elcitrap1_body_shape_entered"]

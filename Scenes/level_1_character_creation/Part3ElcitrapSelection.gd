@@ -45,6 +45,8 @@ func _on_elcitrap_hover_ended() -> void:
 func _process(_delta: float) -> void:
 	if len(selected) == 5:
 		$Button.visible = true
+	else:
+		$Button.visible = false
 
 
 func _on_Button_pressed() -> void:

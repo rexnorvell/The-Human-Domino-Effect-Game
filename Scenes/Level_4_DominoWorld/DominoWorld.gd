@@ -38,6 +38,8 @@ var selected_domino = null # currently selected domino
 var center_num = 0 # current round number
 var num_placed = 0
 
+var cpu_hands = {} # The Host stores CPU hands here
+
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
 var hand_dominos = [] # track dominos in hand numerically
@@ -89,7 +91,10 @@ func _init_players() -> void:
 	var all_icon_names: Array[String] = []
 	for key in ReferenceManager.refDict.keys():
 		if key.begins_with("player_icons/"):
-			all_icon_names.append(key.get_slice("/", 1))
+			var icon_file = key.get_slice("/", 1)
+			# Explicitly ban the sun icons from being used by players/CPUs
+			if icon_file != "sun.png" and icon_file != "sunshine.png":
+				all_icon_names.append(icon_file)
 	all_icon_names.sort()
 
 	# Gather icons already explicitly chosen by any player 
@@ -353,24 +358,42 @@ func setup_dominos():
 	if not multiplayer.is_server():
 		return
 
-	# 1. Deal for the Host
+	# Deal for the Host
 	var my_hand = []
 	for i in range(9):
 		my_hand.append(dominos.pop_front())
 
-	# 2. Deal for the Clients
+	# Deal for Clients and CPUs
 	for p in gamestate.players:
 		if p != 1:
 			var client_hand = []
 			for i in range(9):
 				client_hand.append(dominos.pop_front())
-			# Send the specific hand to the client
-			rpc_id(p, "receive_hand", client_hand)
+				
+			if str(gamestate.players[p]).contains("CPU"):
+				var double_count = 0
+				for d in client_hand:
+					if d[0] == d[1]: double_count += 1
+					if d[0] < d[1]: d.reverse()
+					
+				# Reshuffle if 4+ doubles
+				if double_count >= 4:
+					dominos.append_array(client_hand)
+					dominos.shuffle()
+					client_hand.clear()
+					for i in range(9):
+						var replacement = dominos.pop_front()
+						if replacement[0] < replacement[1]: replacement.reverse()
+						client_hand.append(replacement)
+						
+				cpu_hands[p] = client_hand 
+			else:
+				rpc_id(p, "receive_hand", client_hand)
 			
-	# 3. Sync the remaining deck to everyone so future mid-game draws work
+	# Sync the remaining deck to everyone so future mid-game draws work
 	rpc("sync_full_deck", dominos)
 	
-	# 4. Render the host's hand locally
+	# Render the host's hand locally
 	render_hand(my_hand)
 
 @rpc("any_peer") func receive_hand(hand):
@@ -495,69 +518,86 @@ func select_domino(domino) -> bool:
 func place_domino(num):
 	_verify_anchors_ready()
 	var flip = false
-	# check if it is your turn and you have selected a domino
-	# Only proceed if it is your turn AND you have a domino selected
 	if turn != self_num or !selected_domino:
 		return
-	# If it's a player path (0-5), it's NOT our path, and it's NOT open, block placement
 	if num < 6 and num != self_num and not train_open[num]:
 		print("Cannot play here. Train is closed!")
 		return
 	
+	# Extraction of the true Top and Bottom domino values to match the visual sprite
+	var d_title = str(min(selected_domino.top_num, selected_domino.bottom_num)) + str(max(selected_domino.top_num, selected_domino.bottom_num))
+	var elements = curriculum.domino_dict[d_title]
+	var true_top = int(d_title[0])
+	var true_bot = int(d_title[1])
+	var top_el = elements[0]
+	var bot_el = elements[1]
+
 	# Check if domino can be placed here
-	if (selected_domino.bottom_num == path_ends[num] or selected_domino.top_num == path_ends[num]):
+	if true_top == path_ends[num] or true_bot == path_ends[num]:
 		print("DOMINO Placed at ", num) 
 		
-		# flip domino if the top number matches instead of the bottom...
-		if (selected_domino.bottom_num != path_ends[num] or (selected_domino.top_num == path_ends[num] and selected_domino.top_element != end_dominos[num].top_element)):
-			selected_domino.init(selected_domino.top_num, selected_domino.bottom_num, selected_domino.top_element, selected_domino.bottom_element, false)
-			selected_domino.get_node("Sprite2D").rotation_degrees = 180
-			flip = true
+		# CRASH FIX: First domino of the round has no end_dominos[num] yet!
+		if end_dominos[num] == null:
+			if true_bot != path_ends[num]:
+				flip = true
+		else:
+			if true_bot != path_ends[num] or (true_top == path_ends[num] and top_el != end_dominos[num].top_element):
+				flip = true
 			
-		# check for alloy
-		if end_dominos[num] and end_dominos[num].top_element != selected_domino.bottom_element:
-			rpc("increment_alloys", self_num + 1, curriculum.element_to_alloy[selected_domino.bottom_element])
-			increment_alloys(self_num + 1, curriculum.element_to_alloy[selected_domino.bottom_element])
+		# Check for alloy
+		var touching_el = top_el if flip else bot_el
+		if end_dominos[num] != null and end_dominos[num].top_element != touching_el:
+			if curriculum.element_to_alloy.has(touching_el):
+				var alloy_name = curriculum.element_to_alloy[touching_el]
+				rpc("increment_alloys", self_num + 1, alloy_name)
+				increment_alloys(self_num + 1, alloy_name)
 
-		# check for footprint tile
-		if selected_domino.top_num == selected_domino.bottom_num:
-			rpc("increment_footprint_tiles", self_num + 1, center_num, selected_domino.bottom_num)
-			increment_footprint_tiles(self_num + 1, center_num, selected_domino.bottom_num)
+		# Check for footprint tile
+		if true_top == true_bot:
+			rpc("increment_footprint_tiles", self_num + 1, center_num, true_top)
+			increment_footprint_tiles(self_num + 1, center_num, true_top)
+
+		# Check Wellness Bead
+		if num < 6 and num != self_num and train_open[num]:
+			increment_wellness_beads(self_num + 1)
+			rpc("increment_wellness_beads", self_num + 1)
+			display_wellness_prompt()
+
+		# Force the domino to initialize correctly so the texture syncs with math
+		selected_domino.init(true_top, true_bot, top_el, bot_el, false)
+		if flip:
+			selected_domino.get_node("Sprite2D").rotation_degrees = 180
+		else:
+			selected_domino.get_node("Sprite2D").rotation_degrees = 0
 
 		# Place locally
 		selected_domino.mark_as_placed(PLACED_SCALE)
 		selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
 		_orient_to_path(selected_domino, num)
 
-		path_ends[num] = selected_domino.top_num
+		# Update path ends
+		if flip:
+			path_ends[num] = true_bot
+			selected_domino.top_element = bot_el # Store outward element for next domino
+		else:
+			path_ends[num] = true_top
+			selected_domino.top_element = top_el
+
 		end_dominos[num] = selected_domino
 		path_step_count[num] += 1
 		num_placed += 1
 		
-		# Close our train if we played on it
 		if num == self_num and train_open[self_num]:
 			rpc("set_train_open", self_num, false)
 		
-		# Give a bead if we helped play on someone else's open train
-		if num < 6 and num != self_num and train_open[num]:
-			increment_wellness_beads(self_num + 1)
-			rpc("increment_wellness_beads", self_num + 1)
-			display_wellness_prompt()
+		# Broadcast the exact placement to everyone
+		rpc("update_domino_path", [true_bot, true_top], [bot_el, top_el], position_table[num], num, flip)
 
-		# update other player screens
-		rpc("update_domino_path", [selected_domino.bottom_num, selected_domino.top_num], [selected_domino.bottom_element, selected_domino.top_element], position_table[num], num, flip)
-
-		var placed_domino = []
-		if (flip):
-			placed_domino = [selected_domino.top_num, selected_domino.bottom_num]
-		else:
-			placed_domino = [selected_domino.bottom_num, selected_domino.top_num]
-			
-		hand_dominos.erase(placed_domino)
+		hand_dominos.erase([selected_domino.top_num, selected_domino.bottom_num])
+		hand_dominos.erase([selected_domino.bottom_num, selected_domino.top_num])
 		rearrange_hand()
 
-		# Check if it was a double
-		if (selected_domino.top_num == selected_domino.bottom_num):
+		if true_top == true_bot:
 			can_place = true
 		else:
 			can_place = false
@@ -565,7 +605,6 @@ func place_domino(num):
 		clear_selected_domino()
 		$Place.playing = true
 		
-		# Auto-advance turn if we are done playing
 		if not can_place:
 			rpc("advance_turn")
 			advance_turn()
@@ -727,33 +766,36 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 
 # update domino path for all players after a player places a domino
 @rpc("any_peer") func update_domino_path(domino_nums, domino_elms, pos, path_num, flip):
-	# Sync our anchor for this path in case host moved it
-	position_table[path_num] = pos # (pos should be global anchor)
+	position_table[path_num] = pos
+
+	# RPC format guarantees index 0 is bot, index 1 is top
+	var bot_n = domino_nums[0]
+	var top_n = domino_nums[1]
+	var bot_e = domino_elms[0]
+	var top_e = domino_elms[1]
 
 	var domino = Domino.instantiate()
 	add_child(domino)
 	domino.scale = PLACED_SCALE
-
-	# If anchors are global:
 	domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
-	# If anchors are local, use:
-	# domino.position = _path_position_for_step(path_num, path_step_count[path_num])
-
-	# Optional facing
 	_orient_to_path(domino, path_num)
 
-	var domino_title = str(min(domino_nums[0], domino_nums[1])) + str(max(domino_nums[0], domino_nums[1]))
+	var domino_title = str(top_n) + str(bot_n)
 	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
-	domino.init(domino_nums[0], domino_nums[1], domino_elms[0], domino_elms[1], true)
+	domino.init(top_n, bot_n, top_e, bot_e, true)
 	domino.mark_as_placed(PLACED_SCALE)
 
+	# Flawless Flip logic
 	if flip:
 		domino.get_node("Sprite2D").rotation_degrees = 180
+		path_ends[path_num] = bot_n
+		domino.top_element = bot_e
+	else:
+		domino.get_node("Sprite2D").rotation_degrees = 0
+		path_ends[path_num] = top_n
+		domino.top_element = top_e
 
-	path_ends[path_num] = domino_nums[1]
 	end_dominos[path_num] = domino
-
-	# Advance step AFTER placing (locks peers to host)
 	path_step_count[path_num] += 1
 
 # replace placed domino with one from the deck
@@ -854,6 +896,42 @@ func replace_domino():
 	# Set a new random player's turn
 	randomize_turn()
 
+# Evaluates the CPU's hand and returns the best valid move
+func calculate_cpu_move(cpu_id):
+	if not cpu_hands.has(cpu_id): return null
+	
+	var c_hand = cpu_hands[cpu_id]
+	var my_path_idx = sorted_players.find(cpu_id)
+	
+	# Priority 1: Personal Path
+	for i in range(c_hand.size()):
+		var domino_nums = c_hand[i]
+		var d_title = str(min(domino_nums[0], domino_nums[1])) + str(max(domino_nums[0], domino_nums[1]))
+		
+		if domino_nums[0] == path_ends[my_path_idx] or domino_nums[1] == path_ends[my_path_idx]:
+			return {"hand_idx": i, "path_idx": my_path_idx, "nums": domino_nums, "title": d_title}
+
+	# Priority 2: Help others if personal path is blocked
+	for i in range(c_hand.size()):
+		var domino_nums = c_hand[i]
+		var d_title = str(min(domino_nums[0], domino_nums[1])) + str(max(domino_nums[0], domino_nums[1]))
+		
+		for p_idx in range(6):
+			if p_idx != my_path_idx and train_open[p_idx]:
+				if domino_nums[0] == path_ends[p_idx] or domino_nums[1] == path_ends[p_idx]:
+					return {"hand_idx": i, "path_idx": p_idx, "nums": domino_nums, "title": d_title}
+					
+	# Priority 3: Sun Paths
+	for i in range(c_hand.size()):
+		var domino_nums = c_hand[i]
+		var d_title = str(min(domino_nums[0], domino_nums[1])) + str(max(domino_nums[0], domino_nums[1]))
+		
+		for sun_idx in [6, 7]:
+			if domino_nums[0] == path_ends[sun_idx] or domino_nums[1] == path_ends[sun_idx]:
+				return {"hand_idx": i, "path_idx": sun_idx, "nums": domino_nums, "title": d_title}
+					
+	return null
+
 @rpc("any_peer") func sync_turn(new_turn):
 	turn = new_turn
 	_update_turn_label()
@@ -863,9 +941,82 @@ func replace_domino():
 	_update_turn_label()
 
 func _update_turn_label():
-	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+	var current_player_id = sorted_players[turn]
+	var current_name = gamestate.players[current_player_id]
+	
+	$Turn.text = current_name + "'s\nTurn"
 	# Only show the "Need Help" button if it is currently YOUR turn
 	$Help.visible = (turn == self_num)
+	
+	# CPU TURN AUTOMATION (HOST ONLY)
+	if str(current_name).contains("CPU") and multiplayer.is_server():
+		_execute_cpu_turn_async(current_player_id)
+
+# The async function handles the CPU playing the domino
+func _execute_cpu_turn_async(cpu_id):
+	await get_tree().create_timer(1.5).timeout 
+	if sorted_players[turn] != cpu_id: return 
+	
+	var move = calculate_cpu_move(cpu_id)
+	var my_path_idx = sorted_players.find(cpu_id)
+	
+	if move != null:
+		var elements = curriculum.domino_dict[move.title]
+		var flip = false
+		
+		var true_top = int(move.title[0])
+		var true_bot = int(move.title[1])
+		var top_e = elements[0]
+		var bot_e = elements[1]
+		
+		# CRASH FIX: First piece of the round
+		if end_dominos[move.path_idx] == null:
+			if true_bot != path_ends[move.path_idx]:
+				flip = true
+		else:
+			if true_bot != path_ends[move.path_idx] or (true_top == path_ends[move.path_idx] and top_e != end_dominos[move.path_idx].top_element):
+				flip = true
+
+		# CPU SCORING & POPUP CHECKS
+		var touching_el = top_e if flip else bot_e
+		if end_dominos[move.path_idx] != null and end_dominos[move.path_idx].top_element != touching_el:
+			if curriculum.element_to_alloy.has(touching_el):
+				var alloy_name = curriculum.element_to_alloy[touching_el]
+				rpc("increment_alloys", my_path_idx + 1, alloy_name)
+				increment_alloys(my_path_idx + 1, alloy_name)
+			
+		if true_top == true_bot:
+			rpc("increment_footprint_tiles", my_path_idx + 1, center_num, true_top)
+			increment_footprint_tiles(my_path_idx + 1, center_num, true_top)
+			
+		if move.path_idx < 6 and move.path_idx != my_path_idx and train_open[move.path_idx]:
+			rpc("increment_wellness_beads", my_path_idx + 1)
+			increment_wellness_beads(my_path_idx + 1)
+			display_wellness_prompt()
+			
+		cpu_hands[cpu_id].remove_at(move.hand_idx)
+		
+		if move.path_idx == my_path_idx and train_open[my_path_idx]:
+			rpc("set_train_open", my_path_idx, false)
+			set_train_open(my_path_idx, false)
+			
+		rpc("update_domino_path", [true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
+		update_domino_path([true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
+		
+		# POPUP PAUSE LOGIC
+		while $AlloyPopup.visible or $FootprintTilePopup.visible or $WellnessBeadPopup.visible:
+			await get_tree().process_frame
+		
+		if true_top == true_bot:
+			_execute_cpu_turn_async(cpu_id)
+		else:
+			rpc("advance_turn")
+			advance_turn()
+	else:
+		rpc("set_train_open", my_path_idx, true)
+		set_train_open(my_path_idx, true)
+		rpc("advance_turn")
+		advance_turn()
 
 # handle when next round button pressed by host
 func _on_Next_pressed() -> void:

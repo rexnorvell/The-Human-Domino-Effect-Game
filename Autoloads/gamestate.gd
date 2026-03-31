@@ -191,12 +191,13 @@ func _connected_fail():
 
 	# --- Server Handshake Gatekeeper ---
 	if multiplayer.is_server():
-		if game_in_progress:
+		# Check if the player is a CPU. If they are, let them bypass the lock!
+		if game_in_progress and not str(new_player_name).contains("CPU"):
 			if id != 1: # Don't kick the host!
 				rpc_id(id, "join_rejected", "Game already in progress!")
 			return # Abort registration completely!
 		else:
-			if id != 1:
+			if id != 1 and not str(new_player_name).contains("CPU"):
 				rpc_id(id, "join_accepted")
 	
 	id += cpunum
@@ -255,50 +256,41 @@ func disconnect_network():
 	player_icon.clear()
 	players_ready.clear()
 
-@rpc("any_peer") func pre_start_game():
-	# Change scene.
-#	print(players)
-
-	if not multiplayer.is_server():
-		# Tell server we are ready to start.
-		rpc_id(1, "ready_to_start", multiplayer.get_unique_id())
-	elif players.size() == 1:
-		# small loop to add CPUs with unique names and ids
-		var cpusAdded = 0
-		while cpusAdded < cpuNum and players.size() < 6:
-			register_player("CPU_"+str(players.size()),players.size()+1)
-			cpusAdded=cpusAdded+1
-		post_start_game()
-
-
-@rpc("any_peer") func post_start_game():
-	gamestate.players_ready = []
-	var world = load("res://Scenes/Core/Manager.tscn")
-	
+@rpc("any_peer", "call_local", "reliable") 
+func pre_start_game():
+	if multiplayer.is_server():
+		# Host creates the CPUs
+		var starting_size = players.size()
+		var cpus_needed = 6 - starting_size
+		
+		for i in range(cpus_needed):
+			var cpu_number = starting_size + i + 1
+			var safe_offset = -(10 + i) 
+			rpc("register_player", "CPU_" + str(cpu_number), safe_offset)
 			
-	if multiplayer.get_unique_id() != 1:
-		for top in range(10):
-			for bottom in range(top+1):
-				dominos.append([bottom, top])
-		seed(random_seed)
-#		print(random_seed)
-		dominos.shuffle()
-#		print(dominos)
-	
+		# Wait for the network to sync the new CPU names to everyone
+		await get_tree().create_timer(0.5).timeout
+		
+		# We use call_local so the Host does it too.
+		rpc("prepare_client_deck", random_seed)
+		
+		# Now that everyone has CPUs and Decks, pull them into the scene
+		rpc("post_start_game")
+
+@rpc("any_peer")
+func prepare_client_deck(r_seed):
+	# Clients generate the same shuffled deck as the host
+	dominos = []
+	for top in range(10):
+		for bottom in range(top+1):
+			dominos.append([bottom, top])
+	seed(r_seed)
+	dominos.shuffle()
+
+@rpc("any_peer", "call_local", "reliable")
+func post_start_game():
+	var world = load("res://Scenes/Core/Manager.tscn")
 	get_tree().change_scene_to_packed(world)
-
-# tell host we're ready to start
-@rpc("any_peer") func ready_to_start(id):
-	assert(multiplayer.is_server())
-
-	if not id in players_ready:
-		players_ready.append(id)
-
-	if players_ready.size() == players.size()-1:
-		for p in players:
-			if p != multiplayer.get_unique_id():
-				rpc_id(p, "post_start_game")
-		post_start_game()
 
 func host_single_player(new_player_name):
 	# Because the code assumes a multiplayer network setup, it is easiest
@@ -378,12 +370,8 @@ func begin_game():
 		start_tutorial()
 	else:
 		assert(multiplayer.is_server())
-
-		# Call to pre-start game with the spawn points.
-		for p in players:
-			if p != multiplayer.get_unique_id():
-				rpc_id(p, "pre_start_game")
-
+		# We only call pre_start_game locally on the server. 
+		# The server will then tell clients what to do via RPC.
 		pre_start_game()
 
 #Added CS499 Fall 2024

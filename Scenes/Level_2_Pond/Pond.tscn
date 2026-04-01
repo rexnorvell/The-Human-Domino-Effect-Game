@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Components/Character Bubble.tscn" id="9"]
 [ext_resource type="AudioStream" uid="uid://dod16p8my67xs" path="res://audio/effects/select.wav" id="10"]
 [ext_resource type="AudioStream" uid="uid://80uwjdhywcbr" path="res://audio/effects/back.wav" id="11"]
-[ext_resource type="PackedScene" uid="uid://b5p1i36ak27cu" path="res://Scenes/Level_4_DominoWorld/DominoWorld.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://b4qeg8h8q07u8" path="res://Scenes/Core/Menu_Scene.tscn" id="12"]
 [ext_resource type="Texture2D" uid="uid://bq040pq1lpnqx" path="res://UI/sprites/pond/r_stone.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://bj4cwpnj5dweo" path="res://UI/sprites/pond/br_stone.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://b5xvdp4v1oowj" path="res://UI/sprites/pond/ybr_stone.png" id="15"]
@@ -289,10 +289,7 @@ theme_override_fonts/font = SubResource("8")
 text = "Make some
 healthy choices!"
 
-[node name="Character" parent="." instance=ExtResource("9")]
-visible = false
-position = Vector2(-1934.5, 16.0002)
-scale = Vector2(5, 5)
+
 
 [node name="Stone" type="Area2D" parent="."]
 scale = Vector2(2.5, 2.5)

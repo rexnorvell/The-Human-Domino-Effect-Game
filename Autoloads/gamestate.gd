@@ -210,18 +210,18 @@ func _connected_fail():
 				CharacterFound = true
 				total_points[id] = SaveManager.Save["0"].Points[keys[i]]
 				elcitraps[id] = SaveManager.Save["0"].elcitraps[keys[i]]
-				hair[id] = SaveManager.Save["0"].hair[keys[i]]
-				clothes[id] = SaveManager.Save["0"].clothes[keys[i]]
-				body[id] = SaveManager.Save["0"].body[keys[i]]
-				if(SaveManager.Save["0"].lydia_lion.keys().find(keys[i]) != -1):
+				hair[id] = int(SaveManager.Save["0"].hair[keys[i]])
+				clothes[id] = int(SaveManager.Save["0"].clothes[keys[i]])
+				body[id] = int(SaveManager.Save["0"].body[keys[i]])
+				if SaveManager.Save["0"].lydia_lion.has(keys[i]):
 					lydia_lion[id] = SaveManager.Save["0"].lydia_lion[keys[i]]
-				if(SaveManager.Save["0"].alloys.keys().find(keys[i]) != -1):
+				if SaveManager.Save["0"].alloys.has(keys[i]):
 					alloys[id] = SaveManager.Save["0"].alloys[keys[i]]
-				if(SaveManager.Save["0"].footprint_tiles.keys().find(keys[i]) != -1):
+				if SaveManager.Save["0"].footprint_tiles.has(keys[i]):
 					footprint_tiles[id] = SaveManager.Save["0"].footprint_tiles[keys[i]]
-				if(SaveManager.Save["0"].wellness_beads.keys().find(keys[i]) != -1):
+				if SaveManager.Save["0"].wellness_beads.has(keys[i]):
 					wellness_beads[id] = SaveManager.Save["0"].wellness_beads[keys[i]]
-				if(SaveManager.Save["0"].player_icon.keys().find(keys[i]) != -1):
+				if SaveManager.Save["0"].player_icon.has(keys[i]):
 					player_icon[id] = SaveManager.Save["0"].player_icon[keys[i]]
 		if(not CharacterFound):
 			total_points[id] = 0
@@ -400,6 +400,17 @@ func save_scene_path(scene_path):
 	prev_scene = scene_path
 
 func _ready():
+	if SaveManager.load_game():
+		var data = SaveManager.Save["0"]
+		if data.has("PlayerName"):
+			player_name = data["PlayerName"]
+	else:
+		var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+		var random_id = ""
+		for i in range(4):
+			random_id += chars[randi() % chars.length()]
+		player_name = "Player_" + random_id
+	
 	multiplayer.peer_connected.connect(_player_connected)
 	multiplayer.peer_disconnected.connect(_player_disconnected)
 	multiplayer.connection_failed.connect(_connected_fail)

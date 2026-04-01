@@ -115,7 +115,8 @@ func _on_Button_pressed() -> void:
 	$Popup.visible = false
 	
 @rpc("any_peer") func start_game():
-	get_parent().change_level(next_scene, true)
+	gamestate.disconnect_network()
+	get_tree().change_scene_to_file("res://Scenes/Core/GAME_START.tscn")
 
 @rpc("any_peer") func ready_to_start(id):
 	assert(multiplayer.is_server())

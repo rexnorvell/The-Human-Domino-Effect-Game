@@ -35,6 +35,7 @@ func _ready():
 		
 	# Set the placeholder text to your local IP address
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.placeholder_text = get_local_ip()
+	set_player_name(gamestate.player_name)
 
 
 func _on_Host_pressed():

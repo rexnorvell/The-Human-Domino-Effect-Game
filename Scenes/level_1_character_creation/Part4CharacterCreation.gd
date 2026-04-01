@@ -20,11 +20,7 @@ var clothes_num = 0 # Current clothing option index
 # Track players who are ready to proceed
 var players_ready = []
 
-# Initialize the scene when it enters the scene tree
 func _ready() -> void:
-	#$AnimationPlayer.play("Zoom")
-	#emit_signal("trigger_animation", "Screen_Unwipe") 
-	
 	# Populate elcitraps with data from previous scene
 	for i in range(len(gamestate.elcitraps[multiplayer.get_unique_id()])):
 		var elcitrap = Elcitrap.instantiate()
@@ -88,17 +84,42 @@ func _on_clothes_right_pressed() -> void:
 	# Update clothing texture
 	$clothes.set_texture(load(ReferenceManager.get_reference("clothes/" + str(clothes_num) + ".png")))
 
-# Handling proceeding to the next scene
+func _on_name_input_text_changed(new_text: String) -> void:
+	var regex = RegEx.new()
+	regex.compile("[^a-zA-Z0-9_]")
+	var clean = regex.sub(new_text, "", true)
+	if clean != new_text:
+		var caret = $NameInput.caret_column
+		$NameInput.text = clean
+		$NameInput.caret_column = caret - 1
+
 func _on_next_pressed() -> void:
+	var raw_name = $NameInput.text
+	if raw_name.is_empty():
+		raw_name = "Player_" + str(randi() % 10000)
+	
+	$NameInput.text = raw_name
+	gamestate.player_name = raw_name
+	var my_id = multiplayer.get_unique_id()
+	gamestate.players[my_id] = raw_name
+	
+	# Apply locally so SaveManager gets correct traits
+	gamestate.hair[my_id] = hair_num
+	gamestate.body[my_id] = body_num
+	gamestate.clothes[my_id] = clothes_num
+	
+	# Save locally since customization is finalized
+	SaveManager.save_game()
+	
 	# Synchronize character features across the network
 	rpc("set_features", hair_num, body_num, clothes_num)
 	
 	# If not the server, inform the server that this player is ready
 	if not multiplayer.is_server():
-		rpc_id(1, "ready_to_start", multiplayer.get_unique_id())
+		rpc_id(1, "ready_to_start", my_id)
 	else:
 		# If server, immediately mark as ready
-		ready_to_start(multiplayer.get_unique_id())
+		ready_to_start(my_id)
 
 # Toggle visibility of a color rect during animation
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:

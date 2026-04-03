@@ -33,8 +33,6 @@ func _ready():
 	if has_node("Back_Button"):
 		$Back_Button.pressed.connect(_on_back_button_pressed)
 		
-	# Set the placeholder text to your local IP address
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.placeholder_text = get_local_ip()
 	set_player_name(gamestate.player_name)
 
 
@@ -56,7 +54,7 @@ func _on_Join_Button_pressed():
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
 	
-	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
+	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
 		ip = str(local_ip)
 
@@ -83,7 +81,7 @@ func _on_join_timeout():
 func _on_join_accepted():
 	set_error_label("")
 	
-	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/IP/MarginContainer/LineEdit.text
+	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
 		ip = str(local_ip)
 		

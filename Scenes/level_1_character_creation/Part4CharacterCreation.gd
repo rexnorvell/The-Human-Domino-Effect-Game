@@ -145,8 +145,15 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if not id in players_ready:
 		players_ready.append(id)
 	
+	var real_players = 0
+	for p in gamestate.players:
+		if p > 0:
+			real_players += 1
+			
 	# If all players are ready, notify each player to start the game
-	if players_ready.size() == gamestate.players.size():
+	if players_ready.size() == real_players:
 		for p in gamestate.players:
-			rpc_id(p, "start_game")
+			if p > 1:
+				rpc_id(p, "start_game")
 		start_game()
+

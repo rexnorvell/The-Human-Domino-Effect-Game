@@ -124,7 +124,14 @@ func _on_Button_pressed() -> void:
 	if not id in players_ready:
 		players_ready.append(id)
 
-	if players_ready.size() == gamestate.players.size():
+	var real_players = 0
+	for p in gamestate.players:
+		if p > 0:
+			real_players += 1
+
+	if players_ready.size() == real_players:
 		for p in gamestate.players:
-			rpc_id(p, "start_game")
+			if p > 1:
+				rpc_id(p, "start_game")
 		start_game()
+

@@ -251,6 +251,8 @@ func disconnect_network():
 		
 	multiplayer.multiplayer_peer = null
 	
+	game_in_progress = false
+	
 	# Scrub the local data for the next time they join
 	players.clear()
 	player_icon.clear()

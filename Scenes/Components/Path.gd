@@ -25,11 +25,13 @@ var _glow_time := 0.0
 func _ready() -> void:
 	_base_scale = scale  # captures 0.03 from scene instance
 	set_process(false)
-	get_parent().add_position(self.position)
+	get_parent().get_parent().add_position(self.position)
+
 
 func _process(delta: float) -> void:
 	_glow_time += delta
 	queue_redraw()
+
 
 func _draw() -> void:
 	if not _indicator_active:
@@ -86,7 +88,7 @@ func _update_visual() -> void:
 func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed:
-			get_parent().place_domino(num)
+			get_parent().get_parent().place_domino(num)
 
 func _on_Area2D_mouse_entered() -> void:
 	if not _indicator_active:

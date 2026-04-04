@@ -51,6 +51,23 @@ offset_bottom = 42.0
 
 [node name="Popup" parent="Score/Button" index="2"]
 oversampling_override = 1.0
+position = Vector2i(20, 20)
+size = Vector2i(550, 400)
+
+[node name="Alloy_label" parent="Score/Button/Popup" index="2"]
+horizontal_alignment = 2
+
+[node name="Footprint_label" parent="Score/Button/Popup" index="4"]
+horizontal_alignment = 2
+
+[node name="Wellness_label" parent="Score/Button/Popup" index="6"]
+horizontal_alignment = 2
+
+[node name="Lydia_label" parent="Score/Button/Popup" index="8"]
+offset_left = 286.0
+offset_right = 495.0
+text = "Lydia Lion Coins: "
+horizontal_alignment = 2
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_Area2D_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_Area2D_mouse_exited"]

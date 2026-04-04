@@ -29,143 +29,6 @@
 [ext_resource type="Texture2D" uid="uid://cgb7uykpyjide" path="res://UI/sprites/close.png" id="28"]
 [ext_resource type="PackedScene" uid="uid://onq3cam2n0us" path="res://Scenes/Core/PauseMenu.tscn" id="29_bru2g"]
 
-[sub_resource type="Animation" id="1"]
-resource_name = "Zoom In"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera2D:zoom")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(2.5, 2.5), Vector2(1.7, 1.7)]
-}
-
-[sub_resource type="Animation" id="2"]
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera2D:zoom")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(1.7, 1.7), Vector2(2.5, 2.5)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_vh554"]
-_data = {
-&"Zoom In": SubResource("1"),
-&"Zoom Out": SubResource("2")
-}
-
-[sub_resource type="FontFile" id="5"]
-fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="FontFile" id="6"]
-fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="FontFile" id="7"]
-fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="FontFile" id="8"]
-fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="FontFile" id="10"]
-fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
 [sub_resource type="FontFile" id="11"]
 fallbacks = Array[Font]([ExtResource("16"), ExtResource("16")])
 subpixel_positioning = 0
@@ -290,22 +153,503 @@ region_rect = Rect2(0, 0, 512, 512)
 texture = ExtResource("28")
 region_rect = Rect2(0, 0, 512, 512)
 
+[sub_resource type="FontFile" id="5"]
+fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="6"]
+fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="7"]
+fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="8"]
+fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="FontFile" id="10"]
+fallbacks = Array[Font]([ExtResource("10"), ExtResource("10")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Animation" id="1"]
+resource_name = "Zoom In"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WorldElements/Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(2.5, 2.5), Vector2(1.7, 1.7)]
+}
+
+[sub_resource type="Animation" id="2"]
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WorldElements/Camera2D:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1.7, 1.7), Vector2(2.5, 2.5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vh554"]
+_data = {
+&"Zoom In": SubResource("1"),
+&"Zoom Out": SubResource("2")
+}
+
 [node name="World" type="Node2D" unique_id=1181802440]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("7")
 Domino = ExtResource("8")
 
-[node name="PauseCL" type="CanvasLayer" parent="." unique_id=5341854]
-layer = 15
+[node name="WorldElements" type="Node2D" parent="." unique_id=1641153460]
 
-[node name="PauseMenu" parent="PauseCL" unique_id=2053464100 instance=ExtResource("29_bru2g")]
-visible = false
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1077432123]
-position = Vector2(-192, 0)
+[node name="Camera2D" type="Camera2D" parent="WorldElements" unique_id=1077432123]
+position = Vector2(-191.99998, -1.5258789e-05)
+scale = Vector2(0.99999994, 0.99999994)
 zoom = Vector2(2.5, 2.5)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
 
-[node name="Board" type="Sprite2D" parent="." unique_id=496976469]
+[node name="SaveButton" parent="WorldElements" unique_id=1717313087 instance=ExtResource("14")]
+visible = false
+position = Vector2(-186, -222)
+scale = Vector2(0.4, 0.4)
+
+[node name="Start" type="TextureButton" parent="WorldElements" unique_id=1164943152]
+offset_left = -228.0
+offset_top = 132.0
+offset_right = -38.0
+offset_bottom = 181.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/Start" unique_id=1138882031]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="WorldElements/Start/MarginContainer" unique_id=2113117972]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Reset" type="TextureButton" parent="WorldElements" unique_id=1091096365]
+offset_left = -228.0
+offset_top = 156.0
+offset_right = -38.0
+offset_bottom = 205.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/Reset" unique_id=1372665780]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="WorldElements/Reset/MarginContainer" unique_id=1863938518]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Reset"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Code" type="TextureButton" parent="WorldElements" unique_id=51973216]
+visible = false
+offset_left = -154.0
+offset_top = -228.0
+offset_right = 36.0
+offset_bottom = -179.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/Code" unique_id=1256968813]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="WorldElements/Code/MarginContainer" unique_id=1068016564]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Enter Code"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Next" type="TextureButton" parent="WorldElements" unique_id=750766444]
+offset_left = -144.0
+offset_top = -232.0
+offset_right = 46.0
+offset_bottom = -183.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/Next" unique_id=1524833728]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="WorldElements/Next/MarginContainer" unique_id=1133366593]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Next Round"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Help" type="TextureButton" parent="WorldElements" unique_id=1604946150]
+offset_left = -372.0
+offset_top = 98.0
+offset_right = -182.0
+offset_bottom = 147.0
+scale = Vector2(0.4, 0.4)
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("19")
+texture_pressed = ExtResource("18")
+texture_hover = ExtResource("20")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/Help" unique_id=753929215]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="WorldElements/Help/MarginContainer" unique_id=417630671]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("11")
+text = "Need Help"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnterCodeMenu" type="NinePatchRect" parent="WorldElements" unique_id=2094562660]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -847.0
+offset_top = -495.0
+offset_right = 847.0
+offset_bottom = 495.0
+texture = ExtResource("25")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 31
+patch_margin_top = 28
+patch_margin_right = 29
+patch_margin_bottom = 28
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/EnterCodeMenu" unique_id=1367911909]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WorldElements/EnterCodeMenu/MarginContainer" unique_id=819992936]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="EnterCode" type="Label" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=1619657454]
+layout_mode = 2
+theme_override_fonts/font = SubResource("12")
+text = "Enter Code"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=1824846860]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.0
+texture = ExtResource("25")
+region_rect = Rect2(-1.09497, -1, 102.095, 102.423)
+patch_margin_left = 3
+patch_margin_top = 7
+patch_margin_right = 3
+patch_margin_bottom = 35
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect" unique_id=1533910496]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_right = 25
+
+[node name="LineEdit" type="LineEdit" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer" unique_id=51159914]
+layout_mode = 2
+theme = ExtResource("17")
+theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
+theme_override_fonts/font = SubResource("14")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=937920315]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_top = 150
+
+[node name="Enter" type="TextureButton" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer" unique_id=1946840216]
+custom_minimum_size = Vector2(700, 200)
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("24")
+texture_pressed = ExtResource("23")
+texture_hover = ExtResource("23")
+
+[node name="MarginContainer" type="MarginContainer" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" unique_id=612261445]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 25
+
+[node name="Label" type="Label" parent="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter/MarginContainer" unique_id=1386978179]
+layout_mode = 2
+theme = ExtResource("17")
+theme_override_fonts/font = SubResource("13")
+text = "Enter"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="X" type="TextureButton" parent="WorldElements/EnterCodeMenu" unique_id=187524548]
+layout_mode = 0
+offset_left = 1611.0
+offset_top = 25.0
+offset_right = 1665.0
+offset_bottom = 77.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("22")
+texture_pressed = ExtResource("21")
+texture_hover = ExtResource("21")
+
+[node name="InvalidCode" type="Label" parent="WorldElements/EnterCodeMenu" unique_id=1790883149]
+visible = false
+layout_mode = 0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -42.0
+offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("15")
+text = "Invalid code!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UsedCode" type="Label" parent="WorldElements/EnterCodeMenu" unique_id=1267248247]
+visible = false
+layout_mode = 0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -42.0
+offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("15")
+text = "This code has been used already!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AcceptCode" type="Label" parent="WorldElements/EnterCodeMenu" unique_id=405977017]
+visible = false
+layout_mode = 0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -42.0
+offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_fonts/font = SubResource("15")
+text = "Code accepted!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HelpMenu" type="Control" parent="WorldElements" unique_id=699493088]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HelpButton" type="Button" parent="WorldElements/HelpMenu" unique_id=95552350]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.6
+anchor_top = 0.75
+anchor_right = 1.6
+anchor_bottom = 0.75
+offset_left = 53.0
+offset_top = -260.0
+offset_right = 255.0
+offset_bottom = -54.0
+scale = Vector2(0.15, 0.15)
+theme_override_styles/normal = SubResource("16")
+theme_override_styles/pressed = SubResource("20")
+theme_override_styles/hover = SubResource("18")
+icon_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="HelpImage" type="TextureRect" parent="WorldElements/HelpMenu" unique_id=1678077797]
+visible = false
+layout_mode = 0
+offset_left = -506.0
+offset_top = -244.0
+offset_right = 6054.0
+offset_bottom = 4536.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("26")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="Button" parent="WorldElements/HelpMenu/HelpImage" unique_id=899241210]
+layout_mode = 0
+offset_left = 6280.0
+offset_top = 80.0
+offset_right = 6444.0
+offset_bottom = 240.0
+theme_override_styles/normal = SubResource("17")
+theme_override_styles/pressed = SubResource("21")
+theme_override_styles/hover = SubResource("19")
+metadata/_edit_lock_ = true
+
+[node name="Board" type="Sprite2D" parent="WorldElements" unique_id=496976469]
 z_index = -3
 texture_filter = 1
 position = Vector2(-192, -50)
@@ -313,133 +657,126 @@ rotation = 1.20428
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("1")
 
-[node name="Path1" parent="." unique_id=607809010 instance=ExtResource("9")]
+[node name="Path1" parent="WorldElements" unique_id=607809010 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-130, -176)
 scale = Vector2(0.03, 0.03)
 texture = null
 
-[node name="Path2" parent="." unique_id=853339331 instance=ExtResource("9")]
+[node name="Path2" parent="WorldElements" unique_id=853339331 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-318, -104.00002)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 1
 
-[node name="Path3" parent="." unique_id=1040527191 instance=ExtResource("9")]
+[node name="Path3" parent="WorldElements" unique_id=1040527191 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-58, -98)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 2
 
-[node name="Path4" parent="." unique_id=1591097373 instance=ExtResource("9")]
+[node name="Path4" parent="WorldElements" unique_id=1591097373 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-322, 6)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 3
 
-[node name="Path5" parent="." unique_id=550393547 instance=ExtResource("9")]
+[node name="Path5" parent="WorldElements" unique_id=550393547 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-246, 84)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 4
 
-[node name="Path6" parent="." unique_id=680097435 instance=ExtResource("9")]
+[node name="Path6" parent="WorldElements" unique_id=680097435 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-57.999992, 9.999996)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 5
 
-[node name="SunrisePath" parent="." unique_id=453627861 instance=ExtResource("9")]
+[node name="SunrisePath" parent="WorldElements" unique_id=453627861 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-240.00003, -180)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 6
 
-[node name="SunsetPath" parent="." unique_id=61258073 instance=ExtResource("9")]
+[node name="SunsetPath" parent="WorldElements" unique_id=61258073 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-139, 86.67999)
 scale = Vector2(0.03, 0.03)
 texture = null
 num = 7
 
-[node name="Character Bubble1" parent="." unique_id=1946415537 instance=ExtResource("3")]
+[node name="Character Bubble1" parent="WorldElements" unique_id=1946415537 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-114, -174)
 scale = Vector2(0.4, 0.4)
 
-[node name="face" parent="Character Bubble1" index="0" unique_id=707796254]
+[node name="face" parent="WorldElements/Character Bubble1" index="0" unique_id=707796254]
 position = Vector2(-60.9, 35)
 
-[node name="front_hair" parent="Character Bubble1" index="1" unique_id=633581683]
+[node name="front_hair" parent="WorldElements/Character Bubble1" index="1" unique_id=633581683]
 position = Vector2(-60.9, 130)
 
-[node name="back_hair" parent="Character Bubble1" index="2" unique_id=1771050701]
+[node name="back_hair" parent="WorldElements/Character Bubble1" index="2" unique_id=1771050701]
 position = Vector2(-60.9, 130)
 texture = ExtResource("13")
 
-[node name="Area2D" parent="Character Bubble1" index="3" unique_id=1953206665]
+[node name="Area2D" parent="WorldElements/Character Bubble1" index="3" unique_id=1953206665]
 position = Vector2(39.099995, -79.99999)
 
-[node name="CollisionShape2D" parent="Character Bubble1/Area2D" index="0" unique_id=1168569297]
+[node name="CollisionShape2D" parent="WorldElements/Character Bubble1/Area2D" index="0" unique_id=1168569297]
 position = Vector2(-100, 115)
 
-[node name="Score" parent="Character Bubble1" index="4" unique_id=1386002985]
+[node name="Score" parent="WorldElements/Character Bubble1" index="4" unique_id=1386002985]
 z_index = 2
 
-[node name="Popup" parent="Character Bubble1/Score/Button" index="2"]
-visible = false
-
-[node name="Character Bubble2" parent="." unique_id=917609711 instance=ExtResource("3")]
+[node name="Character Bubble2" parent="WorldElements" unique_id=917609711 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-302, -98.00001)
 scale = Vector2(0.4, 0.4)
 
-[node name="Character Bubble3" parent="." unique_id=892282258 instance=ExtResource("3")]
+[node name="Character Bubble3" parent="WorldElements" unique_id=892282258 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-72, -92)
 scale = Vector2(0.4, 0.4)
 
-[node name="Character Bubble4" parent="." unique_id=1105370240 instance=ExtResource("3")]
+[node name="Character Bubble4" parent="WorldElements" unique_id=1105370240 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-306, -9.536743e-07)
 scale = Vector2(0.4, 0.4)
 
-[node name="Character Bubble5" parent="." unique_id=1180595559 instance=ExtResource("3")]
+[node name="Character Bubble5" parent="WorldElements" unique_id=1180595559 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-240, 66)
 scale = Vector2(0.4, 0.4)
 
-[node name="Character Bubble6" parent="." unique_id=1836691644 instance=ExtResource("3")]
+[node name="Character Bubble6" parent="WorldElements" unique_id=1836691644 instance=ExtResource("3")]
 z_index = -1
 position = Vector2(-77.99999, -4.0000076)
 scale = Vector2(0.4, 0.4)
 
-[node name="sunrise" type="Sprite2D" parent="." unique_id=1731710693]
+[node name="sunrise" type="Sprite2D" parent="WorldElements" unique_id=1731710693]
 z_index = -1
 position = Vector2(-232, -166)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("4")
 
-[node name="sunset" type="Sprite2D" parent="." unique_id=338479446]
+[node name="sunset" type="Sprite2D" parent="WorldElements" unique_id=338479446]
 z_index = -1
 position = Vector2(-146, 66.00001)
 scale = Vector2(0.24, 0.24)
 texture = ExtResource("5")
 
-[node name="Settings" parent="." unique_id=1735084520 instance=ExtResource("6")]
-visible = false
-position = Vector2(-528, -304)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=720694082]
+[node name="CanvasLayer" type="CanvasLayer" parent="WorldElements" unique_id=720694082]
 layer = -2
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=704993846]
+[node name="ColorRect" type="ColorRect" parent="WorldElements/CanvasLayer" unique_id=704993846]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -454,19 +791,46 @@ mouse_filter = 2
 color = Color(0.21962506, 0.3584414, 0.36461106, 1)
 metadata/_edit_lock_ = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=369789060]
-libraries/ = SubResource("AnimationLibrary_vh554")
-autoplay = &"Zoom Out"
-
-[node name="Turn" type="Label" parent="." unique_id=479130248]
+[node name="CentralDomino" parent="WorldElements" unique_id=2035090892 instance=ExtResource("8")]
 texture_filter = 1
+position = Vector2(-192, 0)
+scale = Vector2(0.5, 0.5)
+placed = true
+
+[node name="Sprite2D" parent="WorldElements/CentralDomino" index="0" unique_id=1727582070]
+position = Vector2(8, -112)
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" parent="WorldElements/CentralDomino/Area2D" parent_id_path=PackedInt32Array(2035090892, 1374037218) index="0" unique_id=923412705]
+position = Vector2(8, -112)
+scale = Vector2(0.8, 0.8)
+
+[node name="Tower" parent="WorldElements" unique_id=411159155 instance=ExtResource("15")]
+position = Vector2(-494, -86)
+scale = Vector2(0.2, 0.2)
+
+[node name="UIElements" type="Control" parent="." unique_id=109789685]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PauseCL" type="CanvasLayer" parent="UIElements" unique_id=5341854]
+layer = 15
+
+[node name="PauseMenu" parent="UIElements/PauseCL" unique_id=2053464100 instance=ExtResource("29_bru2g")]
+visible = false
+
+[node name="Turn" type="Label" parent="UIElements" unique_id=479130248]
+texture_filter = 1
+layout_mode = 0
 offset_top = -230.0
 offset_right = 140.0
 offset_bottom = -176.0
 theme_override_fonts/font = SubResource("5")
-metadata/_edit_use_anchors_ = true
 
-[node name="End" type="Label" parent="." unique_id=577962459]
+[node name="End" type="Label" parent="UIElements" unique_id=577962459]
+layout_mode = 0
 offset_left = 368.0
 offset_top = -664.0
 offset_right = 1256.0
@@ -479,11 +843,11 @@ faces to see
 scores)"
 horizontal_alignment = 1
 
-[node name="AlloyPopup" type="Popup" parent="." unique_id=1417684759]
+[node name="AlloyPopup" type="Popup" parent="UIElements" unique_id=1417684759]
 position = Vector2i(303, 75)
 size = Vector2i(417, 381)
 
-[node name="Title" type="Label" parent="AlloyPopup" unique_id=1207134264]
+[node name="Title" type="Label" parent="UIElements/AlloyPopup" unique_id=1207134264]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -499,7 +863,7 @@ text = "Alloy Acquired!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Alloy" type="Label" parent="AlloyPopup" unique_id=401652230]
+[node name="Alloy" type="Label" parent="UIElements/AlloyPopup" unique_id=401652230]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -515,7 +879,7 @@ text = "Electrum"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Info" type="Label" parent="AlloyPopup" unique_id=2002101698]
+[node name="Info" type="Label" parent="UIElements/AlloyPopup" unique_id=2002101698]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -531,7 +895,7 @@ It represents ...
 "
 autowrap_mode = 3
 
-[node name="Close" type="Button" parent="AlloyPopup" unique_id=134790724]
+[node name="Close" type="Button" parent="UIElements/AlloyPopup" unique_id=134790724]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -546,11 +910,11 @@ grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
-[node name="WellnessBeadPopup" type="Popup" parent="." unique_id=1268130132]
+[node name="WellnessBeadPopup" type="Popup" parent="UIElements" unique_id=1268130132]
 position = Vector2i(303, 75)
 size = Vector2i(417, 381)
 
-[node name="Title" type="Label" parent="WellnessBeadPopup" unique_id=1430087579]
+[node name="Title" type="Label" parent="UIElements/WellnessBeadPopup" unique_id=1430087579]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -564,7 +928,7 @@ text = "Alloy Acquired!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="WellnessBead" type="Label" parent="WellnessBeadPopup" unique_id=750531192]
+[node name="WellnessBead" type="Label" parent="UIElements/WellnessBeadPopup" unique_id=750531192]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -582,7 +946,7 @@ text = "Electrum"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Info" type="Label" parent="WellnessBeadPopup" unique_id=1770409782]
+[node name="Info" type="Label" parent="UIElements/WellnessBeadPopup" unique_id=1770409782]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -598,7 +962,7 @@ theme_override_fonts/font = SubResource("7")
 text = "Electrum is an alloy of gold and silver.
 It represents ..."
 
-[node name="Close" type="Button" parent="WellnessBeadPopup" unique_id=402153372]
+[node name="Close" type="Button" parent="UIElements/WellnessBeadPopup" unique_id=402153372]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -613,11 +977,11 @@ grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
-[node name="FootprintTilePopup" type="Popup" parent="." unique_id=127790484]
+[node name="FootprintTilePopup" type="Popup" parent="UIElements" unique_id=127790484]
 position = Vector2i(303, 75)
 size = Vector2i(417, 381)
 
-[node name="Title" type="Label" parent="FootprintTilePopup" unique_id=663929269]
+[node name="Title" type="Label" parent="UIElements/FootprintTilePopup" unique_id=663929269]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -631,7 +995,7 @@ text = "Alloy Acquired!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FootprintTile" type="Label" parent="FootprintTilePopup" unique_id=324370664]
+[node name="FootprintTile" type="Label" parent="UIElements/FootprintTilePopup" unique_id=324370664]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -649,7 +1013,7 @@ text = "Electrum"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Info" type="Label" parent="FootprintTilePopup" unique_id=1506722962]
+[node name="Info" type="Label" parent="UIElements/FootprintTilePopup" unique_id=1506722962]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -666,7 +1030,7 @@ theme_override_fonts/font = SubResource("7")
 text = "Electrum"
 autowrap_mode = 3
 
-[node name="Close" type="Button" parent="FootprintTilePopup" unique_id=1313648609]
+[node name="Close" type="Button" parent="UIElements/FootprintTilePopup" unique_id=1313648609]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -681,7 +1045,7 @@ grow_vertical = 0
 theme_override_fonts/font = SubResource("8")
 text = "OK"
 
-[node name="Description" type="RichTextLabel" parent="FootprintTilePopup" unique_id=1950614225]
+[node name="Description" type="RichTextLabel" parent="UIElements/FootprintTilePopup" unique_id=1950614225]
 offset_left = 22.0
 offset_top = 104.0
 offset_right = 403.0
@@ -704,409 +1068,51 @@ Speak, speak.
 First Citizen:
 You are all resolved rather to die than to famish?"
 
-[node name="CentralDomino" parent="." unique_id=2035090892 instance=ExtResource("8")]
-texture_filter = 1
-position = Vector2(-192, 0)
-scale = Vector2(0.5, 0.5)
-placed = true
+[node name="Settings" parent="UIElements" unique_id=1735084520 instance=ExtResource("6")]
+visible = false
+position = Vector2(-528, -304)
 
-[node name="Sprite2D" parent="CentralDomino" index="0" unique_id=1727582070]
-position = Vector2(8, -112)
-scale = Vector2(0.5, 0.5)
-
-[node name="CollisionShape2D" parent="CentralDomino/Area2D" parent_id_path=PackedInt32Array(2035090892, 1374037218) index="0" unique_id=923412705]
-position = Vector2(8, -112)
-scale = Vector2(0.8, 0.8)
-
-[node name="Place" type="AudioStreamPlayer" parent="." unique_id=594223884]
+[node name="Place" type="AudioStreamPlayer" parent="UIElements" unique_id=594223884]
 stream = ExtResource("12")
 volume_db = -10.0
 
-[node name="Acquire" type="AudioStreamPlayer" parent="." unique_id=745521503]
+[node name="Acquire" type="AudioStreamPlayer" parent="UIElements" unique_id=745521503]
 stream = ExtResource("11")
 volume_db = -5.0
 
-[node name="NextSound" type="AudioStreamPlayer" parent="." unique_id=41311617]
+[node name="NextSound" type="AudioStreamPlayer" parent="UIElements" unique_id=41311617]
 stream = ExtResource("12")
 volume_db = -10.0
 
-[node name="Tower" parent="." unique_id=411159155 instance=ExtResource("15")]
-position = Vector2(-494, -86)
-scale = Vector2(0.2, 0.2)
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=369789060]
+libraries/ = SubResource("AnimationLibrary_vh554")
+autoplay = &"Zoom Out"
 
-[node name="SaveButton" parent="." unique_id=1717313087 instance=ExtResource("14")]
-visible = false
-position = Vector2(-186, -222)
-scale = Vector2(0.4, 0.4)
+[connection signal="mouse_entered" from="WorldElements/Start" to="." method="_on_Start_mouse_entered"]
+[connection signal="mouse_exited" from="WorldElements/Start" to="." method="_on_Start_mouse_exited"]
+[connection signal="pressed" from="WorldElements/Start" to="." method="_on_Start_pressed"]
+[connection signal="mouse_entered" from="WorldElements/Reset" to="." method="_on_Reset_mouse_entered"]
+[connection signal="mouse_exited" from="WorldElements/Reset" to="." method="_on_Reset_mouse_exited"]
+[connection signal="pressed" from="WorldElements/Reset" to="." method="_on_Reset_pressed"]
+[connection signal="mouse_entered" from="WorldElements/Code" to="." method="_on_EnterCode_mouse_entered"]
+[connection signal="mouse_exited" from="WorldElements/Code" to="." method="_on_EnterCode_mouse_exited"]
+[connection signal="pressed" from="WorldElements/Code" to="." method="_on_Code_pressed"]
+[connection signal="mouse_entered" from="WorldElements/Next" to="." method="_on_Next_mouse_entered"]
+[connection signal="mouse_exited" from="WorldElements/Next" to="." method="_on_Next_mouse_exited"]
+[connection signal="pressed" from="WorldElements/Next" to="." method="_on_Next_pressed"]
+[connection signal="mouse_entered" from="WorldElements/Help" to="." method="_on_Help_mouse_entered"]
+[connection signal="mouse_exited" from="WorldElements/Help" to="." method="_on_Help_mouse_exited"]
+[connection signal="pressed" from="WorldElements/Help" to="." method="_on_Help_pressed"]
+[connection signal="pressed" from="WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" to="." method="_on_EnterButton_pressed"]
+[connection signal="pressed" from="WorldElements/EnterCodeMenu/X" to="." method="_on_X_pressed"]
+[connection signal="pressed" from="WorldElements/HelpMenu/HelpButton" to="." method="_on_HelpButton_pressed"]
+[connection signal="pressed" from="WorldElements/HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="WorldElements/HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="UIElements/AlloyPopup/Close" to="." method="_close_Alloy_popup"]
+[connection signal="pressed" from="UIElements/WellnessBeadPopup/Close" to="." method="_close_WellnessBead_popup"]
+[connection signal="pressed" from="UIElements/FootprintTilePopup/Close" to="." method="_close_FootprintTile_popup"]
 
-[node name="Start" type="TextureButton" parent="." unique_id=1164943152]
-offset_left = -228.0
-offset_top = 132.0
-offset_right = -38.0
-offset_bottom = 181.0
-scale = Vector2(0.4, 0.4)
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("19")
-texture_pressed = ExtResource("18")
-texture_hover = ExtResource("20")
-
-[node name="MarginContainer" type="MarginContainer" parent="Start" unique_id=1138882031]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="Start/MarginContainer" unique_id=2113117972]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
-theme_override_fonts/font = SubResource("11")
-text = "Start"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Reset" type="TextureButton" parent="." unique_id=1091096365]
-offset_left = -228.0
-offset_top = 156.0
-offset_right = -38.0
-offset_bottom = 205.0
-scale = Vector2(0.4, 0.4)
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("19")
-texture_pressed = ExtResource("18")
-texture_hover = ExtResource("20")
-
-[node name="MarginContainer" type="MarginContainer" parent="Reset" unique_id=1372665780]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="Reset/MarginContainer" unique_id=1863938518]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
-theme_override_fonts/font = SubResource("11")
-text = "Reset"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Code" type="TextureButton" parent="." unique_id=51973216]
-visible = false
-offset_left = -154.0
-offset_top = -228.0
-offset_right = 36.0
-offset_bottom = -179.0
-scale = Vector2(0.4, 0.4)
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("19")
-texture_pressed = ExtResource("18")
-texture_hover = ExtResource("20")
-metadata/_edit_use_anchors_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="Code" unique_id=1256968813]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="Code/MarginContainer" unique_id=1068016564]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("11")
-text = "Enter Code"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Next" type="TextureButton" parent="." unique_id=750766444]
-offset_left = -144.0
-offset_top = -232.0
-offset_right = 46.0
-offset_bottom = -183.0
-scale = Vector2(0.4, 0.4)
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("19")
-texture_pressed = ExtResource("18")
-texture_hover = ExtResource("20")
-metadata/_edit_use_anchors_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="Next" unique_id=1524833728]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="Next/MarginContainer" unique_id=1133366593]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("11")
-text = "Next Round"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Help" type="TextureButton" parent="." unique_id=1604946150]
-offset_left = -372.0
-offset_top = 98.0
-offset_right = -182.0
-offset_bottom = 147.0
-scale = Vector2(0.4, 0.4)
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("19")
-texture_pressed = ExtResource("18")
-texture_hover = ExtResource("20")
-metadata/_edit_use_anchors_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="Help" unique_id=753929215]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="Help/MarginContainer" unique_id=417630671]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("11")
-text = "Need Help"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="EnterCodeMenu" type="NinePatchRect" parent="." unique_id=2094562660]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -847.0
-offset_top = -495.0
-offset_right = 847.0
-offset_bottom = 495.0
-texture = ExtResource("25")
-region_rect = Rect2(0, 0, 100, 100)
-patch_margin_left = 31
-patch_margin_top = 28
-patch_margin_right = 29
-patch_margin_bottom = 28
-
-[node name="MarginContainer" type="MarginContainer" parent="EnterCodeMenu" unique_id=1367911909]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 100
-
-[node name="VBoxContainer" type="VBoxContainer" parent="EnterCodeMenu/MarginContainer" unique_id=819992936]
-layout_mode = 2
-theme_override_constants/separation = 25
-
-[node name="EnterCode" type="Label" parent="EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=1619657454]
-layout_mode = 2
-theme_override_fonts/font = SubResource("12")
-text = "Enter Code"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NinePatchRect" type="NinePatchRect" parent="EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=1824846860]
-custom_minimum_size = Vector2(0, 150)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-size_flags_stretch_ratio = 0.0
-texture = ExtResource("25")
-region_rect = Rect2(-1.09497, -1, 102.095, 102.423)
-patch_margin_left = 3
-patch_margin_top = 7
-patch_margin_right = 3
-patch_margin_bottom = 35
-
-[node name="MarginContainer" type="MarginContainer" parent="EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect" unique_id=1533910496]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_right = 25
-
-[node name="LineEdit" type="LineEdit" parent="EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer" unique_id=51159914]
-layout_mode = 2
-theme = ExtResource("17")
-theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-theme_override_fonts/font = SubResource("14")
-
-[node name="MarginContainer" type="MarginContainer" parent="EnterCodeMenu/MarginContainer/VBoxContainer" unique_id=937920315]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_top = 150
-
-[node name="Enter" type="TextureButton" parent="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer" unique_id=1946840216]
-custom_minimum_size = Vector2(700, 200)
-layout_mode = 2
-size_flags_horizontal = 6
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("24")
-texture_pressed = ExtResource("23")
-texture_hover = ExtResource("23")
-
-[node name="MarginContainer" type="MarginContainer" parent="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" unique_id=612261445]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 25
-
-[node name="Label" type="Label" parent="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter/MarginContainer" unique_id=1386978179]
-layout_mode = 2
-theme = ExtResource("17")
-theme_override_fonts/font = SubResource("13")
-text = "Enter"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="X" type="TextureButton" parent="EnterCodeMenu" unique_id=187524548]
-layout_mode = 0
-offset_left = 1611.0
-offset_top = 25.0
-offset_right = 1665.0
-offset_bottom = 77.0
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("22")
-texture_pressed = ExtResource("21")
-texture_hover = ExtResource("21")
-
-[node name="InvalidCode" type="Label" parent="EnterCodeMenu" unique_id=1790883149]
-visible = false
-layout_mode = 0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -42.0
-offset_bottom = 73.0
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("15")
-text = "Invalid code!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="UsedCode" type="Label" parent="EnterCodeMenu" unique_id=1267248247]
-visible = false
-layout_mode = 0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -42.0
-offset_bottom = 73.0
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("15")
-text = "This code has been used already!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="AcceptCode" type="Label" parent="EnterCodeMenu" unique_id=405977017]
-visible = false
-layout_mode = 0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -42.0
-offset_bottom = 73.0
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_fonts/font = SubResource("15")
-text = "Code accepted!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HelpMenu" type="Control" parent="." unique_id=699493088]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-metadata/_edit_use_anchors_ = true
-
-[node name="HelpButton" type="Button" parent="HelpMenu" unique_id=95552350]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.6
-anchor_top = 0.75
-anchor_right = 1.6
-anchor_bottom = 0.75
-offset_left = 53.0
-offset_top = -260.0
-offset_right = 255.0
-offset_bottom = -54.0
-scale = Vector2(0.15, 0.15)
-theme_override_styles/normal = SubResource("16")
-theme_override_styles/pressed = SubResource("20")
-theme_override_styles/hover = SubResource("18")
-icon_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="HelpImage" type="TextureRect" parent="HelpMenu" unique_id=1678077797]
-visible = false
-layout_mode = 0
-offset_left = -506.0
-offset_top = -244.0
-offset_right = 6054.0
-offset_bottom = 4536.0
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("26")
-metadata/_edit_lock_ = true
-
-[node name="CloseButton" type="Button" parent="HelpMenu/HelpImage" unique_id=899241210]
-layout_mode = 0
-offset_left = 6280.0
-offset_top = 80.0
-offset_right = 6444.0
-offset_bottom = 240.0
-theme_override_styles/normal = SubResource("17")
-theme_override_styles/pressed = SubResource("21")
-theme_override_styles/hover = SubResource("19")
-metadata/_edit_lock_ = true
-
-[connection signal="pressed" from="AlloyPopup/Close" to="." method="_close_Alloy_popup"]
-[connection signal="pressed" from="WellnessBeadPopup/Close" to="." method="_close_WellnessBead_popup"]
-[connection signal="pressed" from="FootprintTilePopup/Close" to="." method="_close_FootprintTile_popup"]
-[connection signal="mouse_entered" from="Start" to="." method="_on_Start_mouse_entered"]
-[connection signal="mouse_exited" from="Start" to="." method="_on_Start_mouse_exited"]
-[connection signal="pressed" from="Start" to="." method="_on_Start_pressed"]
-[connection signal="mouse_entered" from="Reset" to="." method="_on_Reset_mouse_entered"]
-[connection signal="mouse_exited" from="Reset" to="." method="_on_Reset_mouse_exited"]
-[connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
-[connection signal="mouse_entered" from="Code" to="." method="_on_EnterCode_mouse_entered"]
-[connection signal="mouse_exited" from="Code" to="." method="_on_EnterCode_mouse_exited"]
-[connection signal="pressed" from="Code" to="." method="_on_Code_pressed"]
-[connection signal="mouse_entered" from="Next" to="." method="_on_Next_mouse_entered"]
-[connection signal="mouse_exited" from="Next" to="." method="_on_Next_mouse_exited"]
-[connection signal="pressed" from="Next" to="." method="_on_Next_pressed"]
-[connection signal="mouse_entered" from="Help" to="." method="_on_Help_mouse_entered"]
-[connection signal="mouse_exited" from="Help" to="." method="_on_Help_mouse_exited"]
-[connection signal="pressed" from="Help" to="." method="_on_Help_pressed"]
-[connection signal="pressed" from="EnterCodeMenu/MarginContainer/VBoxContainer/MarginContainer/Enter" to="." method="_on_EnterButton_pressed"]
-[connection signal="pressed" from="EnterCodeMenu/X" to="." method="_on_X_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpButton" to="." method="_on_HelpButton_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_CloseButton_pressed"]
-[connection signal="pressed" from="HelpMenu/HelpImage/CloseButton" to="." method="_on_Button_pressed"]
-
-[editable path="Character Bubble1"]
-[editable path="Character Bubble1/Score"]
-[editable path="Settings"]
-[editable path="CentralDomino"]
+[editable path="WorldElements/Character Bubble1"]
+[editable path="WorldElements/Character Bubble1/Score"]
+[editable path="WorldElements/CentralDomino"]
+[editable path="UIElements/Settings"]

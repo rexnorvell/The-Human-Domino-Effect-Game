@@ -54,29 +54,40 @@ var _next_slot_indicators: Array[Node2D] = []
 var bonusWords = ["Bonus", "Bonus2"]
 var usedBonus = ["ABC123"]
 
-# Called when the node enters the scene tree for the first time.
+@onready var start_button = $WorldElements/Start
+@onready var next_button = $WorldElements/Next
+@onready var help_button = $WorldElements/Help
+@onready var reset_button = $WorldElements/Reset
+@onready var central_domino = $WorldElements/CentralDomino
+@onready var board = $WorldElements/Board
+
+@onready var turn_label = $UIElements/Turn
+@onready var place_sound = $UIElements/Place
+@onready var acquire_sound = $UIElements/Acquire
+@onready var end_label = $UIElements/End
+
+
 func _ready() -> void:
-	$Start.visible = false
-	$Next.visible = false
-	# (Fall 2025) set the visibility of added buttons accordingly
-	$Help.visible = false
-	$Reset.visible = false
+	start_button.visible = false
+	next_button.visible = false
+	help_button.visible = false
+	reset_button.visible = false
 	intialize_tower()
 	_init_players()
 	dominos.erase([0, 0])
 	
-	var center_area := $CentralDomino.get_node_or_null("Area2D")
+	var center_area := central_domino.get_node_or_null("Area2D")
 	if center_area:
 		center_area.input_pickable = false
 		center_area.monitoring = false
-		
-#  Sets up and resolves players and their resulting nodes
+
+# Sets up and resolves players and their resulting nodes
 func _init_players() -> void:
 	print("=== _init_players() START ===")
 	
 	# initialize footprint tile ring
 	footprint_tile_ring = load(ReferenceManager.get_reference("FootprintTileRing.gd")).new(self)
-	footprint_tile_ring.position = $Board.position
+	footprint_tile_ring.position = board.position
 	add_child(footprint_tile_ring)
 	print("Added footprint_tile_ring at: ", footprint_tile_ring.position)
 
@@ -121,7 +132,7 @@ func _init_players() -> void:
 	var ind := 1
 
 	for player_id in sorted_players:
-		var bubble_path := "Character Bubble" + str(ind)
+		var bubble_path := "WorldElements/Character Bubble" + str(ind)
 		print("\n--- setting up ", bubble_path, " for player_id=", player_id, " ---")
 		
 		var bubble_node = get_node_or_null(bubble_path)
@@ -263,7 +274,7 @@ func _init_players() -> void:
 		# self / path visibility logic (unchanged)
 		if player_id == multiplayer.get_unique_id():
 			self_num = ind - 1
-			var path_node_self = get_node_or_null("Path" + str(ind))
+			var path_node_self = get_node_or_null("WorldElements/Path" + str(ind))
 			if path_node_self:
 				path_node_self.visible = true
 				print(" made Path", ind, " visible for SELF")
@@ -272,7 +283,7 @@ func _init_players() -> void:
 				for child in get_children():
 					print("    child: ", child.name)
 		else:
-			var other_path_node = get_node_or_null("Path" + str(ind))
+			var other_path_node = get_node_or_null("WorldElements/Path" + str(ind))
 			if other_path_node:
 				other_path_node.temp = true
 				print(" marked Path", ind, " as temp for OTHER")
@@ -281,7 +292,7 @@ func _init_players() -> void:
 
 	# remove any unused character sprites
 	for i in range(ind, 7):
-		var unused_path := "Character Bubble" + str(i)
+		var unused_path := "WorldElements/Character Bubble" + str(i)
 		if has_node(unused_path):
 			get_node(unused_path).queue_free()
 			print(" removed unused ", unused_path)
@@ -289,7 +300,7 @@ func _init_players() -> void:
 	# Replace decorative board faces with unused player icons
 	var board_face_nodes = {"sunrise": "sun.png", "sunset": "sunshine.png"}
 	for node_name in board_face_nodes:
-		var face_sprite := get_node_or_null(node_name)
+		var face_sprite := get_node_or_null("WorldElements/" + node_name)
 		if face_sprite and face_sprite is Sprite2D:
 			var assigned_icon_name: String = my_icon_name
 			assigned_icon_name = board_face_nodes[node_name]
@@ -323,10 +334,10 @@ func _init_players() -> void:
 
 	# Host sees Start button
 	if multiplayer.get_unique_id() == 1:
-		$Start.visible = true
+		start_button.visible = true
 		print("Host detected, Start button visible")
 
-	print("Turn label set to ", $Turn.text)
+	print("Turn label set to ", turn_label.text)
 	print("=== _init_players() END ===")
 
 
@@ -340,10 +351,10 @@ func _on_Start_pressed() -> void:
 	randomize_turn()
 		
 	setup_dominos()
-	$Start.queue_free()
+	start_button.queue_free()
 	
 	if (self_num == 0):
-		$Next.visible = true
+		next_button.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
@@ -474,12 +485,8 @@ func add_position(global_pos: Vector2) -> void:
 # take a domino from the main deck
 func draw_domino():
 	var nums = dominos.pop_front()
-	# print("len: ", len(dominos))
 	if nums[0] < nums[1]:
 		nums.reverse()
-	# print(nums, len(dominos))
-
-	# update every player's deck to stay in sync
 	rpc("update_deck")
 	return nums
 
@@ -498,11 +505,8 @@ func is_domino_selected(domino) -> bool:
 
 # Attempt to select domino. Return true if successful.
 func select_domino(domino) -> bool:
-	# (Fall 2025) added to restrict more than 1 domino being placed a turn if its not a double
 	if (can_place == false):
-		print("Cannot place anymore this turn") # debug
 		return false
-		
 	if selected_domino == null:
 		selected_domino = domino
 	if selected_domino == domino:
@@ -603,7 +607,7 @@ func place_domino(num):
 			can_place = false
 			
 		clear_selected_domino()
-		$Place.playing = true
+		place_sound.playing = true
 		
 		if not can_place:
 			rpc("advance_turn")
@@ -620,7 +624,7 @@ func _highlight_valid_placements(domino) -> void:
 	_clear_next_slot_indicators()
 	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
 	for i in range(path_names.size()):
-		var path_node = get_node_or_null(path_names[i])
+		var path_node = get_node_or_null("WorldElements/" + path_names[i])
 		if path_node and path_node.has_method("set_placement_indicator"):
 			path_node.rotation = deg_to_rad(PATH_ANGLE_DEGREES[i] + ROTATION_OFFSET_DEG)
 			# Check if this domino can be placed on this path
@@ -649,7 +653,7 @@ func _highlight_valid_placements(domino) -> void:
 func _clear_placement_indicators() -> void:
 	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
 	for path_name in path_names:
-		var path_node = get_node_or_null(path_name)
+		var path_node = get_node_or_null("WorldElements/" + path_name)
 		if path_node and path_node.has_method("clear_indicators"):
 			path_node.clear_indicators()
 	_clear_next_slot_indicators()
@@ -689,7 +693,7 @@ func _update_train_indicator(path_num: int, is_open: bool) -> void:
 	var path_names := ["Path1", "Path2", "Path3", "Path4", "Path5", "Path6", "SunrisePath", "SunsetPath"]
 	if path_num < 0 or path_num >= path_names.size():
 		return
-	var path_node = get_node_or_null(path_names[path_num])
+	var path_node = get_node_or_null("WorldElements/" + path_names[path_num])
 	if path_node and path_node.has_method("set_train_indicator"):
 		path_node.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
 		# Pass category color for train indicator
@@ -702,23 +706,23 @@ func _update_train_indicator(path_num: int, is_open: bool) -> void:
 
 # increment total score for player
 func increment_total(num):
-	var path = "Character Bubble" + str(num) + "/Score/Button/Popup/Lydia_number"
+	var path = "WorldElements/Character Bubble" + str(num) + "/Score/Button/Popup/Lydia_number"
 	get_node(path).text = str(int(get_node(path).text) + 1)
 	gamestate.lydia_lion[num] = int(get_node(path).text)
-	$Acquire.playing = true
+	acquire_sound.playing = true
 
 
 # display wellness bead popup
 func display_wellness_prompt():
-	$WellnessBeadPopup/Title.text = "You Got a..."
-	$WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
-	$WellnessBeadPopup/Info.text = "You helped someone on their path and so helped promote community wellness!"
-	$WellnessBeadPopup.visible = true
+	$UIElements/WellnessBeadPopup/Title.text = "You Got a..."
+	$UIElements/WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
+	$UIElements/WellnessBeadPopup/Info.text = "You helped someone on their path and so helped promote community wellness!"
+	$UIElements/WellnessBeadPopup.visible = true
 
 
 # increment wellness beads for player denoted by num
 @rpc("any_peer") func increment_wellness_beads(num):
-	var path = "Character Bubble" + str(num) + "/Score/Button/Popup/Wellness_number"
+	var path = "WorldElements/Character Bubble" + str(num) + "/Score/Button/Popup/Wellness_number"
 	get_node(path).text = str(int(get_node(path).text) + 1)
 	gamestate.wellness_beads[num] = get_node(path).text
 	increment_total(num)
@@ -726,20 +730,20 @@ func display_wellness_prompt():
 
 # increment alloys earned for player denoted by num
 @rpc("any_peer") func increment_alloys(num, alloy):
-	var path = "Character Bubble" + str(num) + "/Score/Button/Popup/Alloy_number"
+	var path = "WorldElements/Character Bubble" + str(num) + "/Score/Button/Popup/Alloy_number"
 	get_node(path).text = str(int(get_node(path).text) + 1)
 	gamestate.alloys[num] = int(get_node(path).text)
 	increment_total(num)
 	
-	$AlloyPopup/Title.text = "Alloy Acquired!"
-	$AlloyPopup/Alloy.text = alloy
-	$AlloyPopup/Info.text = curriculum.alloy_table[alloy]
-	$AlloyPopup.visible = true
+	$UIElements/AlloyPopup/Title.text = "Alloy Acquired!"
+	$UIElements/AlloyPopup/Alloy.text = alloy
+	$UIElements/AlloyPopup/Info.text = curriculum.alloy_table[alloy]
+	$UIElements/AlloyPopup.visible = true
 
 
 # increment footprint tiles earned for player denoted by player_num
 @rpc("any_peer") func increment_footprint_tiles(player_num, round_num, footprint_num):
-	var path = "Character Bubble" + str(player_num) + "/Score/Button/Popup/Footprint_number"
+	var path = "WorldElements/Character Bubble" + str(player_num) + "/Score/Button/Popup/Footprint_number"
 	get_node(path).text = str(int(get_node(path).text) + 1)
 	gamestate.footprint_tiles[player_num] = int(get_node(path).text)
 	increment_total(player_num)
@@ -750,19 +754,19 @@ func display_wellness_prompt():
 func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	var index = FootprintTile.convert_to_index(footprint_num, round_num)
 	if round_num < 6:
-		$FootprintTilePopup/Title.text = "Footprint Tile Acquired!"
+		$UIElements/FootprintTilePopup/Title.text = "Footprint Tile Acquired!"
 		# TODO: <remove the else block and refactor once all 60 footprint tiles have been reimplemented in curriculum.footprint_tile_table>
 		if index < 30: # if one of the tiles reimplemented in footprint_tile_table (the first 30 so far)
 			# use the new implementation
-			$FootprintTilePopup/FootprintTile.text = curriculum.footprint_tile_table[index][0]
-			$FootprintTilePopup/Info.text = ""
-			$FootprintTilePopup/Description.text = curriculum.footprint_tile_table[index][1]
+			$UIElements/FootprintTilePopup/FootprintTile.text = curriculum.footprint_tile_table[index][0]
+			$UIElements/FootprintTilePopup/Info.text = ""
+			$UIElements/FootprintTilePopup/Description.text = curriculum.footprint_tile_table[index][1]
 		else: # otherwise use the old implementation
 			var table_index = str(round_num) + str(footprint_num)
-			$FootprintTilePopup/FootprintTile.text = curriculum.footprint_title_table[table_index]
-			$FootprintTilePopup/Info.text = curriculum.footprint_text_table[table_index]
-			$FootprintTilePopup/Description.text = ""
-		$FootprintTilePopup.visible = true
+			$UIElements/FootprintTilePopup/FootprintTile.text = curriculum.footprint_title_table[table_index]
+			$UIElements/FootprintTilePopup/Info.text = curriculum.footprint_text_table[table_index]
+			$UIElements/FootprintTilePopup/Description.text = ""
+		$UIElements/FootprintTilePopup.visible = true
 
 # update domino path for all players after a player places a domino
 @rpc("any_peer") func update_domino_path(domino_nums, domino_elms, pos, path_num, flip):
@@ -833,49 +837,31 @@ func replace_domino():
 	# if we've completed round 9, end game
 	if center_num >= 9:
 		add_tower(center_num + 1)
-		$Turn.text = "Game\nOver!"
-		$End.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
-		$End.visible = true
-		$Next.visible = false
-		# (Fall 2025) added visibility conditions for created buttons
-		$Help.visible = false
-		
-		# Only show the reset button to the host
+		turn_label.text = "Game\nOver!"
+		end_label.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
+		end_label.visible = true
+		next_button.visible = false
+		help_button.visible = false
 		if multiplayer.is_server():
-			$Reset.visible = true
+			reset_button.visible = true
 		else:
-			$Reset.visible = false
-
+			reset_button.visible = false
 		center_num += 1
 		return
-
-	# randomize dominos
 	dominos = [] + gamestate.dominos
 	dominos.shuffle()
-
-	# increment round number
 	center_num += 1
-
 	SaveManager.Save["0"].Current_Round += 1
-
-	# add tower
 	add_tower(center_num)
-	
-	# remove center domino from deck
 	print(center_num, center_num)
 	dominos.erase([center_num, center_num])
-
-	# reset domino paths
 	path_ends = []
 	for _i in range(8):
 		path_ends.append(center_num)
 	end_dominos = [null, null, null, null, null, null, null, null]
-
-	# load center domino
 	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
-	$CentralDomino.get_node("Sprite2D").texture = load(domino_title)
-	
-	var center_area := $CentralDomino.get_node_or_null("Area2D")
+	central_domino.get_node("Sprite2D").texture = load(domino_title)
+	var center_area := central_domino.get_node_or_null("Area2D")
 	if center_area:
 		center_area.input_pickable = false
 		center_area.monitoring = false
@@ -883,7 +869,7 @@ func replace_domino():
 	# reset path visibility
 	for i in range(1, 7):
 		if i != self_num + 1:
-			var path_node = get_node("Path" + str(i))
+			var path_node = get_node("WorldElements/Path" + str(i))
 			if path_node:
 				path_node.visible = true
 				print("Found and made visible: Path" + str(i))
@@ -944,9 +930,9 @@ func _update_turn_label():
 	var current_player_id = sorted_players[turn]
 	var current_name = gamestate.players[current_player_id]
 	
-	$Turn.text = current_name + "'s\nTurn"
+	turn_label.text = current_name + "'s\nTurn"
 	# Only show the "Need Help" button if it is currently YOUR turn
-	$Help.visible = (turn == self_num)
+	help_button.visible = (turn == self_num)
 	
 	# CPU TURN AUTOMATION (HOST ONLY)
 	if str(current_name).contains("CPU") and multiplayer.is_server():
@@ -1004,7 +990,7 @@ func _execute_cpu_turn_async(cpu_id):
 		update_domino_path([true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
 		
 		# POPUP PAUSE LOGIC
-		while $AlloyPopup.visible or $FootprintTilePopup.visible or $WellnessBeadPopup.visible:
+		while $UIElements/AlloyPopup.visible or $UIElements/FootprintTilePopup.visible or $UIElements/WellnessBeadPopup.visible:
 			await get_tree().process_frame
 		
 		if true_top == true_bot:
@@ -1023,7 +1009,7 @@ func _on_Next_pressed() -> void:
 	# reset field for host
 	next_round()
 	can_place = true
-	$Help.visible = false
+	help_button.visible = false
 
 	# reset field for everyone else
 	for p in gamestate.players:
@@ -1045,40 +1031,40 @@ func _on_Reset_pressed() -> void:
 
 #intialize tower as not seen
 func intialize_tower():
-	$Tower/Sprite2D/Energy.visible = false
-	$Tower/Sprite2D/Stability.visible = false
-	$Tower/Sprite2D/Prepared_Enviroment.visible = false
-	$Tower/Sprite2D/Ability.visible = false
-	$Tower/Sprite2D/Responsibility.visible = false
-	$Tower/Sprite2D/Perception.visible = false
-	$Tower/Sprite2D/Resilience.visible = false
-	$Tower/Sprite2D/Relationship.visible = false
-	$Tower/Sprite2D/Discernment.visible = false
-	$Tower/Sprite2D/Arts.visible = false
-	$Tower/Sprite2D/Sciences.visible = false
-	$Tower/Sprite2D/Humanities.visible = false
-	$Tower/Sprite2D/Diamond.visible = false
+	$WorldElements/Tower/Sprite2D/Energy.visible = false
+	$WorldElements/Tower/Sprite2D/Stability.visible = false
+	$WorldElements/Tower/Sprite2D/Prepared_Enviroment.visible = false
+	$WorldElements/Tower/Sprite2D/Ability.visible = false
+	$WorldElements/Tower/Sprite2D/Responsibility.visible = false
+	$WorldElements/Tower/Sprite2D/Perception.visible = false
+	$WorldElements/Tower/Sprite2D/Resilience.visible = false
+	$WorldElements/Tower/Sprite2D/Relationship.visible = false
+	$WorldElements/Tower/Sprite2D/Discernment.visible = false
+	$WorldElements/Tower/Sprite2D/Arts.visible = false
+	$WorldElements/Tower/Sprite2D/Sciences.visible = false
+	$WorldElements/Tower/Sprite2D/Humanities.visible = false
+	$WorldElements/Tower/Sprite2D/Diamond.visible = false
 
 # Display tower
 func add_tower(round_num):
 	if round_num == 6:
-		$Tower/Sprite2D/Energy.visible = true
-		$Tower/Sprite2D/Stability.visible = true
-		$Tower/Sprite2D/Prepared_Enviroment.visible = true
+		$WorldElements/Tower/Sprite2D/Energy.visible = true
+		$WorldElements/Tower/Sprite2D/Stability.visible = true
+		$WorldElements/Tower/Sprite2D/Prepared_Enviroment.visible = true
 	elif round_num == 7:
-		$Tower/Sprite2D/Ability.visible = true
-		$Tower/Sprite2D/Responsibility.visible = true
-		$Tower/Sprite2D/Perception.visible = true
+		$WorldElements/Tower/Sprite2D/Ability.visible = true
+		$WorldElements/Tower/Sprite2D/Responsibility.visible = true
+		$WorldElements/Tower/Sprite2D/Perception.visible = true
 	elif round_num == 8:
-		$Tower/Sprite2D/Resilience.visible = true
-		$Tower/Sprite2D/Relationship.visible = true
-		$Tower/Sprite2D/Discernment.visible = true
+		$WorldElements/Tower/Sprite2D/Resilience.visible = true
+		$WorldElements/Tower/Sprite2D/Relationship.visible = true
+		$WorldElements/Tower/Sprite2D/Discernment.visible = true
 	elif round_num == 9:
-		$Tower/Sprite2D/Arts.visible = true
-		$Tower/Sprite2D/Sciences.visible = true
-		$Tower/Sprite2D/Humanities.visible = true
+		$WorldElements/Tower/Sprite2D/Arts.visible = true
+		$WorldElements/Tower/Sprite2D/Sciences.visible = true
+		$WorldElements/Tower/Sprite2D/Humanities.visible = true
 	elif round_num == 10:
-		$Tower/Sprite2D/Diamond.visible = true
+		$WorldElements/Tower/Sprite2D/Diamond.visible = true
 
 func _on_Help_pressed() -> void:
 	if turn == self_num:
@@ -1089,35 +1075,35 @@ func _on_Help_pressed() -> void:
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 @rpc("any_peer") func add_path(num):
-	var path_node = get_node_or_null("Path" + str(num))
+	var path_node = get_node_or_null("WorldElements/Path" + str(num))
 	if path_node:
 		path_node.visible = true
 
 @rpc("any_peer") func remove_path(num):
-	var path_node = get_node_or_null("Path" + str(num))
+	var path_node = get_node_or_null("WorldElements/Path" + str(num))
 	if path_node and "temp" in path_node and path_node.temp:
 		path_node.visible = false
 
 func _close_WellnessBead_popup() -> void:
-	$WellnessBeadPopup.visible = false
+	$UIElements/WellnessBeadPopup.visible = false
 
 func _close_Alloy_popup() -> void:
-	$AlloyPopup.visible = false
+	$UIElements/AlloyPopup.visible = false
 
 func _close_FootprintTile_popup():
-	$FootprintTilePopup.visible = false
+	$UIElements/FootprintTilePopup.visible = false
 	
 # return winner's name (could also be names depending on ties) based on highest total points
 func determine_winner():
 	var best_score = -1
 	var winners = []
 	for i in range(1, len(sorted_players) + 1):
-		var current_player = get_node("Character Bubble" + str(i) + "/Score/Button/Popup")
-		if int(current_player.get_node("Lydia_number").text) > best_score:
-			winners = [current_player.get_node("Name_text").text]
-			best_score = int(current_player.get_node("Lydia_number").text)
-		elif int(current_player.get_node("Lydia_number").text) == best_score:
-			winners.append(current_player.get_node("Name_text").text)
+		var current_player = get_node("WorldElements/Character Bubble" + str(i) + "/Score/Button/Popup")
+		if int(current_player.get_node("WorldElements/Lydia_number").text) > best_score:
+			winners = [current_player.get_node("WorldElements/Name_text").text]
+			best_score = int(current_player.get_node("WorldElements/Lydia_number").text)
+		elif int(current_player.get_node("WorldElements/Lydia_number").text) == best_score:
+			winners.append(current_player.get_node("WorldElements/Name_text").text)
 	var winner_text = ""
 	for winner in winners:
 		winner_text += winner
@@ -1127,97 +1113,104 @@ func determine_winner():
 	return winner_text
 
 func _on_Code_pressed():
-	$EnterCodeMenu.visible = true
-	$EnterCodeMenu/InvalidCode.visible = false
-	$EnterCodeMenu/UsedCode.visible = false
-	$EnterCodeMenu/AcceptCode.visible = false
+	$WorldElements/EnterCodeMenu.visible = true
+	$WorldElements/EnterCodeMenu/InvalidCode.visible = false
+	$WorldElements/EnterCodeMenu/UsedCode.visible = false
+	$WorldElements/EnterCodeMenu/AcceptCode.visible = false
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 func _on_X_pressed():
-	$EnterCodeMenu.visible = false
-	$EnterCodeMenu/InvalidCode.visible = false
-	$EnterCodeMenu/UsedCode.visible = false
-	$EnterCodeMenu/AcceptCode.visible = false
+	$WorldElements/EnterCodeMenu.visible = false
+	$WorldElements/EnterCodeMenu/InvalidCode.visible = false
+	$WorldElements/EnterCodeMenu/UsedCode.visible = false
+	$WorldElements/EnterCodeMenu/AcceptCode.visible = false
 	SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 
 func _on_EnterButton_pressed():
 	var i = 0
 	var wrongFlag = true
-	$EnterCodeMenu/InvalidCode.visible = false
-	$EnterCodeMenu/UsedCode.visible = false
-	$EnterCodeMenu/AcceptCode.visible = false
-	#print($CodeEnterParent/TextEdit.text)
+	$WorldElements/EnterCodeMenu/InvalidCode.visible = false
+	$WorldElements/EnterCodeMenu/UsedCode.visible = false
+	$WorldElements/EnterCodeMenu/AcceptCode.visible = false
 	for word in usedBonus:
-		if ($EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer/LineEdit.text == word):
-			$EnterCodeMenu/UsedCode.visible = true
+		if ($WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer/LineEdit.text == word):
+			$WorldElements/EnterCodeMenu/UsedCode.visible = true
 			wrongFlag = false
 	for word in bonusWords:
-		if ($EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer/LineEdit.text == word):
-			$EnterCodeMenu/AcceptCode.visible = true
+		if ($WorldElements/EnterCodeMenu/MarginContainer/VBoxContainer/NinePatchRect/MarginContainer/LineEdit.text == word):
+			$WorldElements/EnterCodeMenu/AcceptCode.visible = true
 			increment_total(self_num + 1)
 			bonusWords.remove(i)
 			usedBonus.append(word)
 			wrongFlag = false
 		i = i + 1
 	if (wrongFlag == true):
-		$EnterCodeMenu/InvalidCode.visible = true
+		$WorldElements/EnterCodeMenu/InvalidCode.visible = true
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 
-# Updated button UI
-# 4/18/2024
+
 var green = Color("74cc4c")
 var grey = Color("aaaaaa")
 
-#### VVVV BUTTON HOVER HANDLERS VVVV ####
-
-# Set label color to green when mouse enters texture button.
-# Set label color back to grey when mouse leaves.
 
 func _on_EnterCode_mouse_entered():
-	$Code/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$WorldElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", green)
+
+
 func _on_EnterCode_mouse_exited():
-	$Code/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+	$WorldElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+
 
 func _on_Next_mouse_entered():
-	$Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$WorldElements/Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
+
+
 func _on_Next_mouse_exited():
-	$Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+	$WorldElements/Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+
 
 func _on_Help_mouse_entered():
-	$Help/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$WorldElements/Help/MarginContainer/Label.set("theme_override_colors/font_color", green)
+
+
 func _on_Help_mouse_exited():
-	$Help/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-	
+	$WorldElements/Help/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+
+
 func _on_Reset_mouse_entered():
-	$Reset/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$WorldElements/Reset/MarginContainer/Label.set("theme_override_colors/font_color", green)
+
+
 func _on_Reset_mouse_exited():
-	$Reset/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+	$WorldElements/Reset/MarginContainer/Label.set("theme_override_colors/font_color", grey)
+
 
 func _on_Start_mouse_entered():
-	$Start/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$WorldElements/Start/MarginContainer/Label.set("theme_override_colors/font_color", green)
+
+
 func _on_Start_mouse_exited():
-	$Start/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-	
-#### ^^^^ END BUTTON HOVER HANDLERS ^^^^ ####
+	$WorldElements/Start/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 
 func _on_HelpButton_pressed():
-	$HelpMenu/HelpImage.visible = true
-	$HelpMenu.move_to_front()
+	$WorldElements/HelpMenu/HelpImage.visible = true
+	$WorldElements/HelpMenu.move_to_front()
+
 
 func _on_CloseButton_pressed():
-	$HelpMenu/HelpImage.visible = false
-	
-	
-# functions to fix domino alignment 10/1/2025
+	$WorldElements/HelpMenu/HelpImage.visible = false
+
 
 func _deg_to_vec2(angle_deg: float) -> Vector2:
 	var a := deg_to_rad(angle_deg)
 	return Vector2(cos(a), sin(a))
 
+
 func _path_step_vector(path_num: int) -> Vector2:
 	var v := _deg_to_vec2(PATH_ANGLE_DEGREES[path_num])
 	return v * STEP_PIXELS
+
 
 func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
 	# Treat stored anchors as LOCAL positions in this DominoWorld
@@ -1232,9 +1225,11 @@ func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
 func _orient_to_path(domino: Node2D, path_num: int) -> void:
 	domino.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
 
+
 func _verify_anchors_ready():
 	if position_table.size() != 8:
 		push_error("Expected 8 anchors, have %s" % position_table.size())
+
 
 func set_anchor(path_index: int, global_pos: Vector2) -> void:
 	if path_index < 0 or path_index >= position_table.size():

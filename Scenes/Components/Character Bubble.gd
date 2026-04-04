@@ -1,11 +1,11 @@
-# node for characters sitting around game board
 extends Node2D
 
 var my_player_id = null
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	pass
+	$Score/Button/Popup.visible = false
+
 
 func setup_character(player_id):
 	my_player_id = player_id
@@ -47,9 +47,10 @@ func setup_character(player_id):
 			var popup_clothes = get_node_or_null("Score/Button/Popup/clothes")
 			if popup_clothes: popup_clothes.texture = load(clothes_path)
 
-# show or hide character stats
+
 func _on_Area2D_mouse_entered() -> void:
 	$Score/Button/Popup.visible = true
-	
+
+
 func _on_Area2D_mouse_exited() -> void:
 	$Score/Button/Popup.visible = false

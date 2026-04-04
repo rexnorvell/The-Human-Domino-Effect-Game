@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://blxlnppvy7do0" path="res://UI/sprites/elcitrap_b.png" id="1"]
 [ext_resource type="Script" uid="uid://bibgt27a0gvq" path="res://Scenes/Components/CapturedElcitrap.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://c04xhcxj7ynfc" path="res://UI/sprites/elcitrap_r.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ma5lpxmr3jvg" path="res://UI/sprites/elcitrap_g.png" id="4"]
-[ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="6"]
+[ext_resource type="Texture2D" uid="uid://dkf26o8k1mdag" path="res://UI/sprites/elcitrap_y.png" id="4_yvbws"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="5_yvbws"]
 [ext_resource type="Texture2D" uid="uid://cjubjlib62b5g" path="res://UI/sprites/science_icon.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://da4biu7ur7m2m" path="res://UI/sprites/humanities_icon.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://b1rrei01e0vjg" path="res://UI/sprites/arts_icon.png" id="9"]
@@ -23,43 +23,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4")
-}],
-"loop": true,
-"name": &"green",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": ExtResource("3")
 }],
 "loop": true,
 "name": &"red",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_yvbws")
+}],
+"loop": true,
+"name": &"yellow",
+"speed": 5.0
 }]
 
 [sub_resource type="CircleShape2D" id="2"]
 radius = 26.7374
-
-[sub_resource type="FontFile" id="3"]
-fallbacks = Array[Font]([ExtResource("6")])
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
 
 [sub_resource type="SpriteFrames" id="5"]
 animations = [{
@@ -97,24 +77,30 @@ script = ExtResource("2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1594638757]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("1")
-animation = &"green"
+animation = &"yellow"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=291961464]
 shape = SubResource("2")
 
 [node name="Label" type="Label" parent="." unique_id=899001910]
-offset_left = -24.0
-offset_top = -8.0
-offset_right = 24.0
-offset_bottom = 6.0
-theme_override_fonts/font = SubResource("3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("5_yvbws")
+theme_override_font_sizes/font_size = 13
+text = "Testing Testing 123"
+horizontal_alignment = 1
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=1616342431]
 visible = false
 position = Vector2(29.8628, 29.457)
 scale = Vector2(0.07, 0.07)
 sprite_frames = SubResource("5")
-animation = &"humanities"
+animation = &"science"
 
 [node name="Select" type="AudioStreamPlayer" parent="." unique_id=64976224]
 stream = ExtResource("11")

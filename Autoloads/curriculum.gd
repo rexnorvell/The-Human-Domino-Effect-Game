@@ -8,11 +8,11 @@ extends Node
 
 # traits for elcitraps
 @export var traits = [
-	["red", "Painting"], ["blue", "Law"], ["green", "Biology"],
-	["red", "Singing"], ["blue", "Planting"], ["green", "Math"],
-	["red", "Music"], ["blue", "Cooking"], ["green", "Physics"],
-	["red", "Acting"], ["blue", "Building"], ["green", "Geology"],
-	["red", "Sports"], ["blue", "Speaking"], ["green", "Astronomy"]
+	["red", "Painting"], ["blue", "Law"], ["yellow", "Biology"],
+	["red", "Singing"], ["blue", "Planting"], ["yellow", "Math"],
+	["red", "Music"], ["blue", "Cooking"], ["yellow", "Physics"],
+	["red", "Acting"], ["blue", "Building"], ["yellow", "Geology"],
+	["red", "Sports"], ["blue", "Speaking"], ["yellow", "Astronomy"]
 ]
 
 # choices for koi pond venn diagram level

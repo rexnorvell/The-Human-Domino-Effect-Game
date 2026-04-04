@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcitdg5np4i3p"
-path="res://.godot/imported/green_wave4.png-75429fb8768030ae09a241a656f1b85d.ctex"
+uid="uid://b8s7vhtncnlap"
+path="res://.godot/imported/yellow_wave3.png-52048e9e38fc0368dd46252d1e823acf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/sprites/green_wave4.png"
-dest_files=["res://.godot/imported/green_wave4.png-75429fb8768030ae09a241a656f1b85d.ctex"]
+source_file="res://UI/sprites/yellow_wave3.png"
+dest_files=["res://.godot/imported/yellow_wave3.png-52048e9e38fc0368dd46252d1e823acf.ctex"]
 
 [params]
 

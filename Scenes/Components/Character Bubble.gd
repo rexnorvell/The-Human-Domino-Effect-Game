@@ -30,8 +30,15 @@ func _draw() -> void:
 	# Pulsing glow using same sin() pattern as _NextSlotIndicator and Path.gd
 	var alpha := 0.3 + 0.2 * sin(_glow_time * 3.0)
 	var glow_col := Color(_glow_color.r, _glow_color.g, _glow_color.b, alpha)
-	# Draw circle outline centered on face sprite (local coordinates)
-	draw_arc(Vector2(0.3, 2.0), 30.0, 0, TAU, 32, glow_col, 3.0)
+	# Bug 5 fix: center glow on face sprite and compute radius from texture size
+	var face_node: Sprite2D = $face
+	var center := face_node.position
+	var radius := 0.0
+	if face_node.texture:
+		radius = max(face_node.texture.get_width(), face_node.texture.get_height()) * face_node.scale.x * 0.55
+	else:
+		radius = 45.0  # fallback
+	draw_arc(center, radius, 0, TAU, 48, glow_col, 4.0)
 
 func setup_character(player_id):
 	my_player_id = player_id

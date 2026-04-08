@@ -568,9 +568,16 @@ func place_domino(num):
 		# Capture reference before await — selected_domino can become null during yield
 		var placed_domino = selected_domino
 
+		# Bug 1 fix: save global_position before reparenting — reparenting changes it
+		var saved_global_pos = placed_domino.global_position
+
 		# Reparent from UIElements to WorldElements before animating (D-20 pattern)
 		ui_elements.remove_child(placed_domino)
 		world_elements.add_child(placed_domino)
+
+		# Bug 1 fix: restore the hand position so animation starts from correct origin
+		placed_domino.global_position = saved_global_pos
+
 		placed_domino.mark_as_placed(PLACED_SCALE)
 		var target_pos = _path_position_for_step(num, path_step_count[num])
 		var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[num] + ROTATION_OFFSET_DEG)

@@ -167,9 +167,14 @@ func setup_dominos():
 
 # initialize 7 dominos from main deck on player's screen
 func draw_7():
+	var my_id = get_tree().get_unique_id()
+	if not all_player_hands.has(my_id):
+		all_player_hands[my_id] = []
 	for i in range(9):
 		# get domino info
 		var domino_nums = draw_domino()
+		# Track hand numerically for stalemate detection (D-25)
+		all_player_hands[my_id].append([domino_nums[0], domino_nums[1]])
 		var domino = Domino.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
 		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
@@ -290,9 +295,24 @@ func place_domino(num):
 			num_placed += 1
 			_consecutive_help_count = 0
 
+			# Update all_player_hands: remove placed domino from tracker (D-25)
+			var placing_pid = sorted_players[self_num]
+			if all_player_hands.has(placing_pid):
+				for i in range(all_player_hands[placing_pid].size()):
+					var h = all_player_hands[placing_pid][i]
+					if (h[0] == selected_domino.top_num and h[1] == selected_domino.bottom_num) \
+					or (h[0] == selected_domino.bottom_num and h[1] == selected_domino.top_num):
+						all_player_hands[placing_pid].remove_at(i)
+						break
+
 			turn = (turn + 1) % len(gamestate.players)
 			if not _stalemate_active:
 				$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+
+			# True stalemate check after turn advancement (D-25)
+			if _check_stalemate():
+				_trigger_stalemate()
+				return
 
 			# if helped another player on their path, get a wellness bead
 			if num < 6 and get_node("Path3D" + str(num + 1)).temp == true:
@@ -599,6 +619,10 @@ func _on_Help_pressed() -> void:
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 		# Per D-15: behavioral stalemate — all players pressed Help in one rotation
 		if _consecutive_help_count >= len(sorted_players):
+			_trigger_stalemate()
+			return
+		# True stalemate check after Help turn advance (D-25)
+		if _check_stalemate():
 			_trigger_stalemate()
 
 # add player's path denoted by num to all player's screens

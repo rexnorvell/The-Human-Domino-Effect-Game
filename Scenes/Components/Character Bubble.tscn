@@ -11,6 +11,40 @@ radius = 48.6621
 [node name="Character Bubble" type="Node2D" unique_id=424032425]
 script = ExtResource("2")
 
+[node name="Score" parent="." unique_id=1386002985 instance=ExtResource("3")]
+visible = false
+position = Vector2(-117, 1)
+scale = Vector2(1.1, 1.1)
+
+[node name="Label" parent="Score/Button" index="0"]
+offset_left = 0.0
+offset_right = 92.0
+
+[node name="Points" parent="Score/Button" index="1"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 42.0
+
+[node name="Popup" parent="Score/Button" index="2"]
+oversampling_override = 1.0
+size = Vector2i(550, 400)
+
+[node name="Alloy_label" parent="Score/Button/Popup" index="2"]
+horizontal_alignment = 2
+
+[node name="Footprint_label" parent="Score/Button/Popup" index="4"]
+horizontal_alignment = 2
+
+[node name="Wellness_label" parent="Score/Button/Popup" index="6"]
+horizontal_alignment = 2
+
+[node name="Lydia_label" parent="Score/Button/Popup" index="8"]
+offset_left = 286.0
+offset_right = 495.0
+text = "Lydia Lion Coins: "
+horizontal_alignment = 2
+
 [node name="face" type="Sprite2D" parent="." unique_id=707796254]
 position = Vector2(0.3, 2.09999)
 scale = Vector2(0.6, 0.6)
@@ -33,24 +67,6 @@ texture = ExtResource("5")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1168569297]
 scale = Vector2(0.5, 0.5)
 shape = SubResource("1")
-
-[node name="Score" parent="." unique_id=1386002985 instance=ExtResource("3")]
-visible = false
-position = Vector2(-117, 1)
-scale = Vector2(1.1, 1.1)
-
-[node name="Label" parent="Score/Button" index="0"]
-offset_left = 0.0
-offset_right = 92.0
-
-[node name="Points" parent="Score/Button" index="1"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 40.0
-offset_bottom = 42.0
-
-[node name="Popup" parent="Score/Button" index="2"]
-oversampling_override = 1.0
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_Area2D_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_Area2D_mouse_exited"]

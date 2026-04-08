@@ -3,9 +3,35 @@ extends Node2D
 
 var my_player_id = null
 
+# Glow state (per D-14: pulsing gold glow for active player turn indicator)
+var _glow_active := false
+var _glow_time := 0.0
+var _glow_color := Color(1.0, 0.85, 0.0, 0.7)  # warm gold
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	set_process(false)
+
+func set_active_glow(active: bool) -> void:
+	_glow_active = active
+	_glow_time = 0.0
+	set_process(active)
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	if _glow_active:
+		_glow_time += delta
+		queue_redraw()
+
+func _draw() -> void:
+	if not _glow_active:
+		return
+	# Pulsing glow using same sin() pattern as _NextSlotIndicator and Path.gd
+	var alpha := 0.3 + 0.2 * sin(_glow_time * 3.0)
+	var glow_col := Color(_glow_color.r, _glow_color.g, _glow_color.b, alpha)
+	# Draw rounded rect outline around bubble area (local coordinates)
+	var rect := Rect2(-45, -55, 90, 110)
+	draw_rect(rect, glow_col, false, 4.0)
 
 func setup_character(player_id):
 	my_player_id = player_id

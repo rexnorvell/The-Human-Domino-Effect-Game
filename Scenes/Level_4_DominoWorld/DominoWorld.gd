@@ -913,7 +913,14 @@ func replace_domino():
 	# load center domino
 	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
 	$CentralDomino.get_node("Sprite2D").texture = load(domino_title)
-	
+
+	# Per D-07: fade and scale-in the new center domino
+	$CentralDomino.modulate.a = 0.0
+	$CentralDomino.scale = Vector2(0.5, 0.5)
+	var center_tween := create_tween().set_parallel(true)
+	center_tween.tween_property($CentralDomino, "modulate:a", 1.0, 0.4)
+	center_tween.tween_property($CentralDomino, "scale", Vector2(1.0, 1.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
 	var center_area := $CentralDomino.get_node_or_null("Area2D")
 	if center_area:
 		center_area.input_pickable = false
@@ -1036,7 +1043,13 @@ func _update_turn_label():
 	$Turn.text = current_name + "'s\nTurn"
 	# Only show the "Need Help" button if it is currently YOUR turn
 	$Help.visible = (turn == self_num)
-	
+
+	# Per D-14: toggle active player bubble glow
+	for i in range(sorted_players.size()):
+		var bubble := get_node_or_null("Character Bubble" + str(i + 1))
+		if bubble and bubble.has_method("set_active_glow"):
+			bubble.set_active_glow(i == turn)
+
 	# CPU TURN AUTOMATION (HOST ONLY)
 	if str(current_name).contains("CPU") and multiplayer.is_server():
 		_execute_cpu_turn_async(current_player_id)
@@ -1153,26 +1166,33 @@ func intialize_tower():
 	$Tower/Sprite2D/Humanities.visible = false
 	$Tower/Sprite2D/Diamond.visible = false
 
+# Per D-08: fade-in a tower layer node instead of instant visible
+func _animate_tower_layer(node: Node) -> void:
+	node.visible = true
+	node.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(node, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_IN)
+
 # Display tower
 func add_tower(round_num):
 	if round_num == 6:
-		$Tower/Sprite2D/Energy.visible = true
-		$Tower/Sprite2D/Stability.visible = true
-		$Tower/Sprite2D/Prepared_Enviroment.visible = true
+		_animate_tower_layer($Tower/Sprite2D/Energy)
+		_animate_tower_layer($Tower/Sprite2D/Stability)
+		_animate_tower_layer($Tower/Sprite2D/Prepared_Enviroment)
 	elif round_num == 7:
-		$Tower/Sprite2D/Ability.visible = true
-		$Tower/Sprite2D/Responsibility.visible = true
-		$Tower/Sprite2D/Perception.visible = true
+		_animate_tower_layer($Tower/Sprite2D/Ability)
+		_animate_tower_layer($Tower/Sprite2D/Responsibility)
+		_animate_tower_layer($Tower/Sprite2D/Perception)
 	elif round_num == 8:
-		$Tower/Sprite2D/Resilience.visible = true
-		$Tower/Sprite2D/Relationship.visible = true
-		$Tower/Sprite2D/Discernment.visible = true
+		_animate_tower_layer($Tower/Sprite2D/Resilience)
+		_animate_tower_layer($Tower/Sprite2D/Relationship)
+		_animate_tower_layer($Tower/Sprite2D/Discernment)
 	elif round_num == 9:
-		$Tower/Sprite2D/Arts.visible = true
-		$Tower/Sprite2D/Sciences.visible = true
-		$Tower/Sprite2D/Humanities.visible = true
+		_animate_tower_layer($Tower/Sprite2D/Arts)
+		_animate_tower_layer($Tower/Sprite2D/Sciences)
+		_animate_tower_layer($Tower/Sprite2D/Humanities)
 	elif round_num == 10:
-		$Tower/Sprite2D/Diamond.visible = true
+		_animate_tower_layer($Tower/Sprite2D/Diamond)
 
 func _on_Help_pressed() -> void:
 	if turn == self_num:

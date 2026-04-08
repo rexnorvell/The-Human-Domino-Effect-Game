@@ -1082,6 +1082,43 @@ theme_override_styles/pressed = SubResource("21")
 theme_override_styles/hover = SubResource("19")
 metadata/_edit_lock_ = true
 
+[node name="StalematePopup" type="Popup" parent="." unique_id=1500000001]
+position = Vector2i(303, 75)
+size = Vector2i(417, 250)
+visible = false
+
+[node name="Title" type="Label" parent="StalematePopup" unique_id=1500000002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = -40.0
+offset_bottom = -170.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("6")
+text = "Round Over - Stalemate!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Info" type="Label" parent="StalematePopup" unique_id=1500000003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 100.0
+offset_right = -40.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = SubResource("7")
+text = "No player has a valid move.
+Advancing to next round..."
+autowrap_mode = 3
+horizontal_alignment = 1
+
 [connection signal="pressed" from="AlloyPopup/Close" to="." method="_close_Alloy_popup"]
 [connection signal="pressed" from="WellnessBeadPopup/Close" to="." method="_close_WellnessBead_popup"]
 [connection signal="pressed" from="FootprintTilePopup/Close" to="." method="_close_FootprintTile_popup"]

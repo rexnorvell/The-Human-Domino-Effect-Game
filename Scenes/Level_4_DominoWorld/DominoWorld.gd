@@ -1195,6 +1195,7 @@ func _on_Reset_pressed() -> void:
 		rpc("sync_reset_game")
 
 @rpc("authority", "call_local") func sync_reset_game():
+	SaveManager.Save["0"].Current_Round = 0
 	get_tree().reload_current_scene()
 
 #intialize tower as not seen

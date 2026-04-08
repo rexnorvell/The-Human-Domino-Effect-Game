@@ -45,6 +45,7 @@ var all_player_hands = {}  # Host tracks ALL player hands (human + CPU) for stal
 var _consecutive_help_count := 0  # Tracks consecutive Help presses without a placement
 var _round_advancing := false  # Re-entrancy guard for next_round() (Bug 3 fix)
 var _stalemate_in_progress := false  # Prevents multiple stalemate triggers per round
+var _game_over := false  # Stops all turn processing after final round
 
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
@@ -523,6 +524,8 @@ func select_domino(domino) -> bool:
 
 # handles placing of domino onto a path
 func place_domino(num):
+	if _game_over:
+		return
 	_verify_anchors_ready()
 	var flip = false
 	if turn != self_num or !selected_domino:
@@ -898,6 +901,7 @@ func replace_domino():
 
 	# if we've completed round 9, end game
 	if center_num >= 9:
+		_game_over = true
 		add_tower(center_num + 1)
 		turn_label.text = "Game\nOver!"
 		end_label.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
@@ -1048,6 +1052,8 @@ func _trigger_stalemate() -> void:
 	_update_turn_label()
 
 @rpc("any_peer") func advance_turn():
+	if _game_over:
+		return
 	turn = (turn + 1) % len(gamestate.players)
 	_update_turn_label()
 	if multiplayer.is_server() and _check_stalemate():
@@ -1069,13 +1075,14 @@ func _update_turn_label():
 
 
 	# CPU TURN AUTOMATION (HOST ONLY)
-	if str(current_name).contains("CPU") and multiplayer.is_server():
+	if not _game_over and str(current_name).contains("CPU") and multiplayer.is_server():
 		_execute_cpu_turn_async(current_player_id)
 
 # The async function handles the CPU playing the domino
 func _execute_cpu_turn_async(cpu_id):
-	await get_tree().create_timer(1.5).timeout 
-	if sorted_players[turn] != cpu_id: return 
+	await get_tree().create_timer(1.5).timeout
+	if _game_over: return
+	if sorted_players[turn] != cpu_id: return
 	
 	var move = calculate_cpu_move(cpu_id)
 	var my_path_idx = sorted_players.find(cpu_id)
@@ -1145,6 +1152,8 @@ func _execute_cpu_turn_async(cpu_id):
 
 # handle when next round button pressed by host
 func _on_Next_pressed() -> void:
+	if _game_over:
+		return
 	# reset field for host
 	next_round()
 	can_place = true

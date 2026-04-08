@@ -6,7 +6,7 @@ var my_player_id = null
 # Glow state (per D-14: pulsing gold glow for active player turn indicator)
 var _glow_active := false
 var _glow_time := 0.0
-var _glow_color := Color(1.0, 0.85, 0.0, 0.7)  # warm gold
+var _glow_color := Color(0.1, 0.9, 0.2, 0.7)  # green
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

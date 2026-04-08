@@ -44,6 +44,7 @@ var cpu_hands = {} # The Host stores CPU hands here
 var all_player_hands = {}  # Host tracks ALL player hands (human + CPU) for stalemate detection
 var _consecutive_help_count := 0  # Tracks consecutive Help presses without a placement
 var _round_advancing := false  # Re-entrancy guard for next_round() (Bug 3 fix)
+var _stalemate_in_progress := false  # Prevents multiple stalemate triggers per round
 
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
@@ -579,15 +580,17 @@ func place_domino(num):
 		# Capture reference before await — selected_domino can become null during yield
 		var placed_domino = selected_domino
 
-		# Bug 1 fix: save global_position before reparenting — reparenting changes it
-		var saved_global_pos = placed_domino.global_position
+		# Bug 1 fix: UIElements is a CanvasLayer (screen coords), WorldElements uses world coords.
+		# Save screen position before reparenting, then convert to world coords after.
+		var screen_pos = placed_domino.global_position
 
 		# Reparent from UIElements to WorldElements before animating (D-20 pattern)
 		ui_elements.remove_child(placed_domino)
 		world_elements.add_child(placed_domino)
 
-		# Bug 1 fix: restore the hand position so animation starts from correct origin
-		placed_domino.global_position = saved_global_pos
+		# Bug 1 fix: convert screen coords → world coords using the canvas transform
+		# (which includes Camera2D offset/zoom for the default canvas layer)
+		placed_domino.global_position = placed_domino.get_canvas_transform().affine_inverse() * screen_pos
 
 		placed_domino.mark_as_placed(PLACED_SCALE)
 		var target_pos = _path_position_for_step(num, path_step_count[num])
@@ -874,10 +877,11 @@ func replace_domino():
 
 # go to next round of play
 @rpc("any_peer") func next_round():
-	# Re-entrancy guard: prevent double-advance (Bug 3 fix — _round_advancing flag)
+	# Re-entrancy guard: prevent double-advance (Bug 3 fix)
 	if _round_advancing:
 		return
 	_round_advancing = true
+	_stalemate_in_progress = false  # Reset stalemate flag for new round
 	# show all footprint tiles from this round
 	footprint_tile_ring.show_round(center_num)
 	
@@ -1020,20 +1024,23 @@ func _check_stalemate() -> bool:
 func _trigger_stalemate() -> void:
 	if not multiplayer.is_server():
 		return
+	if _stalemate_in_progress:
+		return
+	_stalemate_in_progress = true
 	rpc("show_stalemate_popup")
 
 @rpc("authority", "call_local") func show_stalemate_popup():
 	$UIElements/StalematePopup.visible = true
-	next_button.visible = false  # Prevent Next press during stalemate auto-advance (Bug 3 fix)
+	next_button.visible = false  # Prevent Next press during stalemate auto-advance
 	await get_tree().create_timer(3.0).timeout
 	$UIElements/StalematePopup.visible = false
-	# All peers call next_round() locally — show_stalemate_popup already runs on
-	# all peers via @rpc("authority", "call_local"), so no additional rpc_id calls needed.
-	# Host-only code inside next_round() (like setup_dominos) is already guarded
-	# by multiplayer.is_server().
 	next_round()
+	_stalemate_in_progress = false  # Reset so future rounds can detect stalemate
 	if multiplayer.is_server() and center_num <= 9:
 		setup_dominos()
+	# Re-show Next button for the host after auto-advance completes
+	if multiplayer.is_server():
+		next_button.visible = true
 
 @rpc("any_peer") func sync_turn(new_turn):
 	turn = new_turn
@@ -1207,14 +1214,16 @@ func add_tower(round_num):
 func _on_Help_pressed() -> void:
 	if turn == self_num:
 		rpc("set_train_open", self_num, true)
+		_consecutive_help_count += 1
+		# Check consecutive help BEFORE advance_turn to avoid double-triggering stalemate.
+		# advance_turn() also checks _check_stalemate(), so only one path should fire.
+		if multiplayer.is_server() and _consecutive_help_count >= len(sorted_players):
+			_trigger_stalemate()
+			return
 		rpc("advance_turn")
 		advance_turn()
 		can_place = true
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
-		_consecutive_help_count += 1
-		if multiplayer.is_server() and _consecutive_help_count >= len(sorted_players):
-			_trigger_stalemate()
-			return
 
 @rpc("any_peer") func add_path(num):
 	var path_node = get_node_or_null("WorldElements/Path" + str(num))

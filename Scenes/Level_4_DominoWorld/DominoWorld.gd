@@ -470,7 +470,8 @@ func rearrange_hand() -> void:
 	var hand_center_x: float = -192.0
 	for i in range(hand_count):
 		var new_pos := Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
-		unplaced[i].position = new_pos
+		var tween := unplaced[i].create_tween()
+		tween.tween_property(unplaced[i], "position", new_pos, 0.2).set_ease(Tween.EASE_OUT)
 		unplaced[i].original_pos = new_pos
 
 # path set-up
@@ -572,15 +573,14 @@ func place_domino(num):
 
 		# Force the domino to initialize correctly so the texture syncs with math
 		selected_domino.init(true_top, true_bot, top_el, bot_el, false)
-		if flip:
-			selected_domino.get_node("Sprite2D").rotation_degrees = 180
-		else:
-			selected_domino.get_node("Sprite2D").rotation_degrees = 0
 
-		# Place locally
+		# Place locally — animate slide (and flip if needed) before advancing turn
 		selected_domino.mark_as_placed(PLACED_SCALE)
-		selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
+		var target_pos = _path_position_for_step(num, path_step_count[num])
+		# Set orientation immediately (path angle rotation)
 		_orient_to_path(selected_domino, num)
+		# Per D-01, D-04, D-06: animate slide (and flip if needed) before advancing turn
+		await _animate_placement(selected_domino, target_pos, flip)
 
 		# Update path ends
 		if flip:
@@ -793,23 +793,34 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	var domino = Domino.instantiate()
 	add_child(domino)
 	domino.scale = PLACED_SCALE
-	domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
-	_orient_to_path(domino, path_num)
 
 	var domino_title = str(top_n) + str(bot_n)
 	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
 	domino.init(top_n, bot_n, top_e, bot_e, true)
 	domino.mark_as_placed(PLACED_SCALE)
 
-	# Flawless Flip logic
+	# Per D-02: remote domino slides from placing player's Character Bubble
+	var player_idx = turn  # turn holds the placing player's index at RPC receipt time
+	var bubble_name := "Character Bubble" + str(player_idx + 1)
+	var bubble := get_node_or_null(bubble_name)
+	if bubble:
+		domino.global_position = bubble.global_position
+	else:
+		domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
+	var target_pos = _path_position_for_step(path_num, path_step_count[path_num])
+	_orient_to_path(domino, path_num)
+
+	# Flawless Flip logic — path_ends and top_element set before animation
 	if flip:
-		domino.get_node("Sprite2D").rotation_degrees = 180
 		path_ends[path_num] = bot_n
 		domino.top_element = bot_e
 	else:
-		domino.get_node("Sprite2D").rotation_degrees = 0
 		path_ends[path_num] = top_n
 		domino.top_element = top_e
+
+	# Animate slide (and flip if needed) — no await since turn advancement
+	# is controlled by the host, not by this RPC handler
+	_animate_placement(domino, target_pos, flip)
 
 	end_dominos[path_num] = domino
 	path_step_count[path_num] += 1
@@ -1082,7 +1093,10 @@ func _execute_cpu_turn_async(cpu_id):
 			
 		rpc("update_domino_path", [true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
 		update_domino_path([true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
-		
+
+		# Per D-03: wait for slide animation to complete before continuing
+		await get_tree().create_timer(0.35).timeout
+
 		# POPUP PAUSE LOGIC
 		while $AlloyPopup.visible or $FootprintTilePopup.visible or $WellnessBeadPopup.visible:
 			await get_tree().process_frame
@@ -1315,6 +1329,19 @@ func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
 # Optional: make the domino visually point along its growth direction
 func _orient_to_path(domino: Node2D, path_num: int) -> void:
 	domino.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
+
+# Animate a domino sliding to its target position, with optional flip.
+# Per D-01/D-04: slide is 0.3s ease-out, flip is 0.2s parallel with slide.
+# Per D-06: caller must await this function before advancing turn.
+func _animate_placement(domino: Node2D, target_pos: Vector2, flip: bool) -> void:
+	var tween := create_tween()
+	if flip:
+		tween.set_parallel(true)
+		tween.tween_property(domino.get_node("Sprite2D"), "rotation_degrees", 180.0, 0.2)
+		tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	else:
+		tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	await tween.finished
 
 func _verify_anchors_ready():
 	if position_table.size() != 8:

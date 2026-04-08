@@ -343,7 +343,7 @@ func _on_Start_pressed() -> void:
 		SaveManager.Save["0"].Current_Round = 0
 	
 	randomize_turn()
-		
+	
 	setup_dominos()
 	start_button.queue_free()
 	
@@ -548,6 +548,7 @@ func place_domino(num):
 		
 		# CRASH FIX: First domino of the round has no end_dominos[num] yet!
 		if end_dominos[num] == null:
+			rpc("change_path_collision", num, true)
 			if true_bot != path_ends[num]:
 				flip = true
 		else:
@@ -889,6 +890,10 @@ func replace_domino():
 	# show all footprint tiles from this round
 	footprint_tile_ring.show_round(center_num)
 	
+	# Re-enable all paths' collision
+	for i in range(8):
+		change_path_collision(i, false)
+	
 	# remove all old dominos from screen
 	num_placed = 0
 	_consecutive_help_count = 0
@@ -1078,6 +1083,20 @@ func _update_turn_label():
 	if not _game_over and str(current_name).contains("CPU") and multiplayer.is_server():
 		_execute_cpu_turn_async(current_player_id)
 
+
+@rpc("any_peer", "call_local", "reliable")
+func change_path_collision(index: int, is_disabled: bool) -> void:
+	var path: Sprite2D
+	if index < 6:
+		path = world_elements.get_node("Path" + str(index + 1))
+	elif index == 6:
+		path = world_elements.get_node("SunrisePath")
+	elif index == 7:
+		path = world_elements.get_node("SunsetPath")
+	if index != null:
+		path.disable(is_disabled)
+
+
 # The async function handles the CPU playing the domino
 func _execute_cpu_turn_async(cpu_id):
 	await get_tree().create_timer(1.5).timeout
@@ -1098,6 +1117,7 @@ func _execute_cpu_turn_async(cpu_id):
 		
 		# CRASH FIX: First piece of the round
 		if end_dominos[move.path_idx] == null:
+			rpc("change_path_collision", move.path_idx, true)
 			if true_bot != path_ends[move.path_idx]:
 				flip = true
 		else:

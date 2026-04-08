@@ -84,11 +84,16 @@ func _update_visual() -> void:
 	if was_active != _indicator_active or _indicator_active:
 		queue_redraw()
 
+
+func disable(is_disabled: bool) -> void:
+	$Area2D/CollisionShape2D.disabled = is_disabled
+
 # handle placing domino if domino is placed on to path
 func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed:
 			get_parent().get_parent().place_domino(num)
+
 
 func _on_Area2D_mouse_entered() -> void:
 	if not _indicator_active:
@@ -97,6 +102,7 @@ func _on_Area2D_mouse_entered() -> void:
 		_hover_tween.kill()
 	_hover_tween = create_tween()
 	_hover_tween.tween_property(self, "scale", _base_scale * 1.1, 0.1).set_ease(Tween.EASE_OUT)
+
 
 func _on_Area2D_mouse_exited() -> void:
 	if _hover_tween:

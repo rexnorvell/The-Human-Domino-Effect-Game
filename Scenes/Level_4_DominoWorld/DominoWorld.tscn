@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c7thnwhpiw6xc" path="res://UI/sprites/reference.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Components/Character Bubble.tscn" id="3"]
-[ext_resource type="Script" uid="uid://4dmvtajf87yc" path="res://Scenes/Level_4_DominoWorld/camera_2d.gd" id="3_0lvn3"]
+[ext_resource type="Script" path="res://Scenes/Level_4_DominoWorld/camera_2d.gd" id="3_0lvn3"]
 [ext_resource type="Texture2D" uid="uid://belf0op6o2ek2" path="res://UI/sprites/character_sprites/faces/0.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://ftttl40wh16g" path="res://UI/sprites/character_sprites/faces/2.png" id="5"]
 [ext_resource type="PackedScene" uid="uid://cixonnslrnkt" path="res://Scenes/Core/Settings.tscn" id="6"]
@@ -351,27 +351,24 @@ z_index = -1
 position = Vector2(-114, -174)
 scale = Vector2(0.4, 0.4)
 
-[node name="face" parent="WorldElements/Character Bubble1" index="0" unique_id=707796254]
+[node name="Score" parent="WorldElements/Character Bubble1" index="0" unique_id=1386002985]
+z_index = 2
+
+[node name="face" parent="WorldElements/Character Bubble1" index="1" unique_id=707796254]
 position = Vector2(-60.9, 35)
 
-[node name="front_hair" parent="WorldElements/Character Bubble1" index="1" unique_id=633581683]
+[node name="front_hair" parent="WorldElements/Character Bubble1" index="2" unique_id=633581683]
 position = Vector2(-60.9, 130)
 
-[node name="back_hair" parent="WorldElements/Character Bubble1" index="2" unique_id=1771050701]
+[node name="back_hair" parent="WorldElements/Character Bubble1" index="3" unique_id=1771050701]
 position = Vector2(-60.9, 130)
 texture = ExtResource("13")
 
-[node name="Area2D" parent="WorldElements/Character Bubble1" index="3" unique_id=1953206665]
+[node name="Area2D" parent="WorldElements/Character Bubble1" index="4" unique_id=1953206665]
 position = Vector2(39.099995, -79.99999)
 
 [node name="CollisionShape2D" parent="WorldElements/Character Bubble1/Area2D" index="0" unique_id=1168569297]
 position = Vector2(-100, 115)
-
-[node name="Score" parent="WorldElements/Character Bubble1" index="4" unique_id=1386002985]
-z_index = 2
-
-[node name="Popup" parent="WorldElements/Character Bubble1/Score/Button" index="2"]
-position = Vector2i(0, 0)
 
 [node name="Character Bubble2" parent="WorldElements" unique_id=917609711 instance=ExtResource("3")]
 z_index = -1
@@ -898,10 +895,35 @@ position = Vector2(-528, -304)
 custom_minimum_size = Vector2(0, 950)
 layout_mode = 2
 
+[node name="BottomPanel" type="HBoxContainer" parent="UIElements/HUD" unique_id=701637445]
+custom_minimum_size = Vector2(0, 51)
+layout_mode = 2
+alignment = 1
+
+[node name="Start" parent="UIElements/HUD/BottomPanel" unique_id=1793244429 instance=ExtResource("14_gq41l")]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Start"
+font_color = Color(0, 0.6862745, 0, 1)
+border_color = Color(0, 0.6862745, 0, 1)
+
+[node name="Help" parent="UIElements/HUD/BottomPanel" unique_id=93144388 instance=ExtResource("14_gq41l")]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Need Help"
+font_color = Color(1, 0.48235294, 0, 1)
+border_color = Color(1, 0.48235294, 0, 1)
+
+[node name="Reset" parent="UIElements/HUD/BottomPanel" unique_id=697829354 instance=ExtResource("14_gq41l")]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Reset"
+font_color = Color(0, 0.6862745, 0, 1)
+border_color = Color(0, 0.6862745, 0, 1)
+
 [node name="StalematePopup" type="Popup" parent="UIElements" unique_id=1500000001]
 position = Vector2i(303, 75)
 size = Vector2i(417, 250)
-visible = false
 
 [node name="Title" type="Label" parent="UIElements/StalematePopup" unique_id=1500000002]
 anchors_preset = 15
@@ -932,34 +954,8 @@ grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
 text = "No player has a valid move.
 Advancing to next round..."
-autowrap_mode = 3
 horizontal_alignment = 1
-
-[node name="BottomPanel" type="HBoxContainer" parent="UIElements/HUD" unique_id=701637445]
-custom_minimum_size = Vector2(0, 51)
-layout_mode = 2
-alignment = 1
-
-[node name="Start" parent="UIElements/HUD/BottomPanel" unique_id=1793244429 instance=ExtResource("14_gq41l")]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Start"
-font_color = Color(0, 0.6862745, 0, 1)
-border_color = Color(0, 0.6862745, 0, 1)
-
-[node name="Help" parent="UIElements/HUD/BottomPanel" unique_id=93144388 instance=ExtResource("14_gq41l")]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Need Help"
-font_color = Color(1, 0.48235294, 0, 1)
-border_color = Color(1, 0.48235294, 0, 1)
-
-[node name="Reset" parent="UIElements/HUD/BottomPanel" unique_id=697829354 instance=ExtResource("14_gq41l")]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Reset"
-font_color = Color(0, 0.6862745, 0, 1)
-border_color = Color(0, 0.6862745, 0, 1)
+autowrap_mode = 3
 
 [node name="Place" type="AudioStreamPlayer" parent="UIElements" unique_id=594223884]
 stream = ExtResource("12")

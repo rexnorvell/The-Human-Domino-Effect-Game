@@ -459,7 +459,7 @@ func rearrange_hand() -> void:
 	var all_nodes = get_tree().get_nodes_in_group("dominos")
 	var unplaced: Array = []
 	for domino in all_nodes:
-		if not domino.placed:
+		if not domino.placed and domino.get_parent() == ui_elements:
 			unplaced.append(domino)
 	# Sort left to right by current x-position to preserve ordering
 	unplaced.sort_custom(func(a, b): return a.position.x < b.position.x)
@@ -469,6 +469,11 @@ func rearrange_hand() -> void:
 	var total_width: float = (hand_count - 1) * HAND_SPACING
 	for i in range(hand_count):
 		var new_pos := Vector2(HAND_CENTER_X + (i * HAND_SPACING) - (total_width / 2.0), HAND_CENTER_Y)
+		# Bug 2 fix: kill any existing rearrange tween before creating a new one
+		if unplaced[i].has_meta("_rearrange_tween"):
+			var old_tw = unplaced[i].get_meta("_rearrange_tween")
+			if old_tw and old_tw.is_valid():
+				old_tw.kill()
 		var tween: Tween = create_tween()
 		tween.tween_property(unplaced[i], "position", new_pos, 0.2).set_ease(Tween.EASE_OUT)
 		unplaced[i].set_meta("_rearrange_tween", tween)
@@ -545,6 +550,10 @@ func place_domino(num):
 			if true_bot != path_ends[num] or (true_top == path_ends[num] and top_el != end_dominos[num].top_element):
 				flip = true
 			
+		# Bug 4 fix: doubles look identical when flipped — skip visual animation
+		# but keep internal flip state for element tracking (alloy/footprint checks)
+		var visual_flip = flip and (true_top != true_bot)
+
 		# Check for alloy
 		var touching_el = top_el if flip else bot_el
 		if end_dominos[num] != null and end_dominos[num].top_element != touching_el:
@@ -584,7 +593,7 @@ func place_domino(num):
 		var target_pos = _path_position_for_step(num, path_step_count[num])
 		var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[num] + ROTATION_OFFSET_DEG)
 		camera.set_drag(false)
-		await _animate_placement(placed_domino, target_pos, flip, target_rot)
+		await _animate_placement(placed_domino, target_pos, visual_flip, target_rot)
 
 		# Update path ends
 		if flip:

@@ -470,8 +470,9 @@ func rearrange_hand() -> void:
 	var hand_center_x: float = -192.0
 	for i in range(hand_count):
 		var new_pos := Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
-		var tween := unplaced[i].create_tween()
+		var tween: Tween = create_tween()
 		tween.tween_property(unplaced[i], "position", new_pos, 0.2).set_ease(Tween.EASE_OUT)
+		unplaced[i].set_meta("_rearrange_tween", tween)
 		unplaced[i].original_pos = new_pos
 
 # path set-up
@@ -574,37 +575,38 @@ func place_domino(num):
 		# Force the domino to initialize correctly so the texture syncs with math
 		selected_domino.init(true_top, true_bot, top_el, bot_el, false)
 
-		# Place locally — animate slide (and flip if needed) before advancing turn
-		selected_domino.mark_as_placed(PLACED_SCALE)
+		# Capture reference before await — selected_domino can become null during yield
+		var placed_domino = selected_domino
+
+		# Place locally — animate slide, rotation, and flip before advancing turn
+		placed_domino.mark_as_placed(PLACED_SCALE)
 		var target_pos = _path_position_for_step(num, path_step_count[num])
-		# Set orientation immediately (path angle rotation)
-		_orient_to_path(selected_domino, num)
-		# Per D-01, D-04, D-06: animate slide (and flip if needed) before advancing turn
-		await _animate_placement(selected_domino, target_pos, flip)
+		var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[num] + ROTATION_OFFSET_DEG)
+		await _animate_placement(placed_domino, target_pos, flip, target_rot)
 
 		# Update path ends
 		if flip:
 			path_ends[num] = true_bot
-			selected_domino.top_element = bot_el # Store outward element for next domino
+			placed_domino.top_element = bot_el # Store outward element for next domino
 		else:
 			path_ends[num] = true_top
-			selected_domino.top_element = top_el
+			placed_domino.top_element = top_el
 
-		end_dominos[num] = selected_domino
+		end_dominos[num] = placed_domino
 		path_step_count[num] += 1
 		num_placed += 1
-		
+
 		if num == self_num and train_open[self_num]:
 			rpc("set_train_open", self_num, false)
-		
+
 		# Broadcast the exact placement to everyone
 		rpc("update_domino_path", [true_bot, true_top], [bot_el, top_el], position_table[num], num, flip)
 
-		hand_dominos.erase([selected_domino.top_num, selected_domino.bottom_num])
-		hand_dominos.erase([selected_domino.bottom_num, selected_domino.top_num])
+		hand_dominos.erase([placed_domino.top_num, placed_domino.bottom_num])
+		hand_dominos.erase([placed_domino.bottom_num, placed_domino.top_num])
 		if multiplayer.is_server():
 			# Update host tracking: remove placed domino from local player's tracked hand
-			var placed_pair = [selected_domino.top_num, selected_domino.bottom_num]
+			var placed_pair = [placed_domino.top_num, placed_domino.bottom_num]
 			if all_player_hands.has(multiplayer.get_unique_id()):
 				for i in range(all_player_hands[multiplayer.get_unique_id()].size()):
 					var h = all_player_hands[multiplayer.get_unique_id()][i]
@@ -726,9 +728,10 @@ func increment_total(num):
 
 # display wellness bead popup
 func display_wellness_prompt():
-	$WellnessBeadPopup/Title.text = "You Got a..."
+	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
+	$WellnessBeadPopup/Title.text = str(player_name) + " Got a..."
 	$WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
-	$WellnessBeadPopup/Info.text = "You helped someone on their path and so helped promote community wellness!"
+	$WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their path and so helped promote community wellness!"
 	$WellnessBeadPopup.visible = true
 
 
@@ -747,7 +750,8 @@ func display_wellness_prompt():
 	gamestate.alloys[num] = int(get_node(path).text)
 	increment_total(num)
 	
-	$AlloyPopup/Title.text = "Alloy Acquired!"
+	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
+	$AlloyPopup/Title.text = str(player_name) + " earned an Alloy!"
 	$AlloyPopup/Alloy.text = alloy
 	$AlloyPopup/Info.text = curriculum.alloy_table[alloy]
 	$AlloyPopup.visible = true
@@ -808,7 +812,7 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	else:
 		domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
 	var target_pos = _path_position_for_step(path_num, path_step_count[path_num])
-	_orient_to_path(domino, path_num)
+	var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
 
 	# Flawless Flip logic — path_ends and top_element set before animation
 	if flip:
@@ -818,9 +822,9 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 		path_ends[path_num] = top_n
 		domino.top_element = top_e
 
-	# Animate slide (and flip if needed) — no await since turn advancement
+	# Animate slide, rotation, and flip — no await since turn advancement
 	# is controlled by the host, not by this RPC handler
-	_animate_placement(domino, target_pos, flip)
+	_animate_placement(domino, target_pos, flip, target_rot)
 
 	end_dominos[path_num] = domino
 	path_step_count[path_num] += 1
@@ -910,16 +914,16 @@ func replace_domino():
 		path_ends.append(center_num)
 	end_dominos = [null, null, null, null, null, null, null, null]
 
+	# Per D-07: hide before loading new texture to prevent one-frame flash
+	$CentralDomino.modulate.a = 0.0
+	$CentralDomino.scale = Vector2(0.25, 0.25)
+
 	# load center domino
 	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
 	$CentralDomino.get_node("Sprite2D").texture = load(domino_title)
-
-	# Per D-07: fade and scale-in the new center domino
-	$CentralDomino.modulate.a = 0.0
-	$CentralDomino.scale = Vector2(0.5, 0.5)
-	var center_tween := create_tween().set_parallel(true)
+	var center_tween: Tween = create_tween().set_parallel(true)
 	center_tween.tween_property($CentralDomino, "modulate:a", 1.0, 0.4)
-	center_tween.tween_property($CentralDomino, "scale", Vector2(1.0, 1.0), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	center_tween.tween_property($CentralDomino, "scale", Vector2(0.5, 0.5), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 	var center_area := $CentralDomino.get_node_or_null("Area2D")
 	if center_area:
@@ -1170,7 +1174,7 @@ func intialize_tower():
 func _animate_tower_layer(node: Node) -> void:
 	node.visible = true
 	node.modulate.a = 0.0
-	var tween := create_tween()
+	var tween: Tween = create_tween()
 	tween.tween_property(node, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_IN)
 
 # Display tower
@@ -1353,14 +1357,20 @@ func _orient_to_path(domino: Node2D, path_num: int) -> void:
 # Animate a domino sliding to its target position, with optional flip.
 # Per D-01/D-04: slide is 0.3s ease-out, flip is 0.2s parallel with slide.
 # Per D-06: caller must await this function before advancing turn.
-func _animate_placement(domino: Node2D, target_pos: Vector2, flip: bool) -> void:
-	var tween := create_tween()
+func _animate_placement(domino: Node2D, target_pos: Vector2, flip: bool, target_rotation: float = -999.0) -> void:
+	# Kill any active rearrange tween to prevent position/global_position conflicts
+	if domino.has_meta("_rearrange_tween"):
+		var old_tween = domino.get_meta("_rearrange_tween")
+		if old_tween and old_tween.is_valid():
+			old_tween.kill()
+		domino.remove_meta("_rearrange_tween")
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	if target_rotation != -999.0:
+		tween.tween_property(domino, "rotation", target_rotation, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	if flip:
-		tween.set_parallel(true)
 		tween.tween_property(domino.get_node("Sprite2D"), "rotation_degrees", 180.0, 0.2)
-		tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
-	else:
-		tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 
 func _verify_anchors_ready():

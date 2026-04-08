@@ -29,9 +29,8 @@ func _draw() -> void:
 	# Pulsing glow using same sin() pattern as _NextSlotIndicator and Path.gd
 	var alpha := 0.3 + 0.2 * sin(_glow_time * 3.0)
 	var glow_col := Color(_glow_color.r, _glow_color.g, _glow_color.b, alpha)
-	# Draw rounded rect outline around bubble area (local coordinates)
-	var rect := Rect2(-45, -55, 90, 110)
-	draw_rect(rect, glow_col, false, 4.0)
+	# Draw circle outline centered on face sprite (local coordinates)
+	draw_arc(Vector2(0.3, 2.0), 30.0, 0, TAU, 32, glow_col, 3.0)
 
 func setup_character(player_id):
 	my_player_id = player_id

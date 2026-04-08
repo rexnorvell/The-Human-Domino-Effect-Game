@@ -39,6 +39,8 @@ var center_num = 0 # current round number
 var num_placed = 0
 
 var cpu_hands = {} # The Host stores CPU hands here
+var all_player_hands = {}  # Host tracks ALL player hands (human + CPU) for stalemate detection
+var _consecutive_help_count := 0  # Tracks consecutive Help presses without a placement
 
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
@@ -362,6 +364,7 @@ func setup_dominos():
 	var my_hand = []
 	for i in range(9):
 		my_hand.append(dominos.pop_front())
+	all_player_hands[1] = my_hand.duplicate(true)
 
 	# Deal for Clients and CPUs
 	for p in gamestate.players:
@@ -369,13 +372,16 @@ func setup_dominos():
 			var client_hand = []
 			for i in range(9):
 				client_hand.append(dominos.pop_front())
-				
+
+			# Store ALL player hands on host for stalemate detection (before CPU/human branching)
+			all_player_hands[p] = client_hand.duplicate(true)
+
 			if str(gamestate.players[p]).contains("CPU"):
 				var double_count = 0
 				for d in client_hand:
 					if d[0] == d[1]: double_count += 1
 					if d[0] < d[1]: d.reverse()
-					
+
 				# Reshuffle if 4+ doubles
 				if double_count >= 4:
 					dominos.append_array(client_hand)
@@ -385,8 +391,9 @@ func setup_dominos():
 						var replacement = dominos.pop_front()
 						if replacement[0] < replacement[1]: replacement.reverse()
 						client_hand.append(replacement)
-						
-				cpu_hands[p] = client_hand 
+
+				cpu_hands[p] = client_hand
+				all_player_hands[p] = client_hand.duplicate(true)
 			else:
 				rpc_id(p, "receive_hand", client_hand)
 			
@@ -595,6 +602,15 @@ func place_domino(num):
 
 		hand_dominos.erase([selected_domino.top_num, selected_domino.bottom_num])
 		hand_dominos.erase([selected_domino.bottom_num, selected_domino.top_num])
+		if multiplayer.is_server():
+			# Update host tracking: remove placed domino from local player's tracked hand
+			var placed_pair = [selected_domino.top_num, selected_domino.bottom_num]
+			if all_player_hands.has(multiplayer.get_unique_id()):
+				for i in range(all_player_hands[multiplayer.get_unique_id()].size()):
+					var h = all_player_hands[multiplayer.get_unique_id()][i]
+					if (h[0] == placed_pair[0] and h[1] == placed_pair[1]) or (h[0] == placed_pair[1] and h[1] == placed_pair[0]):
+						all_player_hands[multiplayer.get_unique_id()].remove_at(i)
+						break
 		rearrange_hand()
 
 		if true_top == true_bot:
@@ -797,6 +813,16 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 
 	end_dominos[path_num] = domino
 	path_step_count[path_num] += 1
+	_consecutive_help_count = 0
+	if multiplayer.is_server():
+		var sender_id = multiplayer.get_remote_sender_id()
+		if sender_id != 0 and all_player_hands.has(sender_id):
+			# Remove the placed domino from tracked hand using domino_nums [bot, top]
+			for i in range(all_player_hands[sender_id].size()):
+				var h = all_player_hands[sender_id][i]
+				if (h[0] == domino_nums[0] and h[1] == domino_nums[1]) or (h[0] == domino_nums[1] and h[1] == domino_nums[0]):
+					all_player_hands[sender_id].remove_at(i)
+					break
 
 # replace placed domino with one from the deck
 func replace_domino():
@@ -824,6 +850,8 @@ func replace_domino():
 	
 	# remove all old dominos from screen
 	num_placed = 0
+	_consecutive_help_count = 0
+	all_player_hands.clear()
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
 	var group_dominos = get_tree().get_nodes_in_group("dominos")
 	clear_selected_domino()
@@ -932,6 +960,54 @@ func calculate_cpu_move(cpu_id):
 					
 	return null
 
+# True stalemate check: returns true if NO player has ANY valid move on ANY accessible path
+# Called on host only. Per D-09, reuses calculate_cpu_move matching logic.
+func _check_stalemate() -> bool:
+	if not multiplayer.is_server():
+		return false
+	for idx in range(sorted_players.size()):
+		var pid = sorted_players[idx]
+		var player_hand = []
+		if all_player_hands.has(pid):
+			player_hand = all_player_hands[pid]
+		elif cpu_hands.has(pid):
+			player_hand = cpu_hands[pid]
+		else:
+			return false  # Unknown hand, assume not stuck
+		if player_hand.size() == 0:
+			continue  # No dominos left, can't move but not blocking
+		for domino_pair in player_hand:
+			# Check personal path
+			if domino_pair[0] == path_ends[idx] or domino_pair[1] == path_ends[idx]:
+				return false
+			# Check open trains (other player paths)
+			for p_idx in range(6):
+				if p_idx != idx and train_open[p_idx]:
+					if domino_pair[0] == path_ends[p_idx] or domino_pair[1] == path_ends[p_idx]:
+						return false
+			# Check sun paths (indices 6 and 7)
+			for sun_idx in [6, 7]:
+				if domino_pair[0] == path_ends[sun_idx] or domino_pair[1] == path_ends[sun_idx]:
+					return false
+	return true
+
+func _trigger_stalemate() -> void:
+	if not multiplayer.is_server():
+		return
+	rpc("show_stalemate_popup")
+
+@rpc("authority", "call_local") func show_stalemate_popup():
+	$StalematePopup.visible = true
+	await get_tree().create_timer(3.0).timeout
+	$StalematePopup.visible = false
+	# All peers call next_round() locally — show_stalemate_popup already runs on
+	# all peers via @rpc("authority", "call_local"), so no additional rpc_id calls needed.
+	# Host-only code inside next_round() (like setup_dominos) is already guarded
+	# by multiplayer.is_server().
+	next_round()
+	if multiplayer.is_server() and center_num <= 9:
+		setup_dominos()
+
 @rpc("any_peer") func sync_turn(new_turn):
 	turn = new_turn
 	_update_turn_label()
@@ -939,6 +1015,8 @@ func calculate_cpu_move(cpu_id):
 @rpc("any_peer") func advance_turn():
 	turn = (turn + 1) % len(gamestate.players)
 	_update_turn_label()
+	if multiplayer.is_server() and _check_stalemate():
+		_trigger_stalemate()
 
 func _update_turn_label():
 	var current_player_id = sorted_players[turn]
@@ -995,7 +1073,9 @@ func _execute_cpu_turn_async(cpu_id):
 			display_wellness_prompt()
 			
 		cpu_hands[cpu_id].remove_at(move.hand_idx)
-		
+		if all_player_hands.has(cpu_id):
+			all_player_hands[cpu_id].remove_at(move.hand_idx)
+
 		if move.path_idx == my_path_idx and train_open[my_path_idx]:
 			rpc("set_train_open", my_path_idx, false)
 			set_train_open(my_path_idx, false)
@@ -1087,6 +1167,10 @@ func _on_Help_pressed() -> void:
 		advance_turn()
 		can_place = true
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+		_consecutive_help_count += 1
+		if multiplayer.is_server() and _consecutive_help_count >= len(sorted_players):
+			_trigger_stalemate()
+			return
 
 @rpc("any_peer") func add_path(num):
 	var path_node = get_node_or_null("Path" + str(num))

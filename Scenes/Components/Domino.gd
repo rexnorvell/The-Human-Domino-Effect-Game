@@ -1,4 +1,3 @@
-# node for domino on Domino Level
 class_name Domino
 extends Node2D
 
@@ -6,45 +5,35 @@ extends Node2D
 @export var bottom_num = 0
 @export var top_element = ""
 @export var bottom_element = ""
-
-
 @export var original_pos = null
+@export var placed = false
+@export var hand_hover_mult := 1.10
+@export var placed_hover_mult := 3
+
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var label: Label = $Label
+
 var _orig_y_sort := false
 var _orig_z := 0
-# Affects the Domino hand as well
-#var og_scale = .5 # Hard coded to fit scale of CentralDomino Node2D in DominoWorld.tscn
-#var hover_scale = og_scale + .05
-
 var selected = false
-@export var placed = false
-
-# NEW: separate hover multipliers for hand vs. placed
-@export var hand_hover_mult := 1.10 # 10% bump in the hand
-@export var placed_hover_mult := 3 # 300% bump on the board
-
-# Track the node’s base scale so we can return to it on mouse exit
 var _base_scale: Vector2 = Vector2.ONE
-
-# Reference to world node to minimize `get_parent()` calls
 var _world = null
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	$Sprite2D.z_as_relative = true
-	$Sprite2D.top_level = false
-	$Sprite2D.z_index = 0
-	_world = get_parent()
-	# change domino appearance
+	sprite.z_as_relative = true
+	sprite.top_level = false
+	sprite.z_index = 0
+	_world = get_parent().get_parent()
 	if not placed:
 		add_to_group("dominos")
-	# Set initial scale to og_scale
-	#$Sprite2D.scale = Vector2(og_scale, og_scale)
-	# Store original position for reference
 	original_pos = position
 	call_deferred("_capture_base_scale")
 
+
 func _capture_base_scale() -> void:
 	_base_scale = scale
+
 
 func init(bottom, top, bottom_elm, top_elm, initial):
 	bottom_num = bottom
@@ -60,18 +49,18 @@ func init(bottom, top, bottom_elm, top_elm, initial):
 		top_element = top_elm
 	if initial:
 		original_pos = self.position
-	$Label.text = bottom_element + "\n" + str(bottom) + " | " + str(top) + "\n" + top_element
+	label.text = bottom_element + "\n" + str(bottom) + " | " + str(top) + "\n" + top_element
 
 
-# NEW: let the world update our notion of base scale when it changes the node scale
 func set_base_scale(new_scale: Vector2) -> void:
 	scale = new_scale
 	_base_scale = new_scale
 
-# NEW: helper called when a domino becomes placed
+
 func mark_as_placed(new_scale: Vector2) -> void:
 	placed = true
 	set_base_scale(new_scale)
+
 
 func _on_Area2D_mouse_entered() -> void:
 	var mult: float
@@ -86,6 +75,7 @@ func _on_Area2D_mouse_entered() -> void:
 	y_sort_enabled = false
 	_orig_z = z_index
 	z_index = 10 # put it on top
+
 
 func _on_Area2D_mouse_exited() -> void:
 	scale = _base_scale
@@ -128,10 +118,12 @@ func swap(other: Domino) -> void:
 	original_pos = position
 	other.original_pos = other.position
 
+
 func deselect() -> void:
 	selected = false
 	if !placed:
 		position = original_pos
+
 
 func get_domino_at_click() -> Domino:
 	var mouse_pos = get_global_mouse_position()
@@ -153,10 +145,9 @@ func get_domino_at_click() -> Domino:
 			return node
 	return null
 
+
 func _physics_process(_delta):
 	if selected and not placed:
 		var mousePos = get_global_mouse_position()
-		position.x = 2 * mousePos.x;
-		position.y = 2 * mousePos.y;
-	# elif not placed:
-	# 	position = original_pos
+		position.x = mousePos.x;
+		position.y = mousePos.y;

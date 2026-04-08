@@ -1,70 +1,55 @@
-# domino level scene
 class_name DominoWorld
 extends Node2D
 
-const HAND_SCALE = Vector2(0.22, 0.22)
-const PLACED_SCALE = Vector2(0.08, 0.08)
-const ROTATION_OFFSET_DEG := 90.0 # rotate pieces 90° clockwise
-const HAND_SPACING := 85 # pixels between hand dominoes
-
-# --- Hardcoded step directions by path, in degrees ---
-# Order requested: Path1, Path2, Path3?, Path4, Path5, Path6, ?, SunsetPath
-#const PATH_ANGLE_DEGREES := [292.5, 247.5, 337.5, 157.5, 112.5, 67.5, 202.5, 22.5]
-const PATH_ANGLE_DEGREES := [292.5, 202.5, 337.5, 157.5, 112.5, 22.5, 247.5, 67.5]
-
-# How far to move each successive domino along that direction
-const STEP_PIXELS := 24.0 # tune for your art scale
-
-# Keep a per-path step count; replaces placed_domino_offset
-var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
-# Tracks which player trains (0-5) are currently open for anyone to play on
-var train_open := [false, false, false, false, false, false, false, false]
-
 @export var Domino: PackedScene
-# NOTE: If domino game performance is low, try switching to preload
-#const FootprintTile = preload("res://Scenes/Level_4_DominoWorld/FootprintTile.gd")
+
+@onready var central_domino = $WorldElements/CentralDomino
+@onready var board = $WorldElements/Board
+@onready var camera = $WorldElements/Camera2D
+@onready var world_elements = $WorldElements
+
+@onready var start_button = $UIElements/HUD/BottomPanel/Start
+@onready var next_button = $UIElements/HUD/TopPanel/Next
+@onready var help_button = $UIElements/HUD/BottomPanel/Help
+@onready var reset_button = $UIElements/HUD/BottomPanel/Reset
+@onready var turn_label = $UIElements/HUD/TopPanel/Turn
+@onready var place_sound = $UIElements/Place
+@onready var acquire_sound = $UIElements/Acquire
+@onready var end_label = $UIElements/HUD/End
+@onready var ui_elements = $UIElements
+
+const HAND_SCALE = Vector2(0.44, 0.44)
+const PLACED_SCALE = Vector2(0.08, 0.08)
+const ROTATION_OFFSET_DEG := 90.0
+const HAND_SPACING := 170
+const HAND_CENTER_X: int = 1024
+const HAND_CENTER_Y: int = 1000
+const PATH_ANGLE_DEGREES := [292.5, 202.5, 337.5, 157.5, 112.5, 22.5, 247.5, 67.5]
+const STEP_PIXELS := 24.0
+
+var path_step_count := [0, 0, 0, 0, 0, 0, 0, 0]
+var train_open := [false, false, false, false, false, false, false, false]
 var FootprintTile = load(ReferenceManager.get_reference("FootprintTile.gd"))
 var footprint_tile_ring = null
-# NOTE: If domino game performance is low, try switching to preload
-#const tower = preload("res://Scenes/Level_4_DominoWorld/Tower.gd")
 var tower = load(ReferenceManager.get_reference("Tower.gd"))
 var sorted_players = []
-
-var turn = 0 # whose turn is it, indexed from 0 on
+var turn = 0
 var hand = []
 var dominos = [] + gamestate.dominos
-var self_num = 0 # player's number, indexed from 1 on
-var selected_domino = null # currently selected domino
-var center_num = 0 # current round number
+var self_num = 0
+var selected_domino = null
+var center_num = 0
 var num_placed = 0
-
-var cpu_hands = {} # The Host stores CPU hands here
-
-# (Fall 2025) added variables
-var can_place = true # to check if currently selected domino is a double
-var hand_dominos = [] # track dominos in hand numerically
-
-var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
-var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
-
+var cpu_hands = {}
+var can_place = true
+var hand_dominos = []
+var path_ends = [0, 0, 0, 0, 0, 0, 0, 0]
+var end_dominos = [null, null, null, null, null, null, null, null]
 var position_table: Array[Vector2] = []
 var prev_domino_size = 0
 var _next_slot_indicators: Array[Node2D] = []
-
 var bonusWords = ["Bonus", "Bonus2"]
 var usedBonus = ["ABC123"]
-
-@onready var start_button = $WorldElements/Start
-@onready var next_button = $WorldElements/Next
-@onready var help_button = $WorldElements/Help
-@onready var reset_button = $WorldElements/Reset
-@onready var central_domino = $WorldElements/CentralDomino
-@onready var board = $WorldElements/Board
-
-@onready var turn_label = $UIElements/Turn
-@onready var place_sound = $UIElements/Place
-@onready var acquire_sound = $UIElements/Acquire
-@onready var end_label = $UIElements/End
 
 
 func _ready() -> void:
@@ -118,9 +103,9 @@ func _init_players() -> void:
 
 	# Shuffle for icons not chosen by players
 	var remaining_icon_pool: Array[String] = []
-	for name in all_icon_names:
-		if chosen_icon_names.find(name) == -1:
-			remaining_icon_pool.append(name)
+	for icon_name in all_icon_names:
+		if chosen_icon_names.find(icon_name) == -1:
+			remaining_icon_pool.append(icon_name)
 	remaining_icon_pool.shuffle()
 
 	# Reserve local player's chosen icon (fallback to basket.png)
@@ -335,7 +320,7 @@ func _init_players() -> void:
 	# Host sees Start button
 	if multiplayer.get_unique_id() == 1:
 		start_button.visible = true
-		print("Host detected, Start button visible")
+		print("Host detected, Start button visible at", start_button.position)
 
 	print("Turn label set to ", turn_label.text)
 	print("=== _init_players() END ===")
@@ -407,8 +392,8 @@ func setup_dominos():
 	# Render the host's hand locally
 	render_hand(my_hand)
 
-@rpc("any_peer") func receive_hand(hand):
-	render_hand(hand)
+@rpc("any_peer") func receive_hand(domino_hand):
+	render_hand(domino_hand)
 
 @rpc("authority", "call_remote") func sync_full_deck(new_deck):
 	dominos = new_deck
@@ -435,13 +420,12 @@ func render_hand(drawn_dominos):
 		var domino = Domino.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
 		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
-		add_child(domino)
+		ui_elements.add_child(domino)
 
 		# set domino position and scale
 		var hand_count = drawn_dominos.size()
 		var total_width = (hand_count - 1) * HAND_SPACING
-		var hand_center_x = -192.0
-		domino.position = Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
+		domino.position = Vector2(HAND_CENTER_X + (i * HAND_SPACING) - (total_width / 2.0), HAND_CENTER_Y)
 		domino.scale = HAND_SCALE
 		domino.rotation_degrees = 270
 
@@ -471,9 +455,8 @@ func rearrange_hand() -> void:
 	if hand_count == 0:
 		return
 	var total_width: float = (hand_count - 1) * HAND_SPACING
-	var hand_center_x: float = -192.0
 	for i in range(hand_count):
-		var new_pos := Vector2(hand_center_x + (i * HAND_SPACING) - (total_width / 2.0), 175)
+		var new_pos := Vector2(HAND_CENTER_X + (i * HAND_SPACING) - (total_width / 2.0), HAND_CENTER_Y)
 		unplaced[i].position = new_pos
 		unplaced[i].original_pos = new_pos
 
@@ -575,9 +558,12 @@ func place_domino(num):
 			selected_domino.get_node("Sprite2D").rotation_degrees = 0
 
 		# Place locally
+		ui_elements.remove_child(selected_domino)
+		world_elements.add_child(selected_domino)
 		selected_domino.mark_as_placed(PLACED_SCALE)
 		selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
 		_orient_to_path(selected_domino, num)
+		camera.set_drag(false)
 
 		# Update path ends
 		if flip:
@@ -714,10 +700,8 @@ func increment_total(num):
 
 # display wellness bead popup
 func display_wellness_prompt():
-	$UIElements/WellnessBeadPopup/Title.text = "You Got a..."
-	$UIElements/WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
-	$UIElements/WellnessBeadPopup/Info.text = "You helped someone on their path and so helped promote community wellness!"
 	$UIElements/WellnessBeadPopup.visible = true
+	camera.set_drag(false)
 
 
 # increment wellness beads for player denoted by num
@@ -739,6 +723,7 @@ func display_wellness_prompt():
 	$UIElements/AlloyPopup/Alloy.text = alloy
 	$UIElements/AlloyPopup/Info.text = curriculum.alloy_table[alloy]
 	$UIElements/AlloyPopup.visible = true
+	camera.set_drag(false)
 
 
 # increment footprint tiles earned for player denoted by player_num
@@ -767,6 +752,7 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 			$UIElements/FootprintTilePopup/Info.text = curriculum.footprint_text_table[table_index]
 			$UIElements/FootprintTilePopup/Description.text = ""
 		$UIElements/FootprintTilePopup.visible = true
+		camera.set_drag(false)
 
 # update domino path for all players after a player places a domino
 @rpc("any_peer") func update_domino_path(domino_nums, domino_elms, pos, path_num, flip):
@@ -930,7 +916,7 @@ func _update_turn_label():
 	var current_player_id = sorted_players[turn]
 	var current_name = gamestate.players[current_player_id]
 	
-	turn_label.text = current_name + "'s\nTurn"
+	turn_label.text = current_name + "'s Turn"
 	# Only show the "Need Help" button if it is currently YOUR turn
 	help_button.visible = (turn == self_num)
 	
@@ -1099,11 +1085,11 @@ func determine_winner():
 	var winners = []
 	for i in range(1, len(sorted_players) + 1):
 		var current_player = get_node("WorldElements/Character Bubble" + str(i) + "/Score/Button/Popup")
-		if int(current_player.get_node("WorldElements/Lydia_number").text) > best_score:
-			winners = [current_player.get_node("WorldElements/Name_text").text]
-			best_score = int(current_player.get_node("WorldElements/Lydia_number").text)
-		elif int(current_player.get_node("WorldElements/Lydia_number").text) == best_score:
-			winners.append(current_player.get_node("WorldElements/Name_text").text)
+		if int(current_player.get_node("Lydia_number").text) > best_score:
+			winners = [current_player.get_node("Name_text").text]
+			best_score = int(current_player.get_node("Lydia_number").text)
+		elif int(current_player.get_node("Lydia_number").text) == best_score:
+			winners.append(current_player.get_node("Name_text").text)
 	var winner_text = ""
 	for winner in winners:
 		winner_text += winner
@@ -1154,52 +1140,11 @@ var grey = Color("aaaaaa")
 
 
 func _on_EnterCode_mouse_entered():
-	$WorldElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", green)
+	$UIElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", green)
 
 
 func _on_EnterCode_mouse_exited():
-	$WorldElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-
-func _on_Next_mouse_entered():
-	$WorldElements/Next/MarginContainer/Label.set("theme_override_colors/font_color", green)
-
-
-func _on_Next_mouse_exited():
-	$WorldElements/Next/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-
-func _on_Help_mouse_entered():
-	$WorldElements/Help/MarginContainer/Label.set("theme_override_colors/font_color", green)
-
-
-func _on_Help_mouse_exited():
-	$WorldElements/Help/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-
-func _on_Reset_mouse_entered():
-	$WorldElements/Reset/MarginContainer/Label.set("theme_override_colors/font_color", green)
-
-
-func _on_Reset_mouse_exited():
-	$WorldElements/Reset/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-
-func _on_Start_mouse_entered():
-	$WorldElements/Start/MarginContainer/Label.set("theme_override_colors/font_color", green)
-
-
-func _on_Start_mouse_exited():
-	$WorldElements/Start/MarginContainer/Label.set("theme_override_colors/font_color", grey)
-
-
-func _on_HelpButton_pressed():
-	$WorldElements/HelpMenu/HelpImage.visible = true
-	$WorldElements/HelpMenu.move_to_front()
-
-
-func _on_CloseButton_pressed():
-	$WorldElements/HelpMenu/HelpImage.visible = false
+	$UIElements/Code/MarginContainer/Label.set("theme_override_colors/font_color", grey)
 
 
 func _deg_to_vec2(angle_deg: float) -> Vector2:
@@ -1247,9 +1192,11 @@ class _NextSlotIndicator extends Node2D:
 	var _path_num: int
 	var _glow_time := 0.0
 
+
 	func _init(color: Color, path_num: int) -> void:
 		_color = color
 		_path_num = path_num
+
 
 	func _ready() -> void:
 		# Add an Area2D with a RectangleShape2D so mouse clicks are detected.
@@ -1264,13 +1211,16 @@ class _NextSlotIndicator extends Node2D:
 		add_child(area)
 		area.input_event.connect(_on_area_input_event)
 
+
 	func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			get_parent().place_domino(_path_num)
 
+
 	func _process(delta: float) -> void:
 		_glow_time += delta
 		queue_redraw()
+
 
 	func _draw() -> void:
 		# Slightly smaller than Path.gd indicator (0.85x) to signal "preview/future"

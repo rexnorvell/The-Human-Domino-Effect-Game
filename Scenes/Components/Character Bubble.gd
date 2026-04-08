@@ -4,7 +4,7 @@ var my_player_id = null
 
 
 func _ready() -> void:
-	$Score/Button/Popup.visible = false
+	$Score/Button/Popup.hide()
 
 
 func setup_character(player_id):
@@ -49,8 +49,8 @@ func setup_character(player_id):
 
 
 func _on_Area2D_mouse_entered() -> void:
-	$Score/Button/Popup.visible = true
+	$Score/Button/Popup.popup()
 
 
 func _on_Area2D_mouse_exited() -> void:
-	$Score/Button/Popup.visible = false
+	$Score/Button/Popup.hide()

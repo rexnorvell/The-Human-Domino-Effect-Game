@@ -40,11 +40,19 @@ var self_num = 0
 var selected_domino = null
 var center_num = 0
 var num_placed = 0
-var cpu_hands = {}
-var can_place = true
-var hand_dominos = []
-var path_ends = [0, 0, 0, 0, 0, 0, 0, 0]
-var end_dominos = [null, null, null, null, null, null, null, null]
+var cpu_hands = {} # The Host stores CPU hands here
+var all_player_hands = {}  # Host tracks ALL player hands (human + CPU) for stalemate detection
+var _consecutive_help_count := 0  # Tracks consecutive Help presses without a placement
+var _round_advancing := false  # Re-entrancy guard for next_round() (Bug 3 fix)
+var _stalemate_in_progress := false  # Prevents multiple stalemate triggers per round
+var _game_over := false  # Stops all turn processing after final round
+
+# (Fall 2025) added variables
+var can_place = true # to check if currently selected domino is a double
+var hand_dominos = [] # track dominos in hand numerically
+
+var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
+var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
 var position_table: Array[Vector2] = []
 var prev_domino_size = 0
 var _next_slot_indicators: Array[Node2D] = []
@@ -328,17 +336,18 @@ func _init_players() -> void:
 
 func _on_Start_pressed() -> void:
 	if (SaveManager.loaded_data):
-		for i in range(0, SaveManager.Save["0"].Current_Round):
+		var rounds_to_skip: int = SaveManager.Save["0"].Current_Round
+		for i in range(0, rounds_to_skip):
 			next_round()
 	else:
 		SaveManager.Save["0"].Current_Round = 0
 	
 	randomize_turn()
-		
+	
 	setup_dominos()
 	start_button.queue_free()
 	
-	if (self_num == 0):
+	if multiplayer.is_server():
 		next_button.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
@@ -358,6 +367,7 @@ func setup_dominos():
 	var my_hand = []
 	for i in range(9):
 		my_hand.append(dominos.pop_front())
+	all_player_hands[1] = my_hand.duplicate(true)
 
 	# Deal for Clients and CPUs
 	for p in gamestate.players:
@@ -365,13 +375,16 @@ func setup_dominos():
 			var client_hand = []
 			for i in range(9):
 				client_hand.append(dominos.pop_front())
-				
+
+			# Store ALL player hands on host for stalemate detection (before CPU/human branching)
+			all_player_hands[p] = client_hand.duplicate(true)
+
 			if str(gamestate.players[p]).contains("CPU"):
 				var double_count = 0
 				for d in client_hand:
 					if d[0] == d[1]: double_count += 1
 					if d[0] < d[1]: d.reverse()
-					
+
 				# Reshuffle if 4+ doubles
 				if double_count >= 4:
 					dominos.append_array(client_hand)
@@ -381,8 +394,9 @@ func setup_dominos():
 						var replacement = dominos.pop_front()
 						if replacement[0] < replacement[1]: replacement.reverse()
 						client_hand.append(replacement)
-						
-				cpu_hands[p] = client_hand 
+
+				cpu_hands[p] = client_hand
+				all_player_hands[p] = client_hand.duplicate(true)
 			else:
 				rpc_id(p, "receive_hand", client_hand)
 			
@@ -447,7 +461,7 @@ func rearrange_hand() -> void:
 	var all_nodes = get_tree().get_nodes_in_group("dominos")
 	var unplaced: Array = []
 	for domino in all_nodes:
-		if not domino.placed:
+		if not domino.placed and domino.get_parent() == ui_elements:
 			unplaced.append(domino)
 	# Sort left to right by current x-position to preserve ordering
 	unplaced.sort_custom(func(a, b): return a.position.x < b.position.x)
@@ -457,7 +471,14 @@ func rearrange_hand() -> void:
 	var total_width: float = (hand_count - 1) * HAND_SPACING
 	for i in range(hand_count):
 		var new_pos := Vector2(HAND_CENTER_X + (i * HAND_SPACING) - (total_width / 2.0), HAND_CENTER_Y)
-		unplaced[i].position = new_pos
+		# Bug 2 fix: kill any existing rearrange tween before creating a new one
+		if unplaced[i].has_meta("_rearrange_tween"):
+			var old_tw = unplaced[i].get_meta("_rearrange_tween")
+			if old_tw and old_tw.is_valid():
+				old_tw.kill()
+		var tween: Tween = create_tween()
+		tween.tween_property(unplaced[i], "position", new_pos, 0.2).set_ease(Tween.EASE_OUT)
+		unplaced[i].set_meta("_rearrange_tween", tween)
 		unplaced[i].original_pos = new_pos
 
 # path set-up
@@ -503,6 +524,8 @@ func select_domino(domino) -> bool:
 
 # handles placing of domino onto a path
 func place_domino(num):
+	if _game_over:
+		return
 	_verify_anchors_ready()
 	var flip = false
 	if turn != self_num or !selected_domino:
@@ -525,12 +548,17 @@ func place_domino(num):
 		
 		# CRASH FIX: First domino of the round has no end_dominos[num] yet!
 		if end_dominos[num] == null:
+			rpc("change_path_collision", num, true)
 			if true_bot != path_ends[num]:
 				flip = true
 		else:
 			if true_bot != path_ends[num] or (true_top == path_ends[num] and top_el != end_dominos[num].top_element):
 				flip = true
 			
+		# Bug 4 fix: doubles look identical when flipped — skip visual animation
+		# but keep internal flip state for element tracking (alloy/footprint checks)
+		var visual_flip = flip and (true_top != true_bot)
+
 		# Check for alloy
 		var touching_el = top_el if flip else bot_el
 		if end_dominos[num] != null and end_dominos[num].top_element != touching_el:
@@ -552,39 +580,58 @@ func place_domino(num):
 
 		# Force the domino to initialize correctly so the texture syncs with math
 		selected_domino.init(true_top, true_bot, top_el, bot_el, false)
-		if flip:
-			selected_domino.get_node("Sprite2D").rotation_degrees = 180
-		else:
-			selected_domino.get_node("Sprite2D").rotation_degrees = 0
 
-		# Place locally
-		ui_elements.remove_child(selected_domino)
-		world_elements.add_child(selected_domino)
-		selected_domino.mark_as_placed(PLACED_SCALE)
-		selected_domino.global_position = _path_position_for_step(num, path_step_count[num])
-		_orient_to_path(selected_domino, num)
+		# Capture reference before await — selected_domino can become null during yield
+		var placed_domino = selected_domino
+
+		# Bug 1 fix: UIElements is a CanvasLayer with scale 0.5 — global_position inside it
+		# is in the CanvasLayer's scaled coordinate space, NOT true viewport pixels.
+		# get_global_transform_with_canvas().origin gives the actual viewport position.
+		var viewport_pos = placed_domino.get_global_transform_with_canvas().origin
+
+		# Reparent from UIElements to WorldElements before animating (D-20 pattern)
+		ui_elements.remove_child(placed_domino)
+		world_elements.add_child(placed_domino)
+
+		# Convert viewport position → world position using WorldElements' canvas transform
+		# (which includes Camera2D offset/zoom)
+		placed_domino.global_position = placed_domino.get_canvas_transform().affine_inverse() * viewport_pos
+
+		placed_domino.mark_as_placed(PLACED_SCALE)
+		var target_pos = _path_position_for_step(num, path_step_count[num])
+		var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[num] + ROTATION_OFFSET_DEG)
 		camera.set_drag(false)
+		await _animate_placement(placed_domino, target_pos, visual_flip, target_rot)
 
 		# Update path ends
 		if flip:
 			path_ends[num] = true_bot
-			selected_domino.top_element = bot_el # Store outward element for next domino
+			placed_domino.top_element = bot_el # Store outward element for next domino
 		else:
 			path_ends[num] = true_top
-			selected_domino.top_element = top_el
+			placed_domino.top_element = top_el
 
-		end_dominos[num] = selected_domino
+		end_dominos[num] = placed_domino
 		path_step_count[num] += 1
 		num_placed += 1
-		
+
 		if num == self_num and train_open[self_num]:
 			rpc("set_train_open", self_num, false)
-		
+
 		# Broadcast the exact placement to everyone
 		rpc("update_domino_path", [true_bot, true_top], [bot_el, top_el], position_table[num], num, flip)
 
-		hand_dominos.erase([selected_domino.top_num, selected_domino.bottom_num])
-		hand_dominos.erase([selected_domino.bottom_num, selected_domino.top_num])
+		hand_dominos.erase([placed_domino.top_num, placed_domino.bottom_num])
+		hand_dominos.erase([placed_domino.bottom_num, placed_domino.top_num])
+		if multiplayer.is_server():
+			# Update host tracking: remove placed domino from local player's tracked hand
+			var placed_pair = [placed_domino.top_num, placed_domino.bottom_num]
+			if all_player_hands.has(multiplayer.get_unique_id()):
+				for i in range(all_player_hands[multiplayer.get_unique_id()].size()):
+					var h = all_player_hands[multiplayer.get_unique_id()][i]
+					if (h[0] == placed_pair[0] and h[1] == placed_pair[1]) or (h[0] == placed_pair[1] and h[1] == placed_pair[0]):
+						all_player_hands[multiplayer.get_unique_id()].remove_at(i)
+						break
 		rearrange_hand()
 
 		if true_top == true_bot:
@@ -700,6 +747,10 @@ func increment_total(num):
 
 # display wellness bead popup
 func display_wellness_prompt():
+	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
+	$UIElements/WellnessBeadPopup/Title.text = str(player_name) + " Got a..."
+	$UIElements/WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
+	$UIElements/WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their path and so helped promote community wellness!"
 	$UIElements/WellnessBeadPopup.visible = true
 	camera.set_drag(false)
 
@@ -719,7 +770,8 @@ func display_wellness_prompt():
 	gamestate.alloys[num] = int(get_node(path).text)
 	increment_total(num)
 	
-	$UIElements/AlloyPopup/Title.text = "Alloy Acquired!"
+	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
+	$UIElements/AlloyPopup/Title.text = str(player_name) + " earned an Alloy!"
 	$UIElements/AlloyPopup/Alloy.text = alloy
 	$UIElements/AlloyPopup/Info.text = curriculum.alloy_table[alloy]
 	$UIElements/AlloyPopup.visible = true
@@ -767,26 +819,47 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	var domino = Domino.instantiate()
 	add_child(domino)
 	domino.scale = PLACED_SCALE
-	domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
-	_orient_to_path(domino, path_num)
 
 	var domino_title = str(top_n) + str(bot_n)
 	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
 	domino.init(top_n, bot_n, top_e, bot_e, true)
 	domino.mark_as_placed(PLACED_SCALE)
 
-	# Flawless Flip logic
+	# Per D-02: remote domino slides from placing player's Character Bubble
+	var player_idx = turn  # turn holds the placing player's index at RPC receipt time
+	var bubble_name := "WorldElements/Character Bubble" + str(player_idx + 1)
+	var bubble := get_node_or_null(bubble_name)
+	if bubble:
+		domino.global_position = bubble.global_position
+	else:
+		domino.global_position = _path_position_for_step(path_num, path_step_count[path_num])
+	var target_pos = _path_position_for_step(path_num, path_step_count[path_num])
+	var target_rot = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
+
+	# Flawless Flip logic — path_ends and top_element set before animation
 	if flip:
-		domino.get_node("Sprite2D").rotation_degrees = 180
 		path_ends[path_num] = bot_n
 		domino.top_element = bot_e
 	else:
-		domino.get_node("Sprite2D").rotation_degrees = 0
 		path_ends[path_num] = top_n
 		domino.top_element = top_e
 
+	# Animate slide, rotation, and flip — no await since turn advancement
+	# is controlled by the host, not by this RPC handler
+	_animate_placement(domino, target_pos, flip, target_rot)
+
 	end_dominos[path_num] = domino
 	path_step_count[path_num] += 1
+	_consecutive_help_count = 0
+	if multiplayer.is_server():
+		var sender_id = multiplayer.get_remote_sender_id()
+		if sender_id != 0 and all_player_hands.has(sender_id):
+			# Remove the placed domino from tracked hand using domino_nums [bot, top]
+			for i in range(all_player_hands[sender_id].size()):
+				var h = all_player_hands[sender_id][i]
+				if (h[0] == domino_nums[0] and h[1] == domino_nums[1]) or (h[0] == domino_nums[1] and h[1] == domino_nums[0]):
+					all_player_hands[sender_id].remove_at(i)
+					break
 
 # replace placed domino with one from the deck
 func replace_domino():
@@ -809,11 +882,22 @@ func replace_domino():
 
 # go to next round of play
 @rpc("any_peer") func next_round():
+	# Re-entrancy guard: prevent double-advance (Bug 3 fix)
+	if _round_advancing:
+		return
+	_round_advancing = true
+	_stalemate_in_progress = false  # Reset stalemate flag for new round
 	# show all footprint tiles from this round
 	footprint_tile_ring.show_round(center_num)
 	
+	# Re-enable all paths' collision
+	for i in range(8):
+		change_path_collision(i, false)
+	
 	# remove all old dominos from screen
 	num_placed = 0
+	_consecutive_help_count = 0
+	all_player_hands.clear()
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
 	var group_dominos = get_tree().get_nodes_in_group("dominos")
 	clear_selected_domino()
@@ -822,6 +906,7 @@ func replace_domino():
 
 	# if we've completed round 9, end game
 	if center_num >= 9:
+		_game_over = true
 		add_tower(center_num + 1)
 		turn_label.text = "Game\nOver!"
 		end_label.text = "Winner: " + determine_winner() + "\n(Hover over faces to see stats.)"
@@ -833,6 +918,7 @@ func replace_domino():
 		else:
 			reset_button.visible = false
 		center_num += 1
+		_round_advancing = false
 		return
 	dominos = [] + gamestate.dominos
 	dominos.shuffle()
@@ -845,8 +931,17 @@ func replace_domino():
 	for _i in range(8):
 		path_ends.append(center_num)
 	end_dominos = [null, null, null, null, null, null, null, null]
+	# Per D-07: hide before loading new texture to prevent one-frame flash
+	central_domino.modulate.a = 0.0
+	central_domino.scale = Vector2(0.25, 0.25)
+
+	# load center domino
 	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
 	central_domino.get_node("Sprite2D").texture = load(domino_title)
+	var center_tween: Tween = create_tween().set_parallel(true)
+	center_tween.tween_property(central_domino, "modulate:a", 1.0, 0.4)
+	center_tween.tween_property(central_domino, "scale", Vector2(0.5, 0.5), 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+
 	var center_area := central_domino.get_node_or_null("Area2D")
 	if center_area:
 		center_area.input_pickable = false
@@ -867,6 +962,7 @@ func replace_domino():
 	
 	# Set a new random player's turn
 	randomize_turn()
+	_round_advancing = false
 
 # Evaluates the CPU's hand and returns the best valid move
 func calculate_cpu_move(cpu_id):
@@ -904,13 +1000,69 @@ func calculate_cpu_move(cpu_id):
 					
 	return null
 
+# True stalemate check: returns true if NO player has ANY valid move on ANY accessible path
+# Called on host only. Per D-09, reuses calculate_cpu_move matching logic.
+func _check_stalemate() -> bool:
+	if not multiplayer.is_server():
+		return false
+	for idx in range(sorted_players.size()):
+		var pid = sorted_players[idx]
+		var player_hand = []
+		if all_player_hands.has(pid):
+			player_hand = all_player_hands[pid]
+		elif cpu_hands.has(pid):
+			player_hand = cpu_hands[pid]
+		else:
+			return false  # Unknown hand, assume not stuck
+		if player_hand.size() == 0:
+			continue  # No dominos left, can't move but not blocking
+		for domino_pair in player_hand:
+			# Check personal path
+			if domino_pair[0] == path_ends[idx] or domino_pair[1] == path_ends[idx]:
+				return false
+			# Check open trains (other player paths)
+			for p_idx in range(6):
+				if p_idx != idx and train_open[p_idx]:
+					if domino_pair[0] == path_ends[p_idx] or domino_pair[1] == path_ends[p_idx]:
+						return false
+			# Check sun paths (indices 6 and 7)
+			for sun_idx in [6, 7]:
+				if domino_pair[0] == path_ends[sun_idx] or domino_pair[1] == path_ends[sun_idx]:
+					return false
+	return true
+
+func _trigger_stalemate() -> void:
+	if not multiplayer.is_server():
+		return
+	if _stalemate_in_progress:
+		return
+	_stalemate_in_progress = true
+	rpc("show_stalemate_popup")
+
+@rpc("authority", "call_local") func show_stalemate_popup():
+	$UIElements/StalematePopup.visible = true
+	next_button.visible = false  # Prevent Next press during stalemate auto-advance
+	await get_tree().create_timer(3.0).timeout
+	$UIElements/StalematePopup.visible = false
+	next_round()
+	_stalemate_in_progress = false  # Reset so future rounds can detect stalemate
+	if multiplayer.is_server() and center_num <= 9:
+		setup_dominos()
+	# Re-show Next button for the host after auto-advance completes
+	if multiplayer.is_server():
+		next_button.visible = true
+
 @rpc("any_peer") func sync_turn(new_turn):
 	turn = new_turn
 	_update_turn_label()
 
 @rpc("any_peer") func advance_turn():
+	if _game_over:
+		return
 	turn = (turn + 1) % len(gamestate.players)
 	_update_turn_label()
+	if multiplayer.is_server() and _check_stalemate():
+		_trigger_stalemate()
 
 func _update_turn_label():
 	var current_player_id = sorted_players[turn]
@@ -919,15 +1071,37 @@ func _update_turn_label():
 	turn_label.text = current_name + "'s Turn"
 	# Only show the "Need Help" button if it is currently YOUR turn
 	help_button.visible = (turn == self_num)
-	
+
+	# Per D-14: toggle active player bubble glow
+	for i in range(sorted_players.size()):
+		var bubble := get_node_or_null("WorldElements/Character Bubble" + str(i + 1))
+		if bubble and bubble.has_method("set_active_glow"):
+			bubble.set_active_glow(i == turn)
+
+
 	# CPU TURN AUTOMATION (HOST ONLY)
-	if str(current_name).contains("CPU") and multiplayer.is_server():
+	if not _game_over and str(current_name).contains("CPU") and multiplayer.is_server():
 		_execute_cpu_turn_async(current_player_id)
+
+
+@rpc("any_peer", "call_local", "reliable")
+func change_path_collision(index: int, is_disabled: bool) -> void:
+	var path: Sprite2D
+	if index < 6:
+		path = world_elements.get_node("Path" + str(index + 1))
+	elif index == 6:
+		path = world_elements.get_node("SunrisePath")
+	elif index == 7:
+		path = world_elements.get_node("SunsetPath")
+	if index != null:
+		path.disable(is_disabled)
+
 
 # The async function handles the CPU playing the domino
 func _execute_cpu_turn_async(cpu_id):
-	await get_tree().create_timer(1.5).timeout 
-	if sorted_players[turn] != cpu_id: return 
+	await get_tree().create_timer(1.5).timeout
+	if _game_over: return
+	if sorted_players[turn] != cpu_id: return
 	
 	var move = calculate_cpu_move(cpu_id)
 	var my_path_idx = sorted_players.find(cpu_id)
@@ -943,6 +1117,7 @@ func _execute_cpu_turn_async(cpu_id):
 		
 		# CRASH FIX: First piece of the round
 		if end_dominos[move.path_idx] == null:
+			rpc("change_path_collision", move.path_idx, true)
 			if true_bot != path_ends[move.path_idx]:
 				flip = true
 		else:
@@ -967,14 +1142,19 @@ func _execute_cpu_turn_async(cpu_id):
 			display_wellness_prompt()
 			
 		cpu_hands[cpu_id].remove_at(move.hand_idx)
-		
+		if all_player_hands.has(cpu_id):
+			all_player_hands[cpu_id].remove_at(move.hand_idx)
+
 		if move.path_idx == my_path_idx and train_open[my_path_idx]:
 			rpc("set_train_open", my_path_idx, false)
 			set_train_open(my_path_idx, false)
 			
 		rpc("update_domino_path", [true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
 		update_domino_path([true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
-		
+
+		# Per D-03: wait for slide animation to complete before continuing
+		await get_tree().create_timer(0.35).timeout
+
 		# POPUP PAUSE LOGIC
 		while $UIElements/AlloyPopup.visible or $UIElements/FootprintTilePopup.visible or $UIElements/WellnessBeadPopup.visible:
 			await get_tree().process_frame
@@ -992,6 +1172,8 @@ func _execute_cpu_turn_async(cpu_id):
 
 # handle when next round button pressed by host
 func _on_Next_pressed() -> void:
+	if _game_over:
+		return
 	# reset field for host
 	next_round()
 	can_place = true
@@ -1031,30 +1213,43 @@ func intialize_tower():
 	$WorldElements/Tower/Sprite2D/Humanities.visible = false
 	$WorldElements/Tower/Sprite2D/Diamond.visible = false
 
+# Per D-08: fade-in a tower layer node instead of instant visible
+func _animate_tower_layer(node: Node) -> void:
+	node.visible = true
+	node.modulate.a = 0.0
+	var tween: Tween = create_tween()
+	tween.tween_property(node, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_IN)
+
 # Display tower
 func add_tower(round_num):
 	if round_num == 6:
-		$WorldElements/Tower/Sprite2D/Energy.visible = true
-		$WorldElements/Tower/Sprite2D/Stability.visible = true
-		$WorldElements/Tower/Sprite2D/Prepared_Enviroment.visible = true
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Energy)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Stability)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Prepared_Enviroment)
 	elif round_num == 7:
-		$WorldElements/Tower/Sprite2D/Ability.visible = true
-		$WorldElements/Tower/Sprite2D/Responsibility.visible = true
-		$WorldElements/Tower/Sprite2D/Perception.visible = true
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Ability)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Responsibility)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Perception)
 	elif round_num == 8:
-		$WorldElements/Tower/Sprite2D/Resilience.visible = true
-		$WorldElements/Tower/Sprite2D/Relationship.visible = true
-		$WorldElements/Tower/Sprite2D/Discernment.visible = true
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Resilience)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Relationship)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Discernment)
 	elif round_num == 9:
-		$WorldElements/Tower/Sprite2D/Arts.visible = true
-		$WorldElements/Tower/Sprite2D/Sciences.visible = true
-		$WorldElements/Tower/Sprite2D/Humanities.visible = true
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Arts)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Sciences)
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Humanities)
 	elif round_num == 10:
-		$WorldElements/Tower/Sprite2D/Diamond.visible = true
+		_animate_tower_layer($WorldElements/Tower/Sprite2D/Diamond)
 
 func _on_Help_pressed() -> void:
 	if turn == self_num:
 		rpc("set_train_open", self_num, true)
+		_consecutive_help_count += 1
+		# Check consecutive help BEFORE advance_turn to avoid double-triggering stalemate.
+		# advance_turn() also checks _check_stalemate(), so only one path should fire.
+		if multiplayer.is_server() and _consecutive_help_count >= len(sorted_players):
+			_trigger_stalemate()
+			return
 		rpc("advance_turn")
 		advance_turn()
 		can_place = true
@@ -1170,6 +1365,24 @@ func _path_position_for_step(path_num: int, step_index: int) -> Vector2:
 func _orient_to_path(domino: Node2D, path_num: int) -> void:
 	domino.rotation = deg_to_rad(PATH_ANGLE_DEGREES[path_num] + ROTATION_OFFSET_DEG)
 
+# Animate a domino sliding to its target position, with optional flip.
+# Per D-01/D-04: slide is 0.3s ease-out, flip is 0.2s parallel with slide.
+# Per D-06: caller must await this function before advancing turn.
+func _animate_placement(domino: Node2D, target_pos: Vector2, flip: bool, target_rotation: float = -999.0) -> void:
+	# Kill any active rearrange tween to prevent position/global_position conflicts
+	if domino.has_meta("_rearrange_tween"):
+		var old_tween = domino.get_meta("_rearrange_tween")
+		if old_tween and old_tween.is_valid():
+			old_tween.kill()
+		domino.remove_meta("_rearrange_tween")
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(domino, "global_position", target_pos, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	if target_rotation != -999.0:
+		tween.tween_property(domino, "rotation", target_rotation, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	if flip:
+		tween.tween_property(domino.get_node("Sprite2D"), "rotation_degrees", 180.0, 0.2)
+	await tween.finished
 
 func _verify_anchors_ready():
 	if position_table.size() != 8:

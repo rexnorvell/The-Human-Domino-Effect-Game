@@ -20,6 +20,11 @@ var selected_domino = null  # currently selected domino
 var center_num = 0  # current round number
 var num_placed = 0
 
+# Stalemate detection (per D-15: mirrors DominoWorld.gd, simplified for single-player)
+var all_player_hands = {}
+var _consecutive_help_count := 0
+var _stalemate_active := false  # Guards $Turn label during stalemate display
+
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0]  # last number on domino chain in each path
 var end_dominos = [null, null, null, null, null, null, null, null]  # last domino on domino chain in each path
 
@@ -162,9 +167,14 @@ func setup_dominos():
 
 # initialize 7 dominos from main deck on player's screen
 func draw_7():
+	var my_id = get_tree().get_unique_id()
+	if not all_player_hands.has(my_id):
+		all_player_hands[my_id] = []
 	for i in range(9):
 		# get domino info
 		var domino_nums = draw_domino()
+		# Track hand numerically for stalemate detection (D-25)
+		all_player_hands[my_id].append([domino_nums[0], domino_nums[1]])
 		var domino = Domino.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
 		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
@@ -283,9 +293,26 @@ func place_domino(num):
 			placed_domino_offset[num] = placed_domino_offset[num] + Vector2(160, -176)
 
 			num_placed += 1
+			_consecutive_help_count = 0
+
+			# Update all_player_hands: remove placed domino from tracker (D-25)
+			var placing_pid = sorted_players[self_num]
+			if all_player_hands.has(placing_pid):
+				for i in range(all_player_hands[placing_pid].size()):
+					var h = all_player_hands[placing_pid][i]
+					if (h[0] == selected_domino.top_num and h[1] == selected_domino.bottom_num) \
+					or (h[0] == selected_domino.bottom_num and h[1] == selected_domino.top_num):
+						all_player_hands[placing_pid].remove_at(i)
+						break
 
 			turn = (turn + 1) % len(gamestate.players)
-			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+			if not _stalemate_active:
+				$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+
+			# True stalemate check after turn advancement (D-25)
+			if _check_stalemate():
+				_trigger_stalemate()
+				return
 
 			# if helped another player on their path, get a wellness bead
 			if num < 6 and get_node("Path3D" + str(num + 1)).temp == true:
@@ -410,7 +437,8 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 
 	# change turn
 	turn = (turn + 1) % len(gamestate.players)
-	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+	if not _stalemate_active:
+		$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 
 
 # replace placed domino with one from the deck
@@ -440,8 +468,11 @@ func replace_domino():
 	
 	# remove all old dominos from screen
 	num_placed = 0
+	_consecutive_help_count = 0
+	_stalemate_active = false
+	all_player_hands.clear()
 	placed_domino_offset = [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0),
-							Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), 
+							Vector2(0, 0), Vector2(0, 0), Vector2(0, 0),
 							Vector2(0, 0), Vector2(0, 0)]
 	var group_dominos = get_tree().get_nodes_in_group("dominos")
 	clear_selected_domino()
@@ -541,20 +572,64 @@ func add_tower(round_num):
 	elif round_num == 10:
 		$Tower/Sprite2D/Diamond.visible = true
 
+# True stalemate check: returns true if NO player has ANY valid move on ANY accessible path
+# Tutorial is single-player only — no multiplayer.is_server() guard needed
+# Falls back gracefully if all_player_hands is not populated (returns false = no stalemate)
+func _check_stalemate() -> bool:
+	for idx in range(sorted_players.size()):
+		var pid = sorted_players[idx]
+		var player_hand = []
+		if all_player_hands.has(pid):
+			player_hand = all_player_hands[pid]
+		else:
+			return false
+		if player_hand.size() == 0:
+			continue
+		for domino_pair in player_hand:
+			if domino_pair[0] == path_ends[idx] or domino_pair[1] == path_ends[idx]:
+				return false
+			for p_idx in range(6):
+				if p_idx != idx and get_node_or_null("Path3D" + str(p_idx + 1)) and get_node("Path3D" + str(p_idx + 1)).visible:
+					if domino_pair[0] == path_ends[p_idx] or domino_pair[1] == path_ends[p_idx]:
+						return false
+			for sun_idx in [6, 7]:
+				if domino_pair[0] == path_ends[sun_idx] or domino_pair[1] == path_ends[sun_idx]:
+					return false
+	return true
+
+# Stalemate trigger (simplified — no RPC, tutorial is single-player)
+# Uses _stalemate_active flag to prevent $Turn label overwrite during 3s display
+func _trigger_stalemate() -> void:
+	_stalemate_active = true
+	$Turn.text = "Stalemate!\nNext Round..."
+	await get_tree().create_timer(3.0).timeout
+	_stalemate_active = false
+	_on_Next_pressed()
+
 # if player cannot play a domino on their paths
 func _on_Help_pressed() -> void:
 	if turn == self_num:
+		_consecutive_help_count += 1
 		# add their path to everyone else's screen
 		rpc("add_path", self_num + 1)
 		# change turn
 		turn = (turn + 1) % len(gamestate.players)
-		$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+		if not _stalemate_active:
+			$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+		# Per D-15: behavioral stalemate — all players pressed Help in one rotation
+		if _consecutive_help_count >= len(sorted_players):
+			_trigger_stalemate()
+			return
+		# True stalemate check after Help turn advance (D-25)
+		if _check_stalemate():
+			_trigger_stalemate()
 
 # add player's path denoted by num to all player's screens
 @rpc("any_peer") func add_path(num):
 	turn = (turn + 1) % len(gamestate.players)
-	$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
+	if not _stalemate_active:
+		$Turn.text = gamestate.players[sorted_players[turn]] + "'s\nTurn"
 	get_node("Path3D" + str(num)).visible = true
 
 # remove player's path denoted by num from all player's screens

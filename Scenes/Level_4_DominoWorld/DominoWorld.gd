@@ -346,7 +346,7 @@ func _on_Start_pressed() -> void:
 	setup_dominos()
 	start_button.queue_free()
 	
-	if (self_num == 0):
+	if multiplayer.is_server():
 		next_button.visible = true
 		
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
@@ -580,17 +580,18 @@ func place_domino(num):
 		# Capture reference before await — selected_domino can become null during yield
 		var placed_domino = selected_domino
 
-		# Bug 1 fix: UIElements is a CanvasLayer (screen coords), WorldElements uses world coords.
-		# Save screen position before reparenting, then convert to world coords after.
-		var screen_pos = placed_domino.global_position
+		# Bug 1 fix: UIElements is a CanvasLayer with scale 0.5 — global_position inside it
+		# is in the CanvasLayer's scaled coordinate space, NOT true viewport pixels.
+		# get_global_transform_with_canvas().origin gives the actual viewport position.
+		var viewport_pos = placed_domino.get_global_transform_with_canvas().origin
 
 		# Reparent from UIElements to WorldElements before animating (D-20 pattern)
 		ui_elements.remove_child(placed_domino)
 		world_elements.add_child(placed_domino)
 
-		# Bug 1 fix: convert screen coords → world coords using the canvas transform
-		# (which includes Camera2D offset/zoom for the default canvas layer)
-		placed_domino.global_position = placed_domino.get_canvas_transform().affine_inverse() * screen_pos
+		# Convert viewport position → world position using WorldElements' canvas transform
+		# (which includes Camera2D offset/zoom)
+		placed_domino.global_position = placed_domino.get_canvas_transform().affine_inverse() * viewport_pos
 
 		placed_domino.mark_as_placed(PLACED_SCALE)
 		var target_pos = _path_position_for_step(num, path_step_count[num])

@@ -43,6 +43,7 @@ var num_placed = 0
 var cpu_hands = {} # The Host stores CPU hands here
 var all_player_hands = {}  # Host tracks ALL player hands (human + CPU) for stalemate detection
 var _consecutive_help_count := 0  # Tracks consecutive Help presses without a placement
+var _round_advancing := false  # Re-entrancy guard for next_round() (Bug 3 fix)
 
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
@@ -333,7 +334,8 @@ func _init_players() -> void:
 
 func _on_Start_pressed() -> void:
 	if (SaveManager.loaded_data):
-		for i in range(0, SaveManager.Save["0"].Current_Round):
+		var rounds_to_skip: int = SaveManager.Save["0"].Current_Round
+		for i in range(0, rounds_to_skip):
 			next_round()
 	else:
 		SaveManager.Save["0"].Current_Round = 0
@@ -863,6 +865,10 @@ func replace_domino():
 
 # go to next round of play
 @rpc("any_peer") func next_round():
+	# Re-entrancy guard: prevent double-advance (Bug 3 fix — _round_advancing flag)
+	if _round_advancing:
+		return
+	_round_advancing = true
 	# show all footprint tiles from this round
 	footprint_tile_ring.show_round(center_num)
 	
@@ -889,6 +895,7 @@ func replace_domino():
 		else:
 			reset_button.visible = false
 		center_num += 1
+		_round_advancing = false
 		return
 	dominos = [] + gamestate.dominos
 	dominos.shuffle()
@@ -932,6 +939,7 @@ func replace_domino():
 	
 	# Set a new random player's turn
 	randomize_turn()
+	_round_advancing = false
 
 # Evaluates the CPU's hand and returns the best valid move
 func calculate_cpu_move(cpu_id):
@@ -1007,6 +1015,7 @@ func _trigger_stalemate() -> void:
 
 @rpc("authority", "call_local") func show_stalemate_popup():
 	$UIElements/StalematePopup.visible = true
+	next_button.visible = false  # Prevent Next press during stalemate auto-advance (Bug 3 fix)
 	await get_tree().create_timer(3.0).timeout
 	$UIElements/StalematePopup.visible = false
 	# All peers call next_round() locally — show_stalemate_popup already runs on

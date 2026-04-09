@@ -35,7 +35,7 @@ var tower = load(ReferenceManager.get_reference("Tower.gd"))
 var sorted_players = []
 var turn = 0
 var hand = []
-var dominos = [] + gamestate.dominos
+var dominos = gamestate.dominos.duplicate(true)
 var self_num = 0
 var selected_domino = null
 var center_num = 0
@@ -58,6 +58,7 @@ var prev_domino_size = 0
 var _next_slot_indicators: Array[Node2D] = []
 var bonusWords = ["Bonus", "Bonus2"]
 var usedBonus = ["ABC123"]
+var placement_history = []
 
 
 func _ready() -> void:
@@ -73,6 +74,10 @@ func _ready() -> void:
 	if center_area:
 		center_area.input_pickable = false
 		center_area.monitoring = false
+		
+	if gamestate.is_hot_joining:
+		gamestate.is_hot_joining = false
+		rpc_id(1, "request_full_state_sync")
 
 # Sets up and resolves players and their resulting nodes
 func _init_players() -> void:
@@ -353,7 +358,7 @@ func _on_Start_pressed() -> void:
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
 func randomize_turn():
-	turn = randi() % gamestate.players.size()
+	turn = randi() % sorted_players.size()
 	rpc("sync_turn", turn)
 	sync_turn(turn)
 
@@ -620,6 +625,7 @@ func place_domino(num):
 
 		# Broadcast the exact placement to everyone
 		rpc("update_domino_path", [true_bot, true_top], [bot_el, top_el], position_table[num], num, flip)
+		placement_history.append([[true_bot, true_top], [bot_el, top_el], position_table[num], num, flip])
 
 		hand_dominos.erase([placed_domino.top_num, placed_domino.bottom_num])
 		hand_dominos.erase([placed_domino.bottom_num, placed_domino.top_num])
@@ -646,6 +652,13 @@ func place_domino(num):
 			rpc("advance_turn")
 			advance_turn()
 			can_place = true
+			
+		if hand_dominos.size() == 0:
+			# Automatically synchronize next round when hand is empty!
+			if multiplayer.is_server():
+				_host_force_next_round()
+			else:
+				rpc_id(1, "_host_force_next_round")
 
 @rpc("any_peer", "call_local") func set_train_open(num: int, is_open: bool):
 	train_open[num] = is_open
@@ -898,6 +911,7 @@ func replace_domino():
 	num_placed = 0
 	_consecutive_help_count = 0
 	all_player_hands.clear()
+	placement_history.clear()
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
 	var group_dominos = get_tree().get_nodes_in_group("dominos")
 	clear_selected_domino()
@@ -920,7 +934,7 @@ func replace_domino():
 		center_num += 1
 		_round_advancing = false
 		return
-	dominos = [] + gamestate.dominos
+	dominos = gamestate.dominos.duplicate(true)
 	dominos.shuffle()
 	center_num += 1
 	SaveManager.Save["0"].Current_Round += 1
@@ -960,8 +974,9 @@ func replace_domino():
 				for child in get_children():
 					print("Found child node: ", child.name)
 	
-	# Set a new random player's turn
-	randomize_turn()
+	# Set a new random player's turn natively on the host
+	if multiplayer.is_server():
+		randomize_turn()
 	_round_advancing = false
 
 # Evaluates the CPU's hand and returns the best valid move
@@ -1046,8 +1061,6 @@ func _trigger_stalemate() -> void:
 	$UIElements/StalematePopup.visible = false
 	next_round()
 	_stalemate_in_progress = false  # Reset so future rounds can detect stalemate
-	if multiplayer.is_server() and center_num <= 9:
-		setup_dominos()
 	# Re-show Next button for the host after auto-advance completes
 	if multiplayer.is_server():
 		next_button.visible = true
@@ -1059,7 +1072,7 @@ func _trigger_stalemate() -> void:
 @rpc("any_peer") func advance_turn():
 	if _game_over:
 		return
-	turn = (turn + 1) % len(gamestate.players)
+	turn = (turn + 1) % sorted_players.size()
 	_update_turn_label()
 	if multiplayer.is_server() and _check_stalemate():
 		_trigger_stalemate()
@@ -1150,6 +1163,7 @@ func _execute_cpu_turn_async(cpu_id):
 			set_train_open(my_path_idx, false)
 			
 		rpc("update_domino_path", [true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
+		placement_history.append([[true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip])
 		update_domino_path([true_bot, true_top], [bot_e, top_e], position_table[move.path_idx], move.path_idx, flip)
 
 		# Per D-03: wait for slide animation to complete before continuing
@@ -1174,20 +1188,19 @@ func _execute_cpu_turn_async(cpu_id):
 func _on_Next_pressed() -> void:
 	if _game_over:
 		return
-	# reset field for host
-	next_round()
+		
 	can_place = true
 	help_button.visible = false
-
-	# reset field for everyone else
-	for p in gamestate.players:
-		if p != 1:
-			rpc_id(p, "next_round")
-
-	# get new dominos from deck
-	if center_num <= 9:
-		setup_dominos()
-		SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
+	
+	if multiplayer.is_server():
+		# Simply broadcast the network refresh exactly once to all peers organically
+		rpc("next_round")
+		next_round()
+		
+		# get new dominos from deck
+		if center_num <= 9:
+			setup_dominos()
 
 func _on_Reset_pressed() -> void:
 	if multiplayer.is_server():
@@ -1447,3 +1460,67 @@ class _NextSlotIndicator extends Node2D:
 		var line_width := 35.0
 		draw_rect(rect, glow_color, false, line_width + 20.0)
 		draw_rect(rect, Color(_color.r, _color.g, _color.b, 0.5), false, line_width)
+
+@rpc("any_peer", "call_local") func request_full_state_sync():
+	if multiplayer.is_server():
+		var id = multiplayer.get_remote_sender_id()
+		var state = {
+			"center_num": center_num,
+			"turn": turn,
+			"sorted_players": sorted_players.duplicate(true),
+			"path_ends": path_ends.duplicate(true),
+			"train_open": train_open.duplicate(true),
+			"can_place": can_place,
+			"num_placed": num_placed,
+			"dominos": dominos.duplicate(true),
+			"placement_history": placement_history.duplicate(true),
+			"hand": all_player_hands[id].duplicate(true) if all_player_hands.has(id) else []
+		}
+		rpc_id(id, "receive_full_state_sync", state)
+
+@rpc("authority", "call_local") func receive_full_state_sync(state: Dictionary):
+	center_num = state["center_num"]
+	turn = state["turn"]
+	if state.has("sorted_players"):
+		sorted_players = state["sorted_players"]
+		
+		# Important: Recalculate our physical body-index so Hot Joiners don't permanently permanently 
+		# maintain the scrambled `.sort()` values initialized tentatively during `_ready()`
+		self_num = sorted_players.find(multiplayer.get_unique_id())
+		
+	path_ends = [center_num, center_num, center_num, center_num, center_num, center_num, center_num, center_num]
+	train_open = state["train_open"]
+	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
+	can_place = state["can_place"]
+	num_placed = state["num_placed"]
+	dominos = state["dominos"]
+	placement_history = state["placement_history"]
+	
+	_update_turn_label()
+	
+	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
+	central_domino.get_node("Sprite2D").texture = load(domino_title)
+	central_domino.modulate.a = 1.0
+	central_domino.scale = Vector2(0.5, 0.5)
+	
+	for i in range(8):
+		_update_train_indicator(i, train_open[i])
+	footprint_tile_ring.show_round(center_num)
+	add_tower(center_num)
+		
+	for args in state["placement_history"]:
+		update_domino_path(args[0], args[1], args[2], args[3], args[4])
+		
+	if typeof(state["hand"]) == TYPE_ARRAY and state["hand"].size() > 0:
+		render_hand(state["hand"])
+
+@rpc("any_peer") func _host_force_next_round():
+	if multiplayer.is_server():
+		rpc("next_round")
+		next_round()
+		if center_num <= 9:
+			setup_dominos()
+		
+	next_button.visible = false
+	if is_instance_valid(start_button):
+		start_button.queue_free()

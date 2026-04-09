@@ -14,7 +14,7 @@ var sorted_players = []
 
 var turn = 0  # whose turn is it, indexed from 0 on
 var hand = []
-var dominos = [] + gamestate.dominos
+var dominos = gamestate.dominos.duplicate(true)
 var self_num = 0  # player's number, indexed from 1 on
 var selected_domino = null  # currently selected domino
 var center_num = 0  # current round number
@@ -490,7 +490,7 @@ func replace_domino():
 		return
 
 	# randomize dominos
-	dominos = [] + gamestate.dominos
+	dominos = gamestate.dominos.duplicate(true)
 	dominos.shuffle()
 
 	# increment round number

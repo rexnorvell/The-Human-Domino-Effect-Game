@@ -183,7 +183,7 @@ func _connected_fail():
 	emit_signal("connection_failed")
 
 # Lobby management functions.
-@rpc("any_peer", "call_local") func register_player(new_player_name,cpunum):
+@rpc("any_peer", "call_local") func register_player(new_player_name, cpunum):
 	var id = multiplayer.get_remote_sender_id()
 	
 	if id == 0:
@@ -201,6 +201,8 @@ func _connected_fail():
 				rpc_id(id, "join_accepted")
 	
 	id += cpunum
+	if players.has(id):
+		return
 	var CharacterFound = false
 	players[id] = new_player_name
 	if(SaveManager.loaded_data):
@@ -305,8 +307,6 @@ func host_single_player(new_player_name):
 	# Set MAX_PEERS to 1 since it's singleplayer
 	peer.create_server(0, 1) 
 	multiplayer.multiplayer_peer = peer
-	
-	var id = multiplayer.get_unique_id()
 	rpc("register_player", player_name, 0)
 
 func host_game(new_player_name) -> Error:

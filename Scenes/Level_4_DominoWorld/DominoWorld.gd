@@ -1003,7 +1003,7 @@ func calculate_cpu_move(cpu_id):
 # True stalemate check: returns true if NO player has ANY valid move on ANY accessible path
 # Called on host only. Per D-09, reuses calculate_cpu_move matching logic.
 func _check_stalemate() -> bool:
-	if not multiplayer.is_server():
+	if multiplayer != null and not multiplayer.is_server():
 		return false
 	for idx in range(sorted_players.size()):
 		var pid = sorted_players[idx]

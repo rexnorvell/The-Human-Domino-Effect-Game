@@ -84,7 +84,7 @@ func _on_join_accepted():
 	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
 		ip = str(local_ip)
-		
+	
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
 	
@@ -97,7 +97,15 @@ func _on_join_accepted():
 	refresh_lobby()
 	await get_tree().process_frame
 	
+	# Set icon
+	var player_id = multiplayer.get_unique_id()
+	if player_id in gamestate.player_icon:
+		selected_icon = gamestate.player_icon[player_id]
+		gamestate.player_icon.erase(player_id)
+	else:
+		pick_random_icon()
 	set_player_icon(selected_icon)
+	
 	_update_start_button_state()
 
 
@@ -133,10 +141,7 @@ func refresh_lobby():
 	for p in players:
 		var index = item_list.add_item(p)
 		item_list.set_item_tooltip(index, " ")
-
-	# Ensure Start button is visible and properly configured
 	_update_start_button_state()
-	
 	if multiplayer.is_server():
 		rpc("sync_all_icons", gamestate.player_icon)
 
@@ -166,13 +171,18 @@ func handle_level(level):
 		_on_game_error("Port already in use. Cannot host.")
 		return
 	
+	# Assign an icon
+	var player_id = multiplayer.get_unique_id()
+	if player_id in gamestate.player_icon:
+		selected_icon = gamestate.player_icon[player_id]
+		gamestate.player_icon.erase(player_id)
+	else:
+		pick_random_icon()
+	set_player_icon(selected_icon)
+	
 	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
-	await get_tree().process_frame
-	await get_tree().process_frame
-	
-	refresh_lobby()
 	await get_tree().process_frame
 	
 	_update_start_button_state()
@@ -223,7 +233,6 @@ func _update_start_button_state() -> void:
 func _on_icon_selected(icon_name: String) -> void:
 	selected_icon = icon_name
 	set_player_icon(icon_name)
-	_highlight_selected_icon()
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 	_update_start_button_state()
 
@@ -232,13 +241,12 @@ func set_player_icon(icon_name: String):
 	var player_id = multiplayer.get_unique_id()
 	if player_id in gamestate.players:
 		gamestate.player_icon[player_id] = icon_name
-		_highlight_selected_icon()
-		# Sync with other players if multiplayer
 		if multiplayer.multiplayer_peer != null:
 			if multiplayer.is_server():
 				rpc("sync_player_icon", player_id, icon_name)
 			else:
 				rpc_id(1, "sync_player_icon", player_id, icon_name)
+	_highlight_selected_icon()
 
 
 @rpc("any_peer") func sync_player_icon(player_id: int, icon_name: String):
@@ -247,6 +255,11 @@ func set_player_icon(icon_name: String):
 		for peer in multiplayer.get_peers():
 			if peer != player_id: # Don't echo it back to the client who just sent it
 				rpc_id(peer, "sync_player_icon", player_id, icon_name)
+	_highlight_selected_icon()
+
+
+@rpc("any_peer", "call_local") func sync_all_icons(full_icon_dict: Dictionary):
+	gamestate.player_icon = full_icon_dict.duplicate()
 	_highlight_selected_icon()
 
 
@@ -263,6 +276,7 @@ func _highlight_selected_icon() -> void:
 			else:
 				button.set_is_available(true)
 		else:
+			button.set_is_available(true)
 			if !button.get_is_selected():
 				button.press()
 
@@ -274,19 +288,12 @@ func get_button_from_icon_name(icon_name: String) -> PlayerIconButton:
 	return null
 
 
-@rpc("any_peer", "call_local") func sync_all_icons(full_icon_dict: Dictionary):
-	# Update local dictionary to match the host
-	gamestate.player_icon = full_icon_dict
-	var my_id = multiplayer.get_unique_id()
-	
-	# If I haven't picked an icon yet, pick a random unique one
-	if not gamestate.player_icon.has(my_id):
-		var available = _get_available_icons()
-		if available.size() > 0:
-			selected_icon = available.pick_random()
-		else:
-			selected_icon = "basket.png"
-		set_player_icon(selected_icon)
+func pick_random_icon() -> void:
+	var available = _get_available_icons()
+	if available.size() > 0:
+		selected_icon = available.pick_random()
+	else:
+		selected_icon = "basket.png"
 
 
 func _get_available_icons() -> Array[String]:
@@ -331,5 +338,4 @@ func _on_Start_Button_pressed():
 	if selected_icon == null or selected_icon == "":
 		print("ERROR: Cannot start game - no icon selected!")
 		return
-	print("Start button pressed! Selected icon: ", selected_icon)
 	gamestate.begin_game()

@@ -64,6 +64,7 @@ func _on_focus_exited():
 	if !disabled:
 		animate_background(DEFAULT_BACKGROUND_COLOR)
 
+
 func _update_border_colors():
 	if animated_style:
 		animated_style.border_color = border_color

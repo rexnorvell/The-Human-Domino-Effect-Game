@@ -48,6 +48,9 @@ _data = {
 
 [sub_resource type="FontFile" id="8"]
 fallbacks = Array[Font]([ExtResource("6")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/variation_coordinates = {}
 cache/0/face_index = 0
 cache/0/embolden = 0.0
@@ -301,6 +304,9 @@ _data = {
 
 [sub_resource type="FontFile" id="12"]
 fallbacks = Array[Font]([ExtResource("6")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/variation_coordinates = {}
 cache/0/face_index = 0
 cache/0/embolden = 0.0
@@ -488,7 +494,7 @@ text = "Host"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1525464109]
 layout_mode = 2
 theme_override_constants/separation = 20
 

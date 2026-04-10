@@ -27,6 +27,7 @@ func _ready():
 	gamestate.connect("player_list_changed", Callable(self, "refresh_lobby"))
 	gamestate.connection_failed.connect(_on_connection_failed)
 	gamestate.join_accepted_signal.connect(_on_join_accepted)
+	gamestate.hot_join_accepted_signal.connect(_on_hot_join_accepted)
 	gamestate.game_error.connect(_on_game_error)
 	
 	# Listen for the back button being clicked so we can cleanly disconnect
@@ -107,6 +108,15 @@ func _on_join_accepted():
 	set_player_icon(selected_icon)
 	
 	_update_start_button_state()
+
+func _on_hot_join_accepted():
+	set_error_label("")
+	
+	# Assume DominoWorld as the first level for a hot join
+	gamestate.first_level = "DominoWorld"
+	
+	var world = load("res://Scenes/Core/Manager.tscn")
+	get_tree().change_scene_to_packed(world)
 
 
 func _on_connection_failed():

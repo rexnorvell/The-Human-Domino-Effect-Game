@@ -150,7 +150,10 @@ signal connection_failed()
 signal game_ended()
 signal game_error(what)
 signal join_accepted_signal
+signal hot_join_accepted_signal
+
 var game_in_progress = false
+var is_hot_joining = false
 
 # Callback from SceneTree.
 func _player_connected(_id):
@@ -164,10 +167,29 @@ func _player_connected(_id):
 
 # Callback from SceneTree.
 func _player_disconnected(id):
-	if has_node("/root/World"): # Game is in progress.
-		if multiplayer.is_server():
-			emit_signal("game_error", "Player " + players[id] + " disconnected")
-			end_game()
+	if has_node("/root/Manager"): # Game is in progress.
+		if multiplayer.is_server() and players.has(id):
+			# Turn the dropped player into a CPU
+			var original_name = players[id]
+			if not str(original_name).contains("CPU"):
+				var cpu_name = original_name + " (CPU)"
+				
+				# Generate a protected negative integer ID so Native ENet doesn't recycle this ID onto a new player later!
+				var safe_cpu_id = -(id + 1000)
+				rpc("sync_player_id_change", id, safe_cpu_id, cpu_name)
+				
+				# Map CPU hands first BEFORE sending the RPC (so AI logic is ready)
+				var manager = get_node_or_null("/root/Manager")
+				if manager != null and "current_level" in manager:
+					var world = manager.current_level
+					if world != null:
+						if "all_player_hands" in world and world.all_player_hands.has(safe_cpu_id):
+							if "cpu_hands" in world:
+								# Give the CPU the human's remaining hand so it can play
+								world.cpu_hands[safe_cpu_id] = world.all_player_hands[safe_cpu_id].duplicate(true)
+						
+				# Now that the CPU is mapped, broadcast the name change which also triggers the turn label execution
+				rpc("update_player_name", safe_cpu_id, cpu_name)
 	else: # Game is not in progress.
 		# Unregister this player.
 		unregister_player(id)
@@ -189,16 +211,70 @@ func _connected_fail():
 	if id == 0:
 		id = multiplayer.get_unique_id()
 
+	# PREVENT GHOSTS: Clients should never blindly accept human registrations mid-game
+	# because the server might reject them, but the clients will never natively erase them!
+	# Mid-game human additions are ONLY handled securely by the server's explicit sync_player_id_change.
+	var is_cpu = str(new_player_name).contains("CPU")
+	if not multiplayer.is_server() and game_in_progress and not is_cpu:
+		return
+
+	var target_reclaim_id = -1
 	# --- Server Handshake Gatekeeper ---
 	if multiplayer.is_server():
-		# Check if the player is a CPU. If they are, let them bypass the lock!
-		if game_in_progress and not str(new_player_name).contains("CPU"):
-			if id != 1: # Don't kick the host!
-				rpc_id(id, "join_rejected", "Game already in progress!")
-			return # Abort registration completely!
-		else:
-			if id != 1 and not str(new_player_name).contains("CPU"):
-				rpc_id(id, "join_accepted")
+
+		# Shield existing human players from getting processed again during retro-active peer discoveries
+		if not is_cpu and players.has(id):
+			return
+			
+		if not is_cpu and id != 1:
+			var conflict = false
+			for p_id in players:
+				if p_id == id:
+					continue # Ignore self for duplicate name checks
+					
+				var active_name = str(players[p_id])
+				if active_name == str(new_player_name):
+					conflict = true
+					break
+				elif active_name == str(new_player_name) + " (CPU)":
+					target_reclaim_id = p_id
+					break
+			
+			if conflict:
+				rpc_id(id, "join_rejected", "Name already taken!")
+				return
+				
+			if game_in_progress:
+				if target_reclaim_id != -1:
+					# Swap the CPU's ID to this new client's ID so they can take over
+					rpc("sync_player_id_change", target_reclaim_id, id, new_player_name)
+					
+					var state_package = {
+						"players": players,
+						"player_icon": player_icon,
+						"lydia_lion": lydia_lion,
+						"alloys": alloys,
+						"footprint_tiles": footprint_tiles,
+						"wellness_beads": wellness_beads,
+						"elcitraps": elcitraps,
+					}
+					rpc_id(id, "push_full_gamestate", state_package)
+					return
+				else:
+					rpc_id(id, "join_rejected", "Game already in progress!")
+					return
+			else:
+				if target_reclaim_id != -1:
+					# Client reconnecting in the lobby
+					rpc("sync_player_id_change", target_reclaim_id, id, new_player_name)
+					rpc_id(id, "join_accepted")
+					return
+					
+			rpc_id(id, "join_accepted")
+		
+		# CPUs always bypass the lock
+		elif is_cpu:
+			pass
 	
 	id += cpunum
 	if players.has(id):
@@ -244,6 +320,46 @@ func unregister_player(id):
 	if player_icon.has(id):
 		player_icon.erase(id)
 	emit_signal("player_list_changed")
+
+@rpc("any_peer", "call_local") func update_player_name(id: int, new_name: String):
+	if players.has(id):
+		players[id] = new_name
+		emit_signal("player_list_changed")
+		
+		# Immediately refresh the turn label if the game is active, so clients see "(CPU)" appended mid-turn
+		if has_node("/root/Manager"):
+			var manager = get_node("/root/Manager")
+			if "current_level" in manager and manager.current_level != null:
+				if manager.current_level.has_method("_update_turn_label"):
+					manager.current_level._update_turn_label()
+
+@rpc("any_peer", "call_local", "reliable")
+func sync_player_id_change(old_id: int, new_id: int, new_name: String):
+	players[new_id] = new_name
+	if players.has(old_id): players.erase(old_id)
+	
+	for dict in [total_points, lydia_lion, alloys, footprint_tiles, wellness_beads, elcitraps, hair, clothes, body, player_icon]:
+		if dict.has(old_id):
+			dict[new_id] = dict[old_id]
+			dict.erase(old_id)
+			
+	emit_signal("player_list_changed")
+	
+	if has_node("/root/Manager"):
+		var manager = get_node("/root/Manager")
+		var world_node = null
+		if "current_level" in manager: world_node = manager.current_level
+		if world_node:
+			if world_node.get("cpu_hands") != null and world_node.cpu_hands.has(old_id):
+				world_node.cpu_hands.erase(old_id)
+			if world_node.get("all_player_hands") != null and world_node.all_player_hands.has(old_id):
+				world_node.all_player_hands[new_id] = world_node.all_player_hands[old_id]
+				world_node.all_player_hands.erase(old_id)
+			
+			if world_node.get("sorted_players") != null:
+				var idx = world_node.sorted_players.find(old_id)
+				if idx != -1:
+					world_node.sorted_players[idx] = new_id
 
 func disconnect_network():
 	# Explicitly close the ENet connection so the server knows we left
@@ -336,6 +452,20 @@ func join_game(ip, new_player_name):
 	if not multiplayer.is_server():
 		emit_signal("join_accepted_signal")
 
+@rpc("authority", "call_local") func push_full_gamestate(state_package: Dictionary):
+	if not multiplayer.is_server():
+		players = state_package["players"]
+		player_icon = state_package["player_icon"]
+		lydia_lion = state_package["lydia_lion"]
+		alloys = state_package["alloys"]
+		footprint_tiles = state_package["footprint_tiles"]
+		wellness_beads = state_package["wellness_beads"]
+		elcitraps = state_package["elcitraps"]
+		
+		is_hot_joining = true
+		game_in_progress = true
+		emit_signal("hot_join_accepted_signal")
+
 @rpc("authority", "call_local") func join_rejected(reason: String):
 	disconnect_network()
 	emit_signal("game_error", reason)
@@ -390,9 +520,9 @@ func get_tutorial_mode():
 
 func end_game():
 	game_in_progress = false
-	if has_node("/root/World"): # Game is in progress.
+	if has_node("/root/Manager"): # Game is in progress.
 		# End it
-		get_node("/root/World").queue_free()
+		get_node("/root/Manager").queue_free()
 
 	emit_signal("game_ended")
 	players.clear()

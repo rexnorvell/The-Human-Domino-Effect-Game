@@ -47,31 +47,18 @@ func _on_Host_pressed():
 	# Set up dominos, create the host, and go to the Wait Room
 	handle_level(gamestate.first_level)
 
-
 func _on_Join_Button_pressed():
 	if get_player_name() == "":
 		set_error_label("Invalid name!")
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
+
+	set_error_label("")
 	
-	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
-	if ip.is_empty():
-		ip = str(local_ip)
+	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
 
-	set_error_label("Connecting...")
-
-	# Disable Host and Join buttons
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = true
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = true
-
-	# Set host username and ip address labels
-	waitroom_host_name.set_text("Host: ")
-	waitroom_host_ip.set_text("Host IP: " + ip)
+	$ServerBrowser.visible = true
 	
-	gamestate.join_game(ip, get_player_name())
-	get_tree().create_timer(2.0).timeout.connect(_on_join_timeout)
-
-
 func _on_join_timeout():
 	if $Lobby_Container/HBoxContainer/MenuContainer/Menu/Error_Label.text == "Connecting...":
 		gamestate.disconnect_network() # Abort the attempt under the hood
@@ -81,12 +68,8 @@ func _on_join_timeout():
 func _on_join_accepted():
 	set_error_label("")
 	
-	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
-	if ip.is_empty():
-		ip = str(local_ip)
-		
 	waitroom_host_name.set_text("Host: ")
-	waitroom_host_ip.set_text("Host IP: " + ip)
+	waitroom_host_ip.set_text("Connected to Local Game")
 	
 	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
 	

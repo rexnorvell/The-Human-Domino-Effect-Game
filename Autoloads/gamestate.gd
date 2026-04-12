@@ -8,6 +8,11 @@ extends Node
 # https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
 const DEFAULT_PORT = 10567
 
+# Server Browser Variables
+const BROADCAST_PORT = 10568
+var broadcast_peer: PacketPeerUDP
+var broadcast_timer: Timer
+
 # Max number of players.
 const MAX_PEERS = 6
 
@@ -20,7 +25,7 @@ const num_domino_rounds = 6
 # Consts for footprint tiles
 const num_outer_tiles = 36
 const num_inner_tiles = 24
-const tiles_per_round = (num_outer_tiles + num_inner_tiles) / num_domino_rounds
+const tiles_per_round = (num_outer_tiles + num_inner_tiles) / float(num_domino_rounds)
 
 var peer = null
 
@@ -244,16 +249,16 @@ func unregister_player(id):
 	emit_signal("player_list_changed")
 
 func disconnect_network():
-	# Explicitly close the ENet connection so the server knows we left
+	if broadcast_timer:
+		broadcast_timer.stop()
+		broadcast_timer.queue_free()
+	
 	if peer != null:
 		peer.close()
 		peer = null
 		
 	multiplayer.multiplayer_peer = null
-	
 	game_in_progress = false
-	
-	# Scrub the local data for the next time they join
 	players.clear()
 	player_icon.clear()
 	players_ready.clear()
@@ -306,33 +311,53 @@ func host_single_player(new_player_name):
 	peer.create_server(0, 1) 
 	multiplayer.multiplayer_peer = peer
 	
-	var id = multiplayer.get_unique_id()
 	rpc("register_player", player_name, 0)
 
 func host_game(new_player_name) -> Error:
 	player_name = new_player_name
 	peer = ENetMultiplayerPeer.new()
+	
 	var err = peer.create_server(DEFAULT_PORT, MAX_PEERS)
-	# If the port is in use or creation fails, abort!
 	if err != OK:
 		peer = null
 		return err
+		
 	multiplayer.multiplayer_peer = peer
 	rpc("register_player", player_name, 0)
+	start_broadcasting()
 	return OK
+	
+func start_broadcasting():
+	broadcast_peer = PacketPeerUDP.new()
+	broadcast_peer.set_broadcast_enabled(true)
+	broadcast_peer.set_dest_address("255.255.255.255", BROADCAST_PORT)
+
+	broadcast_timer = Timer.new()
+	broadcast_timer.wait_time = 1.0
+	broadcast_timer.timeout.connect(_on_broadcast_timeout)
+	add_child(broadcast_timer)
+	broadcast_timer.start()
+
+func _on_broadcast_timeout():
+	var room_info = {
+		"name": player_name + "'s Classroom",
+		"players": players.size(),
+		"max_players": MAX_PEERS,
+		"started": game_in_progress
+	}
+	var data = JSON.stringify(room_info).to_ascii_buffer()
+	broadcast_peer.put_packet(data)
 	
 func join_game(ip, new_player_name):
 	player_name = new_player_name
 	peer = ENetMultiplayerPeer.new()
 	var err = peer.create_client(ip, DEFAULT_PORT)
-	# If it fails instantly (e.g., invalid IP format), abort and notify UI
 	if err != OK:
 		_connected_fail()
 		return
 	multiplayer.multiplayer_peer = peer
 
 @rpc("authority", "call_local") func join_accepted():
-	# Only clients care about this signal (the host handles their own UI)
 	if not multiplayer.is_server():
 		emit_signal("join_accepted_signal")
 

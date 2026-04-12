@@ -15,7 +15,7 @@ func _ready():
 
 func _init(index: int = 0, in_ring: bool = false) -> void:
 	# SET MEMBERS
-	self.footprint_num = index % gamestate.tiles_per_round
+	self.footprint_num = index % int(gamestate.tiles_per_round)
 # warning-ignore:integer_division
 	self.round_num = index / gamestate.tiles_per_round
 	

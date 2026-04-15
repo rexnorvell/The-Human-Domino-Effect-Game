@@ -21,25 +21,76 @@
 [ext_resource type="Texture2D" uid="uid://cxkeaarsn10wc" path="res://UI/sprites/player_icons/stone.png" id="21_qqykm"]
 [ext_resource type="Texture2D" uid="uid://cin1wie3tnu2j" path="res://UI/sprites/player_icons/wheel.png" id="22_pbwek"]
 
-[sub_resource type="Animation" id="7"]
-resource_name = "start"
-length = 0.2
+[sub_resource type="Animation" id="Animation_cannh"]
+resource_name = "in_next"
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("Lobby_Container:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, 600), Vector2(0, 0)]
+"values": [Vector2(0, 620), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="7"]
+resource_name = "start"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -500), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ba6iy"]
+resource_name = "out_next"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 620)]
+}
+
+[sub_resource type="Animation" id="Animation_3yrp3"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -500)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yqok8"]
 _data = {
-&"start": SubResource("7")
+&"in_next": SubResource("Animation_cannh"),
+&"in_prev": SubResource("7"),
+&"out_next": SubResource("Animation_ba6iy"),
+&"out_prev": SubResource("Animation_3yrp3")
 }
 
 [sub_resource type="FontFile" id="8"]
@@ -277,25 +328,76 @@ cache/0/300/0/underline_position = 0.0
 cache/0/300/0/underline_thickness = 0.0
 cache/0/300/0/scale = 1.0
 
-[sub_resource type="Animation" id="9"]
-resource_name = "start"
-length = 0.2
+[sub_resource type="Animation" id="Animation_s12ko"]
+resource_name = "in_next"
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, -600), Vector2(0, 0)]
+"values": [Vector2(0, 680), Vector2(0, 40)]
+}
+
+[sub_resource type="Animation" id="9"]
+resource_name = "start"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -620), Vector2(0, 40)]
+}
+
+[sub_resource type="Animation" id="Animation_sjikb"]
+resource_name = "out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 40), Vector2(0, 680)]
+}
+
+[sub_resource type="Animation" id="Animation_8x7hx"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 40), Vector2(0, -620)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_u6tgg"]
 _data = {
-&"start": SubResource("9")
+&"in_next": SubResource("Animation_s12ko"),
+&"in_prev": SubResource("9"),
+&"out_next": SubResource("Animation_sjikb"),
+&"out_prev": SubResource("Animation_8x7hx")
 }
 
 [sub_resource type="FontFile" id="12"]
@@ -323,7 +425,78 @@ bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="Animation" id="11"]
 resource_name = "start"
-length = 0.2
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, 620), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_pbwek"]
+resource_name = "in_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -540), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qqykm"]
+resource_name = "out_next"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 620)]
+}
+
+[sub_resource type="Animation" id="Animation_r2233"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -540)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_08v5d"]
+_data = {
+&"in_next": SubResource("11"),
+&"in_prev": SubResource("Animation_pbwek"),
+&"out_next": SubResource("Animation_qqykm"),
+&"out_prev": SubResource("Animation_r2233")
+}
+
+[sub_resource type="Animation" id="Animation_di32h"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -331,15 +504,32 @@ tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 600), Vector2(0, 0)]
+"values": [Vector2(27.777779, 591.11115)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_08v5d"]
+[sub_resource type="Animation" id="Animation_b2780"]
+resource_name = "in"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(27.778, -68.889), Vector2(27.777779, 591.11115)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4yls7"]
 _data = {
-&"start": SubResource("11")
+&"RESET": SubResource("Animation_di32h"),
+&"in": SubResource("Animation_b2780")
 }
 
 [node name="Lobby" type="Control" unique_id=795876909]
@@ -357,8 +547,9 @@ script = ExtResource("10")
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_top = -1100.0
 offset_right = 1024.0
-offset_bottom = 600.0
+offset_bottom = -499.9992
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
@@ -536,14 +727,12 @@ border_color = Color(0.98039216, 0.8117647, 0.10980392, 1)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container" unique_id=1475839705]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_yqok8")
-autoplay = &"start"
 
 [node name="LevelSelect_Container" type="MarginContainer" parent="." unique_id=160266583]
-visible = false
 layout_mode = 0
-offset_top = 50.0
+offset_top = 40.0
 offset_right = 5472.0
-offset_bottom = 2944.0
+offset_bottom = 2934.0
 scale = Vector2(0.2, 0.2)
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
@@ -559,6 +748,9 @@ metadata/_edit_lock_ = true
 [node name="Label" type="Label" parent="LevelSelect_Container/VBoxContainer" unique_id=2057130829]
 layout_mode = 2
 size_flags_vertical = 5
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
+theme_override_constants/shadow_offset_x = 12
+theme_override_constants/shadow_offset_y = 12
 theme_override_fonts/font = SubResource("8")
 theme_override_font_sizes/font_size = 300
 text = "Select Level"
@@ -616,14 +808,14 @@ stretch_mode = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container" unique_id=1492345975]
 libraries/ = SubResource("AnimationLibrary_u6tgg")
+autoplay = &"in_prev"
 
 [node name="WaitRoom_Container" type="MarginContainer" parent="." unique_id=287395699]
-visible = false
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 600.0
-offset_bottom = 600.0
+offset_top = -540.0
+offset_bottom = -539.99976
 mouse_filter = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
@@ -814,6 +1006,10 @@ offset_top = -8.888855
 offset_right = 161.7779
 offset_bottom = 44.111145
 grow_vertical = 0
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Back_Button" unique_id=1255645619]
+libraries/ = SubResource("AnimationLibrary_4yls7")
+autoplay = &"in"
 
 [connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host" to="." method="_on_Host_pressed"]
 [connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join" to="." method="_on_Join_pressed"]

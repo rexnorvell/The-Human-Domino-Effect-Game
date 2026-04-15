@@ -96,7 +96,7 @@ func _on_join_accepted():
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
 	
-	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
+	change_menu_smoothly(LobbyContainer, WaitRoomContainer, true)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
 	await get_tree().process_frame
@@ -137,17 +137,23 @@ func _on_game_error(what: String):
 	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(true)
 
 
-func change_menu_smoothly(prev, target):
+func change_menu_smoothly(prev, target, is_next: bool):
 	var prev_animation = prev.get_node("AnimationPlayer")
 	var target_animation = target.get_node("AnimationPlayer")
 
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
-	prev_animation.play_backwards("start")
+	if is_next:
+		prev_animation.play("out_next")
+	else:
+		prev_animation.play("out_prev")
 	await prev_animation.animation_finished
 	
 	prev.visible = false
 	target.visible = true
-	target_animation.play("start")
+	if is_next:
+		target_animation.play("in_prev")
+	else:
+		target_animation.play("in_next")
 
 
 func refresh_lobby():
@@ -197,7 +203,7 @@ func handle_level(level):
 		pick_random_icon()
 	set_player_icon(selected_icon)
 	
-	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
+	change_menu_smoothly(LobbyContainer, WaitRoomContainer, true)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
 	await get_tree().process_frame
@@ -341,7 +347,7 @@ func _on_Virtual_World_pressed():
 func _on_Domino_Game_pressed():
 	# Set the level, then transition to the Host/Join screen
 	gamestate.first_level = "DominoWorld"
-	change_menu_smoothly(LevelSelectContainer, LobbyContainer)
+	change_menu_smoothly(LevelSelectContainer, LobbyContainer, true)
 
 
 func start_single_player(level_name: String):

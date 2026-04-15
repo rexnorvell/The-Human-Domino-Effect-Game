@@ -30,10 +30,6 @@ func _ready():
 	gamestate.hot_join_accepted_signal.connect(_on_hot_join_accepted)
 	gamestate.game_error.connect(_on_game_error)
 	
-	# Listen for the back button being clicked so we can cleanly disconnect
-	if has_node("Back_Button"):
-		$Back_Button.pressed.connect(_on_back_button_pressed)
-		
 	set_player_name(gamestate.player_name)
 
 
@@ -329,7 +325,21 @@ func _get_available_icons() -> Array[String]:
 	
 	
 func _on_back_button_pressed() -> void:
+	SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
+	var button_animation_player: AnimationPlayer = $Back_Button/AnimationPlayer2
+	var animation_player: AnimationPlayer
+	if WaitRoomContainer.visible:
+		animation_player = WaitRoomContainer.get_node("AnimationPlayer")
+	elif LobbyContainer.visible:
+		animation_player = LobbyContainer.get_node("AnimationPlayer")
+	elif LevelSelectContainer.visible:
+		animation_player = LevelSelectContainer.get_node("AnimationPlayer")
+	if animation_player != null:
+		animation_player.play("out_prev")
+		button_animation_player.play("out")
+		await animation_player.animation_finished
 	gamestate.disconnect_network()
+	get_tree().change_scene_to_file(gamestate.prev_scene)
 
 
 func _on_Char_Creation_pressed():

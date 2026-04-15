@@ -526,10 +526,27 @@ tracks/0/keys = {
 "values": [Vector2(27.778, -68.889), Vector2(27.777779, 591.11115)]
 }
 
+[sub_resource type="Animation" id="Animation_4yls7"]
+resource_name = "out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(27.778, 591.111), Vector2(27.778, -68.889)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4yls7"]
 _data = {
 &"RESET": SubResource("Animation_di32h"),
-&"in": SubResource("Animation_b2780")
+&"in": SubResource("Animation_b2780"),
+&"out": SubResource("Animation_4yls7")
 }
 
 [node name="Lobby" type="Control" unique_id=795876909]
@@ -1026,3 +1043,4 @@ autoplay = &"in"
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Stone" to="." method="_on_icon_selected" binds= ["stone.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Wheel" to="." method="_on_icon_selected" binds= ["wheel.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/StartButton" to="." method="_on_Start_Button_pressed"]
+[connection signal="pressed" from="Back_Button" to="." method="_on_back_button_pressed"]

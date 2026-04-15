@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://dlygu0mhr0ual"]
 
-[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="1_6yl0x"]
+[ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="1_typj7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6yl0x"]
 content_margin_left = 10.0
@@ -101,7 +101,7 @@ Button/colors/font_hover_pressed_color = Color(0.6, 0.6, 0.6, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 1)
 Button/colors/font_pressed_color = Color(0.6, 0.6, 0.6, 1)
 Button/font_sizes/font_size = 26
-Button/fonts/font = ExtResource("1_6yl0x")
+Button/fonts/font = ExtResource("1_typj7")
 Button/icons/icon = null
 Button/styles/disabled = SubResource("StyleBoxFlat_6yl0x")
 Button/styles/focus = SubResource("StyleBoxFlat_6ujou")

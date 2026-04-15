@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cx43fxqtn64eq"]
+[gd_scene format=3 uid="uid://cx43fxqtn64eq"]
 
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="1"]
 [ext_resource type="Script" uid="uid://df0eaecey1h31" path="res://_Unsure/Button.gd" id="2"]

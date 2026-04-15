@@ -8,7 +8,7 @@
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
 [ext_resource type="Texture2D" uid="uid://cffbm8m1efihk" path="res://UI/Control/green_button03.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://bvbwqwm5kr6o1" path="res://UI/Control/yellow_button02.png" id="8"]
-[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="9"]
+[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/themes/ui_theme.tres" id="9"]
 [ext_resource type="Script" uid="uid://c38yj276hupv0" path="res://Scenes/Core/Lobby.gd" id="10"]
 [ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="12"]

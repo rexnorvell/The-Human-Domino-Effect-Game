@@ -38,33 +38,40 @@ func _ready():
 
 
 func _on_Host_pressed():
+	if !$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.get_clickable():
+		return
 	if get_player_name() == "":
 		set_error_label("Invalid name!")
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
-
+	
+	# Disable Host and Join buttons
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(false)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(false)
+	
 	set_error_label("")
 	
 	# Set up dominos, create the host, and go to the Wait Room
 	handle_level(gamestate.first_level)
 
 
-func _on_Join_Button_pressed():
+func _on_Join_pressed():
+	if !$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.get_clickable():
+		return
 	if get_player_name() == "":
 		set_error_label("Invalid name!")
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
 	
+	# Disable Host and Join buttons
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(false)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(false)
+	
 	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
 		ip = str(local_ip)
-
 	set_error_label("Connecting...")
-
-	# Disable Host and Join buttons
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = true
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = true
-
+	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
@@ -126,8 +133,8 @@ func _on_connection_failed():
 func _on_game_error(what: String):
 	set_error_label(what)
 	# Turn the buttons back on for retry purposes
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = false
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = false
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(true)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(true)
 
 
 func change_menu_smoothly(prev, target):

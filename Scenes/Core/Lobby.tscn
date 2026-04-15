@@ -3,11 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://b280avyrjcv5t" path="res://Scenes/Components/Back_Button.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://b0dvssdrdf6g2" path="res://UI/Control/grey_panel.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bepv5woel474d" path="res://UI/Control/yellow_button03.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bjhsyid7yg8fu" path="res://UI/Control/green_button02.png" id="5"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
-[ext_resource type="Texture2D" uid="uid://cffbm8m1efihk" path="res://UI/Control/green_button03.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bvbwqwm5kr6o1" path="res://UI/Control/yellow_button02.png" id="8"]
 [ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/themes/ui_theme.tres" id="9"]
 [ext_resource type="Script" uid="uid://c38yj276hupv0" path="res://Scenes/Core/Lobby.gd" id="10"]
 [ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="11"]
@@ -399,11 +395,15 @@ patch_margin_right = 29
 patch_margin_bottom = 28
 
 [node name="Error_Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu" unique_id=1016796339]
-layout_mode = 0
-offset_left = 81.0
-offset_top = 305.0
-offset_right = 297.0
-offset_bottom = 342.0
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 0
 theme = ExtResource("9")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -469,30 +469,16 @@ clear_button_enabled = true
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Host" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1266781458]
-custom_minimum_size = Vector2(160, 50)
+[node name="Host" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=751661298]
 layout_mode = 2
-size_flags_vertical = 8
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("8")
-texture_pressed = ExtResource("4")
-texture_hover = ExtResource("4")
-ignore_texture_size = true
-stretch_mode = 5
+size_flags_horizontal = 3
+alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" unique_id=140982941]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/MarginContainer" unique_id=1659101171]
+[node name="Host" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" unique_id=170246650 instance=ExtResource("14_ubiko")]
 layout_mode = 2
-theme = ExtResource("9")
 text = "Host"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_color = Color(0, 0.6862745, 0, 1)
+border_color = Color(0, 0.6862745, 0, 1)
 
 [node name="VSeparator" type="VSeparator" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1525464109]
 layout_mode = 2
@@ -541,31 +527,11 @@ max_length = 32
 expand_to_text_length = true
 clear_button_enabled = true
 
-[node name="Join_Button" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join" unique_id=1125241492]
-custom_minimum_size = Vector2(160, 50)
+[node name="Join" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join" unique_id=1231996224 instance=ExtResource("14_ubiko")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5")
-texture_pressed = ExtResource("7")
-texture_hover = ExtResource("7")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" unique_id=2118971894]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button/MarginContainer" unique_id=1129559598]
-layout_mode = 2
-theme = ExtResource("9")
 text = "Join"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_color = Color(0.98039216, 0.8117647, 0.10980392, 1)
+border_color = Color(0.98039216, 0.8117647, 0.10980392, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container" unique_id=1475839705]
 root_node = NodePath("../..")
@@ -731,7 +697,7 @@ layout_mode = 2
 size_flags_vertical = 3
 columns = 4
 
-[node name="Basket" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=170246650 instance=ExtResource("14_ba6iy")]
+[node name="Basket" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1628470272 instance=ExtResource("14_ba6iy")]
 layout_mode = 2
 icon = ExtResource("15_sjikb")
 
@@ -849,8 +815,8 @@ offset_right = 161.7779
 offset_bottom = 44.111145
 grow_vertical = 0
 
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" to="." method="_on_Host_pressed"]
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" to="." method="_on_Join_Button_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host" to="." method="_on_Host_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join" to="." method="_on_Join_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
 [connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]

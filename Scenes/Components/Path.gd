@@ -89,7 +89,7 @@ func disable(is_disabled: bool) -> void:
 	$Area2D/CollisionShape2D.disabled = is_disabled
 
 # handle placing domino if domino is placed on to path
-func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_Area2D_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed:
 			get_parent().get_parent().place_domino(num)

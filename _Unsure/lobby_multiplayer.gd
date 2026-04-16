@@ -115,19 +115,19 @@ func _on_find_public_ip_pressed():
 	OS.shell_open("https://icanhazip.com/")
 
 
-# handle which level to begin at / randomize dominos
+# handle which level to begin at / randomize dominoes
 func handle_level(level):
 	gamestate.first_level = level
 
 	for top in range(10):
 		for bottom in range(top + 1):
-			gamestate.dominos.append([bottom, top])
+			gamestate.dominoes.append([bottom, top])
 
 	randomize()
 	gamestate.random_seed = randi() % 10000000
 	seed(gamestate.random_seed)
 
-	gamestate.dominos.shuffle()
+	gamestate.dominoes.shuffle()
 	$LoadButton.visible = false
 	$LevelSelect/Popup.visible = true
 	$Players.show()

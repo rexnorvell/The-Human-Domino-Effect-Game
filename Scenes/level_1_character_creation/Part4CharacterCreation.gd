@@ -122,7 +122,7 @@ func _on_next_pressed() -> void:
 		ready_to_start(my_id)
 
 # Toggle visibility of a color rect during animation
-func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
+func _on_AnimationPlayer_animation_finished(_anim_name: String) -> void:
 	$ZIndexSetter/ColorRect.visible = !$ZIndexSetter/ColorRect.visible 
 
 # Network RPC to set character features for each player
@@ -156,4 +156,3 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 			if p > 1:
 				rpc_id(p, "start_game")
 		start_game()
-

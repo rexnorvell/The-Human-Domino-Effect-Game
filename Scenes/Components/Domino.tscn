@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dq5f7r63drllb"]
 
 [ext_resource type="Script" uid="uid://cj4jg36t0e65a" path="res://Scenes/Components/Domino.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cxr8qbu56i4u4" path="res://UI/sprites/dominos/00.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cxr8qbu56i4u4" path="res://UI/sprites/dominoes/00.png" id="2"]
 [ext_resource type="FontFile" uid="uid://dcgbqt5s40js7" path="res://UI/Fonts/Nunito/Nunito-Regular.ttf" id="3"]
 
 [sub_resource type="CapsuleShape2D" id="1"]

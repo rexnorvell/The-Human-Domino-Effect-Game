@@ -47,7 +47,7 @@ func _on_Host_pressed():
 	
 	set_error_label("")
 	
-	# Set up dominos, create the host, and go to the Wait Room
+	# Set up dominoes, create the host, and go to the Wait Room
 	handle_level(gamestate.first_level)
 
 
@@ -170,13 +170,13 @@ func handle_level(level):
 
 	for top in range(10):
 		for bottom in range(top + 1):
-			gamestate.dominos.append([bottom, top])
+			gamestate.dominoes.append([bottom, top])
 
 	randomize()
 	gamestate.random_seed = randi() % 10000000
 	seed(gamestate.random_seed)
 
-	gamestate.dominos.shuffle()
+	gamestate.dominoes.shuffle()
 	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: " + get_player_name())

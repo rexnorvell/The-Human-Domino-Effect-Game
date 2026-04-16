@@ -268,7 +268,7 @@ _data = {
 [node name="World" type="Node2D" unique_id=1181802440]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("7")
-Domino = ExtResource("8")
+domino_scene = ExtResource("8")
 
 [node name="WorldElements" type="Node2D" parent="." unique_id=1641153460]
 
@@ -295,55 +295,47 @@ texture = ExtResource("1")
 z_index = -2
 position = Vector2(-130, -176)
 scale = Vector2(0.03, 0.03)
-texture = null
 
 [node name="Path2" parent="WorldElements" unique_id=853339331 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-318, -104.00002)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 1
 
 [node name="Path3" parent="WorldElements" unique_id=1040527191 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-58, -98)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 2
 
 [node name="Path4" parent="WorldElements" unique_id=1591097373 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-322, 6)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 3
 
 [node name="Path5" parent="WorldElements" unique_id=550393547 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-246, 84)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 4
 
 [node name="Path6" parent="WorldElements" unique_id=680097435 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-57.999992, 9.999996)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 5
 
 [node name="SunrisePath" parent="WorldElements" unique_id=453627861 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-240.00003, -180)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 6
 
 [node name="SunsetPath" parent="WorldElements" unique_id=61258073 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-139, 86.67999)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 7
 
 [node name="Character Bubble1" parent="WorldElements" unique_id=1946415537 instance=ExtResource("3")]

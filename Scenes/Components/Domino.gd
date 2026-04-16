@@ -26,7 +26,7 @@ func _ready() -> void:
 	sprite.z_index = 0
 	_world = get_parent().get_parent()
 	if not placed:
-		add_to_group("dominos")
+		add_to_group("dominoes")
 	original_pos = position
 	call_deferred("_capture_base_scale")
 

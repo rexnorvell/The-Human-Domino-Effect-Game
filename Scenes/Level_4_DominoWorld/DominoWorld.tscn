@@ -563,9 +563,9 @@ offset_bottom = 87.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
-text = "You helped someone on their path
-and so helped promote community
-wellness!"
+text = "You helped someone on their
+path and so helped promote
+community wellness!"
 
 [node name="Close" type="Button" parent="UIElements/WellnessBeadPopup" unique_id=402153372]
 anchors_preset = 7

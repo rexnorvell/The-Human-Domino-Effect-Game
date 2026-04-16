@@ -763,7 +763,7 @@ func display_wellness_prompt():
 	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
 	$UIElements/WellnessBeadPopup/Title.text = str(player_name) + " Got a..."
 	$UIElements/WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
-	$UIElements/WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their path and so helped promote community wellness!"
+	$UIElements/WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their\npath and so helped promote\ncommunity wellness!"
 	$UIElements/WellnessBeadPopup.visible = true
 	camera.set_drag(false)
 

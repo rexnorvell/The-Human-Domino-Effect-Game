@@ -57,31 +57,31 @@ func change_stone(area):
 
 # handle different venn diagram section clicks
 
-func _on_y_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_y_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not blue_selected and not red_selected:
 		handle_choice("y")
 
-func _on_b_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_b_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not yellow_selected and not red_selected:
 		handle_choice("b")
 
-func _on_r_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_r_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not yellow_selected and not blue_selected:
 		handle_choice("r")
 		
-func _on_yb_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_yb_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not red_selected:
 		handle_choice("yb")
 
-func _on_yr_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_yr_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not blue_selected:
 		handle_choice("yr")
 
-func _on_br_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_br_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and not yellow_selected:
 		handle_choice("br")
 
-func _on_ybr_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_ybr_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		handle_choice("ybr")
 
@@ -134,4 +134,3 @@ func _on_Button_pressed() -> void:
 			if p > 1:
 				rpc_id(p, "start_game")
 		start_game()
-

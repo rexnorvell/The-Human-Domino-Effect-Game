@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://31cxwpf6raj0"]
 
-[ext_resource type="Theme" uid="uid://dlygu0mhr0ual" path="res://UI/button.tres" id="1_yuy87"]
+[ext_resource type="Theme" uid="uid://dlygu0mhr0ual" path="res://UI/themes/button.tres" id="1_yuy87"]
 [ext_resource type="Script" uid="uid://dxeo6grjej8q7" path="res://Scenes/Components/PlayerIconButton.gd" id="2_k2861"]
 
 [node name="Button" type="Button" unique_id=170246650]

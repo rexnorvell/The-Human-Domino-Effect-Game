@@ -1,7 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://0u4wmccvex36"]
+[gd_scene format=3 uid="uid://0u4wmccvex36"]
 
 [ext_resource type="PackedScene" uid="uid://b280avyrjcv5t" path="res://Scenes/Components/Back_Button.tscn" id="1"]
-[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="2"]
+[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/themes/ui_theme.tres" id="2"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="3"]
 [ext_resource type="Texture2D" uid="uid://b0dvssdrdf6g2" path="res://UI/Control/grey_panel.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bjhsyid7yg8fu" path="res://UI/Control/green_button02.png" id="5"]

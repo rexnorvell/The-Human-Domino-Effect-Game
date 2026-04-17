@@ -15,5 +15,5 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	time += delta * 75
-	var offset = n.noise.get_noise_1d(time)
-	$PointLight2D.scale = Vector2(1.5 + offset/3, 1.5 + offset/3)
+	var noise_value = n.noise.get_noise_1d(time)
+	$PointLight2D.scale = Vector2(1.5 + noise_value / 3, 1.5 + noise_value / 3)

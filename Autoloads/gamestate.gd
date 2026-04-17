@@ -15,12 +15,12 @@ const MAX_PEERS = 6
 const num_domino_rounds = 6
 
 # list of [top number, bottom number] lists
-@export var dominos = []
+@export var dominoes = []
 
 # Consts for footprint tiles
 const num_outer_tiles = 36
 const num_inner_tiles = 24
-const tiles_per_round = (num_outer_tiles + num_inner_tiles) / num_domino_rounds
+const tiles_per_round = int(float(num_outer_tiles + num_inner_tiles) / num_domino_rounds)
 
 var peer = null
 
@@ -39,7 +39,7 @@ var cpuNum = 0
 var tutorial_mode = false
 
 # CS499 Fall 2024 - Doesnt work as intented
-var tutorial_dominos = [
+var tutorial_dominoes = [
 	[0, 1], [1, 2], [2, 3], [3, 4]  # Example domino chain
 ]
 
@@ -400,12 +400,12 @@ func pre_start_game():
 @rpc("any_peer")
 func prepare_client_deck(r_seed):
 	# Clients generate the same shuffled deck as the host
-	dominos = []
+	dominoes = []
 	for top in range(10):
 		for bottom in range(top+1):
-			dominos.append([bottom, top])
+			dominoes.append([bottom, top])
 	seed(r_seed)
-	dominos.shuffle()
+	dominoes.shuffle()
 
 @rpc("any_peer", "call_local", "reliable")
 func post_start_game():
@@ -510,7 +510,7 @@ func begin_game():
 func start_tutorial():
 	var tutorial_scene = load("res://Scenes/Core/Manager.tscn")
 	player_name = "Tutorial" #Set the player name to Tutorial
-	dominos = tutorial_dominos
+	dominoes = tutorial_dominoes
 	random_seed = 12345 #Fixed Seed for Tutorial consistency
 	
 	get_tree().change_scene_to_packed(tutorial_scene)

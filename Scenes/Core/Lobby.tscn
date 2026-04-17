@@ -3,16 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://c5yrqg0lncfkt" path="res://UI/sprites/Domino Effect Logo.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://b280avyrjcv5t" path="res://Scenes/Components/Back_Button.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://b0dvssdrdf6g2" path="res://UI/Control/grey_panel.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bepv5woel474d" path="res://UI/Control/yellow_button03.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bjhsyid7yg8fu" path="res://UI/Control/green_button02.png" id="5"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="6"]
-[ext_resource type="Texture2D" uid="uid://cffbm8m1efihk" path="res://UI/Control/green_button03.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bvbwqwm5kr6o1" path="res://UI/Control/yellow_button02.png" id="8"]
-[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="9"]
+[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/themes/ui_theme.tres" id="9"]
 [ext_resource type="Script" uid="uid://c38yj276hupv0" path="res://Scenes/Core/Lobby.gd" id="10"]
 [ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://1v4s7y3mtnon" path="res://UI/sprites/level4.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="14"]
 [ext_resource type="PackedScene" uid="uid://31cxwpf6raj0" path="res://Scenes/Components/PlayerIconButton.tscn" id="14_ba6iy"]
 [ext_resource type="PackedScene" uid="uid://clj23haf5g65i" path="res://Scenes/Components/AnimatedButton.tscn" id="14_ubiko"]
@@ -25,25 +20,76 @@
 [ext_resource type="Texture2D" uid="uid://cxkeaarsn10wc" path="res://UI/sprites/player_icons/stone.png" id="21_qqykm"]
 [ext_resource type="Texture2D" uid="uid://cin1wie3tnu2j" path="res://UI/sprites/player_icons/wheel.png" id="22_pbwek"]
 
-[sub_resource type="Animation" id="7"]
-resource_name = "start"
-length = 0.2
+[sub_resource type="Animation" id="Animation_cannh"]
+resource_name = "in_next"
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("Lobby_Container:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, 600), Vector2(0, 0)]
+"values": [Vector2(0, 620), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="7"]
+resource_name = "start"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -500), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ba6iy"]
+resource_name = "out_next"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 620)]
+}
+
+[sub_resource type="Animation" id="Animation_3yrp3"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Lobby_Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -500)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yqok8"]
 _data = {
-&"start": SubResource("7")
+&"in_next": SubResource("Animation_cannh"),
+&"in_prev": SubResource("7"),
+&"out_next": SubResource("Animation_ba6iy"),
+&"out_prev": SubResource("Animation_3yrp3")
 }
 
 [sub_resource type="FontFile" id="8"]
@@ -281,25 +327,76 @@ cache/0/300/0/underline_position = 0.0
 cache/0/300/0/underline_thickness = 0.0
 cache/0/300/0/scale = 1.0
 
-[sub_resource type="Animation" id="9"]
-resource_name = "start"
-length = 0.2
+[sub_resource type="Animation" id="Animation_s12ko"]
+resource_name = "in_next"
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Vector2(0, -600), Vector2(0, 0)]
+"values": [Vector2(0, 680), Vector2(0, 40)]
+}
+
+[sub_resource type="Animation" id="9"]
+resource_name = "start"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -620), Vector2(0, 40)]
+}
+
+[sub_resource type="Animation" id="Animation_sjikb"]
+resource_name = "out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 40), Vector2(0, 680)]
+}
+
+[sub_resource type="Animation" id="Animation_8x7hx"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 40), Vector2(0, -620)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_u6tgg"]
 _data = {
-&"start": SubResource("9")
+&"in_next": SubResource("Animation_s12ko"),
+&"in_prev": SubResource("9"),
+&"out_next": SubResource("Animation_sjikb"),
+&"out_prev": SubResource("Animation_8x7hx")
 }
 
 [sub_resource type="FontFile" id="12"]
@@ -327,7 +424,78 @@ bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="Animation" id="11"]
 resource_name = "start"
-length = 0.2
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, 620), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_pbwek"]
+resource_name = "in_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(0, -540), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qqykm"]
+resource_name = "out_next"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 620)]
+}
+
+[sub_resource type="Animation" id="Animation_r2233"]
+resource_name = "out_prev"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -540)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_08v5d"]
+_data = {
+&"in_next": SubResource("11"),
+&"in_prev": SubResource("Animation_pbwek"),
+&"out_next": SubResource("Animation_qqykm"),
+&"out_prev": SubResource("Animation_r2233")
+}
+
+[sub_resource type="Animation" id="Animation_di32h"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -335,15 +503,49 @@ tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0, 600), Vector2(0, 0)]
+"values": [Vector2(27.777779, 591.11115)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_08v5d"]
+[sub_resource type="Animation" id="Animation_b2780"]
+resource_name = "in"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(27.778, -68.889), Vector2(27.777779, 591.11115)]
+}
+
+[sub_resource type="Animation" id="Animation_4yls7"]
+resource_name = "out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(27.778, 591.111), Vector2(27.778, -68.889)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4yls7"]
 _data = {
-&"start": SubResource("11")
+&"RESET": SubResource("Animation_di32h"),
+&"in": SubResource("Animation_b2780"),
+&"out": SubResource("Animation_4yls7")
 }
 
 [node name="Lobby" type="Control" unique_id=795876909]
@@ -361,8 +563,9 @@ script = ExtResource("10")
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_top = -1100.0
 offset_right = 1024.0
-offset_bottom = 600.0
+offset_bottom = -499.9992
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
@@ -399,11 +602,15 @@ patch_margin_right = 29
 patch_margin_bottom = 28
 
 [node name="Error_Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu" unique_id=1016796339]
-layout_mode = 0
-offset_left = 81.0
-offset_top = 305.0
-offset_right = 297.0
-offset_bottom = 342.0
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 0
 theme = ExtResource("9")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -469,30 +676,16 @@ clear_button_enabled = true
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Host" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1266781458]
-custom_minimum_size = Vector2(160, 50)
+[node name="Host" type="VBoxContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=751661298]
 layout_mode = 2
-size_flags_vertical = 8
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("8")
-texture_pressed = ExtResource("4")
-texture_hover = ExtResource("4")
-ignore_texture_size = true
-stretch_mode = 5
+size_flags_horizontal = 3
+alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" unique_id=140982941]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/MarginContainer" unique_id=1659101171]
+[node name="Host" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" unique_id=170246650 instance=ExtResource("14_ubiko")]
 layout_mode = 2
-theme = ExtResource("9")
 text = "Host"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_color = Color(0, 0.6862745, 0, 1)
+border_color = Color(0, 0.6862745, 0, 1)
 
 [node name="VSeparator" type="VSeparator" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer" unique_id=1525464109]
 layout_mode = 2
@@ -541,43 +734,21 @@ max_length = 32
 expand_to_text_length = true
 clear_button_enabled = true
 
-[node name="Join_Button" type="TextureButton" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join" unique_id=1125241492]
-custom_minimum_size = Vector2(160, 50)
+[node name="Join" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join" unique_id=1231996224 instance=ExtResource("14_ubiko")]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5")
-texture_pressed = ExtResource("7")
-texture_hover = ExtResource("7")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" unique_id=2118971894]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-theme_override_constants/margin_bottom = 5
-
-[node name="Label" type="Label" parent="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button/MarginContainer" unique_id=1129559598]
-layout_mode = 2
-theme = ExtResource("9")
 text = "Join"
-horizontal_alignment = 1
-vertical_alignment = 1
+font_color = Color(0.98039216, 0.8117647, 0.10980392, 1)
+border_color = Color(0.98039216, 0.8117647, 0.10980392, 1)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Lobby_Container" unique_id=1475839705]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_yqok8")
-autoplay = &"start"
 
 [node name="LevelSelect_Container" type="MarginContainer" parent="." unique_id=160266583]
-visible = false
 layout_mode = 0
-offset_top = 50.0
+offset_top = 40.0
 offset_right = 5472.0
-offset_bottom = 2944.0
+offset_bottom = 2934.0
 scale = Vector2(0.2, 0.2)
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
@@ -593,6 +764,9 @@ metadata/_edit_lock_ = true
 [node name="Label" type="Label" parent="LevelSelect_Container/VBoxContainer" unique_id=2057130829]
 layout_mode = 2
 size_flags_vertical = 5
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.49803922)
+theme_override_constants/shadow_offset_x = 12
+theme_override_constants/shadow_offset_y = 12
 theme_override_fonts/font = SubResource("8")
 theme_override_font_sizes/font_size = 300
 text = "Select Level"
@@ -604,15 +778,17 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="GridContainer" type="GridContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer" unique_id=768670445]
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer" unique_id=1988401006]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 100
-theme_override_constants/v_separation = 50
-columns = 2
+theme_override_constants/separation = 100
 
-[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=269964990]
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer" unique_id=633670268]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=269964990]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -621,7 +797,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("12")
 stretch_mode = 4
 
-[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=748264962]
+[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=748264962]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -630,7 +806,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11")
 stretch_mode = 4
 
-[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=876093611]
+[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer" unique_id=876093611]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -639,25 +815,16 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14")
 stretch_mode = 4
 
-[node name="Virtual_World" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=154937086]
-custom_minimum_size = Vector2(250, 141)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("13")
-stretch_mode = 4
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container" unique_id=1492345975]
 libraries/ = SubResource("AnimationLibrary_u6tgg")
+autoplay = &"in_prev"
 
 [node name="WaitRoom_Container" type="MarginContainer" parent="." unique_id=287395699]
-visible = false
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 600.0
-offset_bottom = 600.0
+offset_top = -540.0
+offset_bottom = -539.99976
 mouse_filter = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
@@ -731,7 +898,7 @@ layout_mode = 2
 size_flags_vertical = 3
 columns = 4
 
-[node name="Basket" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=170246650 instance=ExtResource("14_ba6iy")]
+[node name="Basket" parent="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer" unique_id=1628470272 instance=ExtResource("14_ba6iy")]
 layout_mode = 2
 icon = ExtResource("15_sjikb")
 
@@ -849,12 +1016,15 @@ offset_right = 161.7779
 offset_bottom = 44.111145
 grow_vertical = 0
 
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host" to="." method="_on_Host_pressed"]
-[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button" to="." method="_on_Join_Button_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Virtual_World" to="." method="_on_Virtual_World_pressed"]
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Back_Button" unique_id=1255645619]
+libraries/ = SubResource("AnimationLibrary_4yls7")
+autoplay = &"in"
+
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host" to="." method="_on_Host_pressed"]
+[connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join" to="." method="_on_Join_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Basket" to="." method="_on_icon_selected" binds= ["basket.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Boat" to="." method="_on_icon_selected" binds= ["boat.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/BowAndArrow" to="." method="_on_icon_selected" binds= ["bowandarrow.png"]]
@@ -864,3 +1034,4 @@ grow_vertical = 0
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Stone" to="." method="_on_icon_selected" binds= ["stone.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Wheel" to="." method="_on_icon_selected" binds= ["wheel.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/StartButton" to="." method="_on_Start_Button_pressed"]
+[connection signal="pressed" from="Back_Button" to="." method="_on_back_button_pressed"]

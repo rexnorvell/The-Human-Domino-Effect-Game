@@ -6,8 +6,8 @@ var round_num = 0
 
 # warning-ignore:shadowed_variable
 # warning-ignore:shadowed_variable
-static func convert_to_index(footprint_num: int, round_num: int) -> int:
-	return footprint_num + gamestate.tiles_per_round * round_num
+static func convert_to_index(footprint_number: int, round_number: int) -> int:
+	return footprint_number + gamestate.tiles_per_round * round_number
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,8 +16,7 @@ func _ready():
 func _init(index: int = 0, in_ring: bool = false) -> void:
 	# SET MEMBERS
 	self.footprint_num = index % gamestate.tiles_per_round
-# warning-ignore:integer_division
-	self.round_num = index / gamestate.tiles_per_round
+	self.round_num = int(float(index) / gamestate.tiles_per_round)
 	
 	var ShapeSprite = Sprite2D.new()
 	var RoundSprite = Sprite2D.new()

@@ -3,6 +3,7 @@ class_name AnimatedButton
 
 var animated_style: StyleBoxFlat
 var current_tween: Tween
+var clickable: bool
 const MAX_BORDER_WIDTH: int = 5
 const MIN_BORDER_WIDTH: int = 0
 
@@ -25,8 +26,12 @@ const MIN_BORDER_WIDTH: int = 0
 
 
 func _ready():
-	focus_entered.connect(_on_focus_entered)
-	focus_exited.connect(_on_focus_exited)
+	clickable = true
+	
+	focus_entered.connect(_on_focus_received)
+	focus_exited.connect(_on_focus_revoked)
+	mouse_entered.connect(_on_focus_received)
+	mouse_exited.connect(_on_focus_revoked)
 	
 	var base_style = get_theme_stylebox("normal", "Button")
 	animated_style = base_style.duplicate()
@@ -41,42 +46,29 @@ func _ready():
 	add_theme_stylebox_override("pressed", animated_style)
 	add_theme_stylebox_override("focus", animated_style)
 	add_theme_stylebox_override("disabled", animated_style)
-
-	mouse_entered.connect(_on_hover)
-	mouse_exited.connect(_on_unhover)
 	
 	_update_font_colors()
 	_update_border_colors()
 
 
 func _update_focus():
-	focus_mode = Control.FOCUS_NONE if disabled else Control.FOCUS_ALL
+	focus_mode = Control.FOCUS_NONE if disabled or !clickable else Control.FOCUS_ALL
 
 
 func _update_cursor():
 	mouse_default_cursor_shape = (
-		Control.CURSOR_ARROW if disabled
+		Control.CURSOR_ARROW if disabled or !clickable
 		else Control.CURSOR_POINTING_HAND
 	)
 
 
-func _on_hover():
-	if !disabled:
+func _on_focus_received():
+	if !disabled and clickable:
 		animate_border(MAX_BORDER_WIDTH)
 
 
-func _on_unhover():
-	if !disabled:
-		animate_border(MIN_BORDER_WIDTH)
-
-
-func _on_focus_entered():
-	if !disabled:
-		animate_border(MAX_BORDER_WIDTH)
-
-
-func _on_focus_exited():
-	if !disabled:
+func _on_focus_revoked():
+	if !disabled and clickable:
 		animate_border(MIN_BORDER_WIDTH)
 
 
@@ -110,3 +102,17 @@ func _update_font_colors():
 func _update_border_colors():
 	if animated_style:
 		animated_style.border_color = border_color
+
+
+func set_clickable(is_clickable: bool) -> void:
+	self.clickable = is_clickable
+	if !self.clickable:
+		animate_border(MIN_BORDER_WIDTH)
+	elif is_hovered():
+		animate_border(MAX_BORDER_WIDTH)
+	_update_focus()
+	_update_cursor()
+
+
+func get_clickable() -> bool:
+	return self.clickable

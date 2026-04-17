@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b5p1i36ak27cu"]
 
-[ext_resource type="Texture2D" uid="uid://c7thnwhpiw6xc" path="res://UI/sprites/reference.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyfxufwvoeeed" path="res://UI/sprites/reference.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Components/Character Bubble.tscn" id="3"]
 [ext_resource type="Script" path="res://Scenes/Level_4_DominoWorld/camera_2d.gd" id="3_0lvn3"]
 [ext_resource type="Texture2D" uid="uid://belf0op6o2ek2" path="res://UI/sprites/character_sprites/faces/0.png" id="4"]
@@ -17,7 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://clj23haf5g65i" path="res://Scenes/Components/AnimatedButton.tscn" id="14_gq41l"]
 [ext_resource type="PackedScene" uid="uid://du60w0816hck7" path="res://Scenes/Level_4_DominoWorld/Tower.tscn" id="15"]
 [ext_resource type="FontFile" uid="uid://cxgxlgqxgek6n" path="res://UI/Fonts/Non_Nunito/domino_font/human_domino.otf" id="16"]
-[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/Miscellaneous/ui_theme.tres" id="17"]
+[ext_resource type="Theme" uid="uid://brneq6bi4fuba" path="res://UI/themes/ui_theme.tres" id="17"]
 [ext_resource type="Texture2D" uid="uid://77bnnplkinqm" path="res://UI/Control/grey_button_down.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://coqqyg76wct3k" path="res://UI/Control/grey_button03.png" id="19"]
 [ext_resource type="Texture2D" uid="uid://4y0sfebdco0k" path="res://UI/Control/green_button13.png" id="20"]
@@ -268,7 +268,7 @@ _data = {
 [node name="World" type="Node2D" unique_id=1181802440]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("7")
-Domino = ExtResource("8")
+domino_scene = ExtResource("8")
 
 [node name="WorldElements" type="Node2D" parent="." unique_id=1641153460]
 
@@ -283,67 +283,59 @@ position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("3_0lvn3")
 
-[node name="Board" type="Sprite2D" parent="WorldElements" unique_id=496976469]
+[node name="Board" type="Sprite2D" parent="WorldElements" unique_id=815787146]
 z_index = -3
 texture_filter = 1
-position = Vector2(-192, -50)
-rotation = 1.20428
-scale = Vector2(0.3, 0.3)
+position = Vector2(-189.5, -46.3)
+rotation = 1.2042772
+scale = Vector2(0.352, 0.352)
 texture = ExtResource("1")
 
 [node name="Path1" parent="WorldElements" unique_id=607809010 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-130, -176)
 scale = Vector2(0.03, 0.03)
-texture = null
 
 [node name="Path2" parent="WorldElements" unique_id=853339331 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-318, -104.00002)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 1
 
 [node name="Path3" parent="WorldElements" unique_id=1040527191 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-58, -98)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 2
 
 [node name="Path4" parent="WorldElements" unique_id=1591097373 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-322, 6)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 3
 
 [node name="Path5" parent="WorldElements" unique_id=550393547 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-246, 84)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 4
 
 [node name="Path6" parent="WorldElements" unique_id=680097435 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-57.999992, 9.999996)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 5
 
 [node name="SunrisePath" parent="WorldElements" unique_id=453627861 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-240.00003, -180)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 6
 
 [node name="SunsetPath" parent="WorldElements" unique_id=61258073 instance=ExtResource("9")]
 z_index = -2
 position = Vector2(-139, 86.67999)
 scale = Vector2(0.03, 0.03)
-texture = null
 num = 7
 
 [node name="Character Bubble1" parent="WorldElements" unique_id=1946415537 instance=ExtResource("3")]
@@ -571,9 +563,9 @@ offset_bottom = 87.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = SubResource("7")
-text = "You helped someone on their path
-and so helped promote community
-wellness!"
+text = "You helped someone on their
+path and so helped promote
+community wellness!"
 
 [node name="Close" type="Button" parent="UIElements/WellnessBeadPopup" unique_id=402153372]
 anchors_preset = 7

@@ -1,7 +1,7 @@
 class_name DominoWorld
 extends Node2D
 
-@export var Domino: PackedScene
+@export var domino_scene: PackedScene
 
 @onready var central_domino = $WorldElements/CentralDomino
 @onready var board = $WorldElements/Board
@@ -35,7 +35,7 @@ var tower = load(ReferenceManager.get_reference("Tower.gd"))
 var sorted_players = []
 var turn = 0
 var hand = []
-var dominos = gamestate.dominos.duplicate(true)
+var dominoes = gamestate.dominoes.duplicate(true)
 var self_num = 0
 var selected_domino = null
 var center_num = 0
@@ -49,10 +49,10 @@ var _game_over := false  # Stops all turn processing after final round
 
 # (Fall 2025) added variables
 var can_place = true # to check if currently selected domino is a double
-var hand_dominos = [] # track dominos in hand numerically
+var hand_dominoes = [] # track dominoes in hand numerically
 
 var path_ends = [0, 0, 0, 0, 0, 0, 0, 0] # last number on domino chain in each path
-var end_dominos = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
+var end_dominoes = [null, null, null, null, null, null, null, null] # last domino on domino chain in each path
 var position_table: Array[Vector2] = []
 var prev_domino_size = 0
 var _next_slot_indicators: Array[Node2D] = []
@@ -68,7 +68,7 @@ func _ready() -> void:
 	reset_button.visible = false
 	intialize_tower()
 	_init_players()
-	dominos.erase([0, 0])
+	dominoes.erase([0, 0])
 	
 	var center_area := central_domino.get_node_or_null("Area2D")
 	if center_area:
@@ -349,7 +349,7 @@ func _on_Start_pressed() -> void:
 	
 	randomize_turn()
 	
-	setup_dominos()
+	setup_dominoes()
 	start_button.queue_free()
 	
 	if multiplayer.is_server():
@@ -362,8 +362,8 @@ func randomize_turn():
 	rpc("sync_turn", turn)
 	sync_turn(turn)
 
-#Modified values to give out 9 dominos rather than 7.
-func setup_dominos():
+#Modified values to give out 9 dominoes rather than 7.
+func setup_dominoes():
 	# Only the host is allowed to deal dominoes
 	if not multiplayer.is_server():
 		return
@@ -371,7 +371,7 @@ func setup_dominos():
 	# Deal for the Host
 	var my_hand = []
 	for i in range(9):
-		my_hand.append(dominos.pop_front())
+		my_hand.append(dominoes.pop_front())
 	all_player_hands[1] = my_hand.duplicate(true)
 
 	# Deal for Clients and CPUs
@@ -379,7 +379,7 @@ func setup_dominos():
 		if p != 1:
 			var client_hand = []
 			for i in range(9):
-				client_hand.append(dominos.pop_front())
+				client_hand.append(dominoes.pop_front())
 
 			# Store ALL player hands on host for stalemate detection (before CPU/human branching)
 			all_player_hands[p] = client_hand.duplicate(true)
@@ -392,11 +392,11 @@ func setup_dominos():
 
 				# Reshuffle if 4+ doubles
 				if double_count >= 4:
-					dominos.append_array(client_hand)
-					dominos.shuffle()
+					dominoes.append_array(client_hand)
+					dominoes.shuffle()
 					client_hand.clear()
 					for i in range(9):
-						var replacement = dominos.pop_front()
+						var replacement = dominoes.pop_front()
 						if replacement[0] < replacement[1]: replacement.reverse()
 						client_hand.append(replacement)
 
@@ -406,7 +406,7 @@ func setup_dominos():
 				rpc_id(p, "receive_hand", client_hand)
 			
 	# Sync the remaining deck to everyone so future mid-game draws work
-	rpc("sync_full_deck", dominos)
+	rpc("sync_full_deck", dominoes)
 	
 	# Render the host's hand locally
 	render_hand(my_hand)
@@ -415,17 +415,17 @@ func setup_dominos():
 	render_hand(domino_hand)
 
 @rpc("authority", "call_remote") func sync_full_deck(new_deck):
-	dominos = new_deck
+	dominoes = new_deck
 
 # Takes an array of dominoes and renders them on screen
-func render_hand(drawn_dominos):
+func render_hand(drawn_dominoes):
 	# Ensure the numbers are formatted correctly before sorting
-	for i in range(drawn_dominos.size()):
-		if drawn_dominos[i][0] < drawn_dominos[i][1]:
-			drawn_dominos[i].reverse()
+	for i in range(drawn_dominoes.size()):
+		if drawn_dominoes[i][0] < drawn_dominoes[i][1]:
+			drawn_dominoes[i].reverse()
 			
 	# Sort by lowest number, low to high
-	drawn_dominos.sort_custom(func(a, b):
+	drawn_dominoes.sort_custom(func(a, b):
 		var min_a = min(a[0], a[1])
 		var min_b = min(b[0], b[1])
 		if min_a == min_b:
@@ -433,16 +433,16 @@ func render_hand(drawn_dominos):
 		return min_a < min_b
 	)
 
-	for i in range(drawn_dominos.size()):
+	for i in range(drawn_dominoes.size()):
 		# get domino info
-		var domino_nums = drawn_dominos[i]
-		var domino = Domino.instantiate()
+		var domino_nums = drawn_dominoes[i]
+		var domino = domino_scene.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
-		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
+		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominoes/" + domino_title + ".png"))
 		ui_elements.add_child(domino)
 
 		# set domino position and scale
-		var hand_count = drawn_dominos.size()
+		var hand_count = drawn_dominoes.size()
 		var total_width = (hand_count - 1) * HAND_SPACING
 		domino.position = Vector2(HAND_CENTER_X + (i * HAND_SPACING) - (total_width / 2.0), HAND_CENTER_Y)
 		domino.scale = HAND_SCALE
@@ -458,12 +458,12 @@ func render_hand(drawn_dominos):
 			true
 		)
 	
-	# set the hand array to the drawn dominos
-	hand_dominos = drawn_dominos
+	# set the hand array to the drawn dominoes
+	hand_dominoes = drawn_dominoes
 
 # Rearrange unplaced hand dominoes to fill gaps and stay centered after a placement
 func rearrange_hand() -> void:
-	var all_nodes = get_tree().get_nodes_in_group("dominos")
+	var all_nodes = get_tree().get_nodes_in_group("dominoes")
 	var unplaced: Array = []
 	for domino in all_nodes:
 		if not domino.placed and domino.get_parent() == ui_elements:
@@ -493,7 +493,7 @@ func add_position(global_pos: Vector2) -> void:
 
 # take a domino from the main deck
 func draw_domino():
-	var nums = dominos.pop_front()
+	var nums = dominoes.pop_front()
 	if nums[0] < nums[1]:
 		nums.reverse()
 	rpc("update_deck")
@@ -525,7 +525,7 @@ func select_domino(domino) -> bool:
 
 # update deck from other player's drawing a domino
 @rpc("any_peer") func update_deck():
-	var _nums = dominos.pop_front()
+	var _nums = dominoes.pop_front()
 
 # handles placing of domino onto a path
 func place_domino(num):
@@ -551,13 +551,13 @@ func place_domino(num):
 	if true_top == path_ends[num] or true_bot == path_ends[num]:
 		print("DOMINO Placed at ", num) 
 		
-		# CRASH FIX: First domino of the round has no end_dominos[num] yet!
-		if end_dominos[num] == null:
+		# CRASH FIX: First domino of the round has no end_dominoes[num] yet!
+		if end_dominoes[num] == null:
 			rpc("change_path_collision", num, true)
 			if true_bot != path_ends[num]:
 				flip = true
 		else:
-			if true_bot != path_ends[num] or (true_top == path_ends[num] and top_el != end_dominos[num].top_element):
+			if true_bot != path_ends[num] or (true_top == path_ends[num] and top_el != end_dominoes[num].top_element):
 				flip = true
 			
 		# Bug 4 fix: doubles look identical when flipped — skip visual animation
@@ -566,7 +566,7 @@ func place_domino(num):
 
 		# Check for alloy
 		var touching_el = top_el if flip else bot_el
-		if end_dominos[num] != null and end_dominos[num].top_element != touching_el:
+		if end_dominoes[num] != null and end_dominoes[num].top_element != touching_el:
 			if curriculum.element_to_alloy.has(touching_el):
 				var alloy_name = curriculum.element_to_alloy[touching_el]
 				rpc("increment_alloys", self_num + 1, alloy_name)
@@ -616,7 +616,7 @@ func place_domino(num):
 			path_ends[num] = true_top
 			placed_domino.top_element = top_el
 
-		end_dominos[num] = placed_domino
+		end_dominoes[num] = placed_domino
 		path_step_count[num] += 1
 		num_placed += 1
 
@@ -627,8 +627,8 @@ func place_domino(num):
 		rpc("update_domino_path", [true_bot, true_top], [bot_el, top_el], position_table[num], num, flip)
 		placement_history.append([[true_bot, true_top], [bot_el, top_el], position_table[num], num, flip])
 
-		hand_dominos.erase([placed_domino.top_num, placed_domino.bottom_num])
-		hand_dominos.erase([placed_domino.bottom_num, placed_domino.top_num])
+		hand_dominoes.erase([placed_domino.top_num, placed_domino.bottom_num])
+		hand_dominoes.erase([placed_domino.bottom_num, placed_domino.top_num])
 		if multiplayer.is_server():
 			# Update host tracking: remove placed domino from local player's tracked hand
 			var placed_pair = [placed_domino.top_num, placed_domino.bottom_num]
@@ -653,7 +653,7 @@ func place_domino(num):
 			advance_turn()
 			can_place = true
 			
-		if hand_dominos.size() == 0:
+		if hand_dominoes.size() == 0:
 			# Automatically synchronize next round when hand is empty!
 			if multiplayer.is_server():
 				_host_force_next_round()
@@ -763,7 +763,7 @@ func display_wellness_prompt():
 	var player_name = gamestate.players[sorted_players[turn]] if turn < sorted_players.size() else "Unknown"
 	$UIElements/WellnessBeadPopup/Title.text = str(player_name) + " Got a..."
 	$UIElements/WellnessBeadPopup/WellnessBead.text = "Wellness Bead!"
-	$UIElements/WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their path and so helped promote community wellness!"
+	$UIElements/WellnessBeadPopup/Info.text = str(player_name) + " helped someone on their\npath and so helped promote\ncommunity wellness!"
 	$UIElements/WellnessBeadPopup.visible = true
 	camera.set_drag(false)
 
@@ -829,12 +829,12 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	var bot_e = domino_elms[0]
 	var top_e = domino_elms[1]
 
-	var domino = Domino.instantiate()
+	var domino = domino_scene.instantiate()
 	add_child(domino)
 	domino.scale = PLACED_SCALE
 
 	var domino_title = str(top_n) + str(bot_n)
-	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
+	domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominoes/" + domino_title + ".png"))
 	domino.init(top_n, bot_n, top_e, bot_e, true)
 	domino.mark_as_placed(PLACED_SCALE)
 
@@ -861,7 +861,7 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 	# is controlled by the host, not by this RPC handler
 	_animate_placement(domino, target_pos, flip, target_rot)
 
-	end_dominos[path_num] = domino
+	end_dominoes[path_num] = domino
 	path_step_count[path_num] += 1
 	_consecutive_help_count = 0
 	if multiplayer.is_server():
@@ -878,9 +878,9 @@ func display_footprint_tile(round_num: int, footprint_num: int) -> void:
 func replace_domino():
 	var domino_nums = draw_domino()
 	if domino_nums:
-		var domino = Domino.instantiate()
+		var domino = domino_scene.instantiate()
 		var domino_title = str(domino_nums[1]) + str(domino_nums[0])
-		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominos/" + domino_title + ".png"))
+		domino.get_node("Sprite2D").texture = load(ReferenceManager.get_reference("dominoes/" + domino_title + ".png"))
 		add_child(domino)
 		domino.position = selected_domino.original_pos
 		domino.init(
@@ -907,15 +907,15 @@ func replace_domino():
 	for i in range(8):
 		change_path_collision(i, false)
 	
-	# remove all old dominos from screen
+	# remove all old dominoes from screen
 	num_placed = 0
 	_consecutive_help_count = 0
 	all_player_hands.clear()
 	placement_history.clear()
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
-	var group_dominos = get_tree().get_nodes_in_group("dominos")
+	var group_dominoes = get_tree().get_nodes_in_group("dominoes")
 	clear_selected_domino()
-	for domino in group_dominos:
+	for domino in group_dominoes:
 		domino.queue_free()
 
 	# if we've completed round 9, end game
@@ -934,23 +934,23 @@ func replace_domino():
 		center_num += 1
 		_round_advancing = false
 		return
-	dominos = gamestate.dominos.duplicate(true)
-	dominos.shuffle()
+	dominoes = gamestate.dominoes.duplicate(true)
+	dominoes.shuffle()
 	center_num += 1
 	SaveManager.Save["0"].Current_Round += 1
 	add_tower(center_num)
 	print(center_num, center_num)
-	dominos.erase([center_num, center_num])
+	dominoes.erase([center_num, center_num])
 	path_ends = []
 	for _i in range(8):
 		path_ends.append(center_num)
-	end_dominos = [null, null, null, null, null, null, null, null]
+	end_dominoes = [null, null, null, null, null, null, null, null]
 	# Per D-07: hide before loading new texture to prevent one-frame flash
 	central_domino.modulate.a = 0.0
 	central_domino.scale = Vector2(0.25, 0.25)
 
 	# load center domino
-	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
+	var domino_title = ReferenceManager.get_reference("dominoes/" + str(center_num) + str(center_num) + ".png")
 	central_domino.get_node("Sprite2D").texture = load(domino_title)
 	var center_tween: Tween = create_tween().set_parallel(true)
 	center_tween.tween_property(central_domino, "modulate:a", 1.0, 0.4)
@@ -1030,7 +1030,7 @@ func _check_stalemate() -> bool:
 		else:
 			return false  # Unknown hand, assume not stuck
 		if player_hand.size() == 0:
-			continue  # No dominos left, can't move but not blocking
+			continue  # No dominoes left, can't move but not blocking
 		for domino_pair in player_hand:
 			# Check personal path
 			if domino_pair[0] == path_ends[idx] or domino_pair[1] == path_ends[idx]:
@@ -1129,17 +1129,17 @@ func _execute_cpu_turn_async(cpu_id):
 		var bot_e = elements[1]
 		
 		# CRASH FIX: First piece of the round
-		if end_dominos[move.path_idx] == null:
+		if end_dominoes[move.path_idx] == null:
 			rpc("change_path_collision", move.path_idx, true)
 			if true_bot != path_ends[move.path_idx]:
 				flip = true
 		else:
-			if true_bot != path_ends[move.path_idx] or (true_top == path_ends[move.path_idx] and top_e != end_dominos[move.path_idx].top_element):
+			if true_bot != path_ends[move.path_idx] or (true_top == path_ends[move.path_idx] and top_e != end_dominoes[move.path_idx].top_element):
 				flip = true
 
 		# CPU SCORING & POPUP CHECKS
 		var touching_el = top_e if flip else bot_e
-		if end_dominos[move.path_idx] != null and end_dominos[move.path_idx].top_element != touching_el:
+		if end_dominoes[move.path_idx] != null and end_dominoes[move.path_idx].top_element != touching_el:
 			if curriculum.element_to_alloy.has(touching_el):
 				var alloy_name = curriculum.element_to_alloy[touching_el]
 				rpc("increment_alloys", my_path_idx + 1, alloy_name)
@@ -1198,9 +1198,9 @@ func _on_Next_pressed() -> void:
 		rpc("next_round")
 		next_round()
 		
-		# get new dominos from deck
+		# get new dominoes from deck
 		if center_num <= 9:
-			setup_dominos()
+			setup_dominoes()
 
 func _on_Reset_pressed() -> void:
 	if multiplayer.is_server():
@@ -1472,7 +1472,7 @@ class _NextSlotIndicator extends Node2D:
 			"train_open": train_open.duplicate(true),
 			"can_place": can_place,
 			"num_placed": num_placed,
-			"dominos": dominos.duplicate(true),
+			"dominoes": dominoes.duplicate(true),
 			"placement_history": placement_history.duplicate(true),
 			"hand": all_player_hands[id].duplicate(true) if all_player_hands.has(id) else []
 		}
@@ -1493,12 +1493,12 @@ class _NextSlotIndicator extends Node2D:
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
 	can_place = state["can_place"]
 	num_placed = state["num_placed"]
-	dominos = state["dominos"]
+	dominoes = state["dominoes"]
 	placement_history = state["placement_history"]
 	
 	_update_turn_label()
 	
-	var domino_title = ReferenceManager.get_reference("dominos/" + str(center_num) + str(center_num) + ".png")
+	var domino_title = ReferenceManager.get_reference("dominoes/" + str(center_num) + str(center_num) + ".png")
 	central_domino.get_node("Sprite2D").texture = load(domino_title)
 	central_domino.modulate.a = 1.0
 	central_domino.scale = Vector2(0.5, 0.5)
@@ -1519,7 +1519,7 @@ class _NextSlotIndicator extends Node2D:
 		rpc("next_round")
 		next_round()
 		if center_num <= 9:
-			setup_dominos()
+			setup_dominoes()
 		
 	next_button.visible = false
 	if is_instance_valid(start_button):

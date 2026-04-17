@@ -3,5 +3,5 @@
 extends Area2D
 
 # have stone follow mouse
-func _physics_process(delta):
+func _physics_process(_delta):
 	global_position = get_global_mouse_position()

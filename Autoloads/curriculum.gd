@@ -39,7 +39,7 @@ extends Node
 	["ybr", "Playing in a soccer game."]
 ]
 
-# dictionary mapping numbers to elements for dominos
+# dictionary mapping numbers to elements for dominoes
 # key: "top_number+bottomnumber", item: [top element, bottom element]
 @export var domino_dict = {
 	"00": ["", ""],
@@ -156,7 +156,7 @@ extends Node
 	"15": "Growing Gardens / Return of Glaciers",
 	"16": "Gobekli Tepe",
 	"17": "Bye Glaciers (again), Hello Sheep Herding",
-	"18": "Bread and Dominos",
+	"18": "Bread and dominoes",
 	"19": "Clay and Catalhoyuk",
 	"20": "Malachite to Copper",
 	"21": "Human Skin",
@@ -222,7 +222,7 @@ extends Node
 	"15": "Growing Gardens / Return of Glaciers",
 	"16": "Gobekli Tepe",
 	"17": "Bye Glaciers (again), Hello Sheep Herding",
-	"18": "Bread and Dominos",
+	"18": "Bread and dominoes",
 	"19": "Clay and Catalhoyuk",
 	"20": "Malachite to Copper",
 	"21": "Human Skin",
@@ -402,7 +402,7 @@ const footprint_tile_table = [
 		[],
 	],
 	[ # Footprint tile 18
-		"Bread and Dominos",
+		"Bread and dominoes",
 		"The Megafauna and Mammoths become extinct. Now that the last Ice Age is over, we are able to collect more seeds and grow larger fields of wheat, millet and rice.",
 		["The Agriculture Revolution", "The History of Farming"],
 		"10,000 years ago, the warming climate allowed us to collect more seeds from grasses and plant crops for the first time.\nThis is called agriculture, which gave us time to rest, play, build and perhaps make up some rhymes!\nThis new way of living began in the Fertile Crescent and slowly became widespread.\nLife was different with rice, millet, sorghum, and the wheat that brought us the first bread.",
@@ -856,7 +856,7 @@ const external_link_dict = {
 		"https://www.youtube.com/watch?v=QO7NHZJ-eE4",
 	"Cathedrals and Universities":
 		"https://www.youtube.com/watch?v=0wDlLwLIFeI",
-	"20 Things You Never Knew About Dominos!":
+	"20 Things You Never Knew About dominoes!":
 		"https://www.youtube.com/watch?v=X-RNmaWkYD4",
 	"Gutenberg Printing Press":
 		"https://www.youtube.com/watch?v=DLctAw4JZXE",

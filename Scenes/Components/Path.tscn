@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://dejvxq7nbxxxf"]
 
-[ext_resource type="Texture2D" uid="uid://d0uqyedhohbqh" path="res://UI/sprites/elcitrap.png" id="1"]
 [ext_resource type="Script" uid="uid://cyujx5y8r27gr" path="res://Scenes/Components/Path.gd" id="2"]
 
 [sub_resource type="CircleShape2D" id="1"]
@@ -8,7 +7,6 @@ radius = 590.085
 
 [node name="Path2D" type="Sprite2D" unique_id=782846768]
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("1")
 script = ExtResource("2")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1881454765]

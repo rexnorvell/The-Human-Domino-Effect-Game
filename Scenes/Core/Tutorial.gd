@@ -42,13 +42,13 @@ func handle_level(level):
 
 	#for top in range(10):
 	#	for bottom in range(top + 1):
-	#		gamestate.dominos.append([bottom, top])
+	#		gamestate.dominoes.append([bottom, top])
 
 	#randomize()
 	#gamestate.random_seed = randi() % 10000000
 	#seed(gamestate.random_seed)
 
-	#gamestate.dominos.shuffle()
+	#gamestate.dominoes.shuffle()
 	
 	# Change menu to waiting room
 	change_menu_smoothly(LevelSelectContainer, TutorialContainer)

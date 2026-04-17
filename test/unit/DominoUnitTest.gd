@@ -28,7 +28,7 @@ func before_test():
 
 func test__ready_in_group() -> void:
 	# Executes _ready() on creation
-	assert_bool(domino_spy.is_in_group("dominos")).is_true()
+	assert_bool(domino_spy.is_in_group("dominoes")).is_true()
 	assert_object(domino_spy.original_pos).is_not_null()
 
 

@@ -30,41 +30,44 @@ func _ready():
 	gamestate.hot_join_accepted_signal.connect(_on_hot_join_accepted)
 	gamestate.game_error.connect(_on_game_error)
 	
-	# Listen for the back button being clicked so we can cleanly disconnect
-	if has_node("Back_Button"):
-		$Back_Button.pressed.connect(_on_back_button_pressed)
-		
 	set_player_name(gamestate.player_name)
 
 
 func _on_Host_pressed():
+	if !$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.get_clickable():
+		return
 	if get_player_name() == "":
 		set_error_label("Invalid name!")
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
-
+	
+	# Disable Host and Join buttons
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(false)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(false)
+	
 	set_error_label("")
 	
-	# Set up dominos, create the host, and go to the Wait Room
+	# Set up dominoes, create the host, and go to the Wait Room
 	handle_level(gamestate.first_level)
 
 
-func _on_Join_Button_pressed():
+func _on_Join_pressed():
+	if !$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.get_clickable():
+		return
 	if get_player_name() == "":
 		set_error_label("Invalid name!")
 		SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
 		return
+	
+	# Disable Host and Join buttons
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(false)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(false)
 	
 	var ip = $Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/IP/MarginContainer/LineEdit.text
 	if ip.is_empty():
 		ip = str(local_ip)
-
 	set_error_label("Connecting...")
-
-	# Disable Host and Join buttons
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = true
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = true
-
+	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
@@ -89,7 +92,7 @@ func _on_join_accepted():
 	waitroom_host_name.set_text("Host: ")
 	waitroom_host_ip.set_text("Host IP: " + ip)
 	
-	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
+	change_menu_smoothly(LobbyContainer, WaitRoomContainer, true)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
 	await get_tree().process_frame
@@ -126,21 +129,27 @@ func _on_connection_failed():
 func _on_game_error(what: String):
 	set_error_label(what)
 	# Turn the buttons back on for retry purposes
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host.disabled = false
-	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join_Button.disabled = false
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host.set_clickable(true)
+	$Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join.set_clickable(true)
 
 
-func change_menu_smoothly(prev, target):
+func change_menu_smoothly(prev, target, is_next: bool):
 	var prev_animation = prev.get_node("AnimationPlayer")
 	var target_animation = target.get_node("AnimationPlayer")
 
 	SFXController.playSFX(ReferenceManager.get_reference("next.wav"))
-	prev_animation.play_backwards("start")
+	if is_next:
+		prev_animation.play("out_next")
+	else:
+		prev_animation.play("out_prev")
 	await prev_animation.animation_finished
 	
 	prev.visible = false
 	target.visible = true
-	target_animation.play("start")
+	if is_next:
+		target_animation.play("in_prev")
+	else:
+		target_animation.play("in_next")
 
 
 func refresh_lobby():
@@ -161,13 +170,13 @@ func handle_level(level):
 
 	for top in range(10):
 		for bottom in range(top + 1):
-			gamestate.dominos.append([bottom, top])
+			gamestate.dominoes.append([bottom, top])
 
 	randomize()
 	gamestate.random_seed = randi() % 10000000
 	seed(gamestate.random_seed)
 
-	gamestate.dominos.shuffle()
+	gamestate.dominoes.shuffle()
 	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: " + get_player_name())
@@ -190,7 +199,7 @@ func handle_level(level):
 		pick_random_icon()
 	set_player_icon(selected_icon)
 	
-	change_menu_smoothly(LobbyContainer, WaitRoomContainer)
+	change_menu_smoothly(LobbyContainer, WaitRoomContainer, true)
 	
 	await WaitRoomContainer.get_node("AnimationPlayer").animation_finished
 	await get_tree().process_frame
@@ -316,7 +325,21 @@ func _get_available_icons() -> Array[String]:
 	
 	
 func _on_back_button_pressed() -> void:
+	SFXController.playSFX(ReferenceManager.get_reference("back.wav"))
+	var button_animation_player: AnimationPlayer = $Back_Button/AnimationPlayer2
+	var animation_player: AnimationPlayer
+	if WaitRoomContainer.visible:
+		animation_player = WaitRoomContainer.get_node("AnimationPlayer")
+	elif LobbyContainer.visible:
+		animation_player = LobbyContainer.get_node("AnimationPlayer")
+	elif LevelSelectContainer.visible:
+		animation_player = LevelSelectContainer.get_node("AnimationPlayer")
+	if animation_player != null:
+		animation_player.play("out_prev")
+		button_animation_player.play("out")
+		await animation_player.animation_finished
 	gamestate.disconnect_network()
+	get_tree().change_scene_to_file(gamestate.prev_scene)
 
 
 func _on_Char_Creation_pressed():
@@ -327,14 +350,10 @@ func _on_Pond_Choices_pressed():
 	start_single_player("Pond")
 
 
-func _on_Virtual_World_pressed():
-	start_single_player("VW0")
-
-
 func _on_Domino_Game_pressed():
 	# Set the level, then transition to the Host/Join screen
 	gamestate.first_level = "DominoWorld"
-	change_menu_smoothly(LevelSelectContainer, LobbyContainer)
+	change_menu_smoothly(LevelSelectContainer, LobbyContainer, true)
 
 
 func start_single_player(level_name: String):

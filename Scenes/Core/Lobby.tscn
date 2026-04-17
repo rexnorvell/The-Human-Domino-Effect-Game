@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://c38yj276hupv0" path="res://Scenes/Core/Lobby.gd" id="10"]
 [ext_resource type="Texture2D" uid="uid://tjghemgrl3s6" path="res://UI/sprites/level2.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://c5sns54lt28rr" path="res://UI/sprites/level1.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://1v4s7y3mtnon" path="res://UI/sprites/level4.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://cryqi7ofrk51m" path="res://UI/sprites/level3.png" id="14"]
 [ext_resource type="PackedScene" uid="uid://31cxwpf6raj0" path="res://Scenes/Components/PlayerIconButton.tscn" id="14_ba6iy"]
 [ext_resource type="PackedScene" uid="uid://clj23haf5g65i" path="res://Scenes/Components/AnimatedButton.tscn" id="14_ubiko"]
@@ -779,15 +778,17 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="GridContainer" type="GridContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer" unique_id=768670445]
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer" unique_id=1988401006]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 100
-theme_override_constants/v_separation = 50
-columns = 2
+theme_override_constants/separation = 100
 
-[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=269964990]
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer" unique_id=633670268]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="Char_Creation" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=269964990]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -796,7 +797,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("12")
 stretch_mode = 4
 
-[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=748264962]
+[node name="Pond_Choices" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=748264962]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -805,22 +806,13 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("11")
 stretch_mode = 4
 
-[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=876093611]
+[node name="Domino_Game" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer" unique_id=876093611]
 custom_minimum_size = Vector2(250, 141)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14")
-stretch_mode = 4
-
-[node name="Virtual_World" type="TextureButton" parent="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer" unique_id=154937086]
-custom_minimum_size = Vector2(250, 141)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("13")
 stretch_mode = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelSelect_Container" unique_id=1492345975]
@@ -1030,10 +1022,9 @@ autoplay = &"in"
 
 [connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Host/Host" to="." method="_on_Host_pressed"]
 [connection signal="pressed" from="Lobby_Container/HBoxContainer/MenuContainer/Menu/VBoxContainer/HBoxContainer/Join/Join" to="." method="_on_Join_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
-[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/GridContainer/Virtual_World" to="." method="_on_Virtual_World_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer/Char_Creation" to="." method="_on_Char_Creation_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/HBoxContainer/Pond_Choices" to="." method="_on_Pond_Choices_pressed"]
+[connection signal="pressed" from="LevelSelect_Container/VBoxContainer/CenterContainer/VBoxContainer/Domino_Game" to="." method="_on_Domino_Game_pressed"]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Basket" to="." method="_on_icon_selected" binds= ["basket.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/Boat" to="." method="_on_icon_selected" binds= ["boat.png"]]
 [connection signal="pressed" from="WaitRoom_Container/HBoxContainer/MenuContainer/Menu/MarginContainer/VBoxContainer/GridContainer/BowAndArrow" to="." method="_on_icon_selected" binds= ["bowandarrow.png"]]

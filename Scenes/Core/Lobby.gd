@@ -350,10 +350,6 @@ func _on_Pond_Choices_pressed():
 	start_single_player("Pond")
 
 
-func _on_Virtual_World_pressed():
-	start_single_player("VW0")
-
-
 func _on_Domino_Game_pressed():
 	# Set the level, then transition to the Host/Join screen
 	gamestate.first_level = "DominoWorld"

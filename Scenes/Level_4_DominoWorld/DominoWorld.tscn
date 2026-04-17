@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b5p1i36ak27cu"]
 
-[ext_resource type="Texture2D" uid="uid://c7thnwhpiw6xc" path="res://UI/sprites/reference.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyfxufwvoeeed" path="res://UI/sprites/reference.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://crx57hj081ag0" path="res://Scenes/Components/Character Bubble.tscn" id="3"]
 [ext_resource type="Script" path="res://Scenes/Level_4_DominoWorld/camera_2d.gd" id="3_0lvn3"]
 [ext_resource type="Texture2D" uid="uid://belf0op6o2ek2" path="res://UI/sprites/character_sprites/faces/0.png" id="4"]
@@ -283,12 +283,12 @@ position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("3_0lvn3")
 
-[node name="Board" type="Sprite2D" parent="WorldElements" unique_id=496976469]
+[node name="Board" type="Sprite2D" parent="WorldElements" unique_id=815787146]
 z_index = -3
 texture_filter = 1
-position = Vector2(-192, -50)
-rotation = 1.20428
-scale = Vector2(0.3, 0.3)
+position = Vector2(-189.5, -46.3)
+rotation = 1.2042772
+scale = Vector2(0.352, 0.352)
 texture = ExtResource("1")
 
 [node name="Path1" parent="WorldElements" unique_id=607809010 instance=ExtResource("9")]

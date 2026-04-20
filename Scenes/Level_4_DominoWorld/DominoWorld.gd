@@ -652,13 +652,7 @@ func place_domino(num):
 			rpc("advance_turn")
 			advance_turn()
 			can_place = true
-			
-		if hand_dominoes.size() == 0:
-			# Automatically synchronize next round when hand is empty!
-			if multiplayer.is_server():
-				_host_force_next_round()
-			else:
-				rpc_id(1, "_host_force_next_round")
+
 
 @rpc("any_peer", "call_local") func set_train_open(num: int, is_open: bool):
 	train_open[num] = is_open
@@ -913,6 +907,7 @@ func replace_domino():
 	all_player_hands.clear()
 	placement_history.clear()
 	path_step_count = [0, 0, 0, 0, 0, 0, 0, 0]
+	train_open = [false, false, false, false, false, false, false, false]
 	var group_dominoes = get_tree().get_nodes_in_group("dominoes")
 	clear_selected_domino()
 	for domino in group_dominoes:
@@ -1063,6 +1058,8 @@ func _trigger_stalemate() -> void:
 	_stalemate_in_progress = false  # Reset so future rounds can detect stalemate
 	# Re-show Next button for the host after auto-advance completes
 	if multiplayer.is_server():
+		if center_num <= 9:
+			setup_dominoes()
 		next_button.visible = true
 
 @rpc("any_peer") func sync_turn(new_turn):

@@ -349,6 +349,7 @@ func _on_Start_pressed() -> void:
 	
 	randomize_turn()
 	
+	dominoes.shuffle()
 	setup_dominoes()
 	start_button.queue_free()
 	

@@ -407,6 +407,7 @@ func prepare_client_deck(r_seed):
 	seed(r_seed)
 	dominoes.shuffle()
 
+
 @rpc("any_peer", "call_local", "reliable")
 func post_start_game():
 	var world = load("res://Scenes/Core/Manager.tscn")
@@ -487,7 +488,7 @@ func join_game(ip, new_player_name):
 # player sets their random seed
 @rpc("any_peer") func set_random_seed(rando_seed):
 	random_seed = rando_seed
-#	print("seed: ", random_seed)
+
 
 func get_player_list():
 	return players.values()

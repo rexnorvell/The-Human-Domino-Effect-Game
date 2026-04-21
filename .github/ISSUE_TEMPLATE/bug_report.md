@@ -1,33 +1,30 @@
 ---
-name: Bug report
-about: Create a issue to help improve GdUnit3
-title: ''
+name: Bug Report
+about: Report something that isn't working
+title: "[BUG] "
 labels: bug
-assignees: MikeSchulze
-
 ---
 
-<!-- Please search existing issues for potential duplicates before filing yours:
-https://github.com/MikeSchulze/gdUnit3/issues?q=is%3Aissue
--->
+## Description
+A clear and concise description of the bug.
 
-**The used Godot version:**
-<!-- Specify commit hash if using non-official build. -->
-
-**OS including version:**
-<!-- Specify GPU model, drivers, and the backend. -->
-
-**Describe the bug**
-<!-- A clear and concise description of what the bug is.-->
-
-**Steps to Reproduce**
-<!--
-Steps to reproduce the behavior:
+## Steps to Reproduce
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error -->
+2. Click on '...'
+3. See error
 
+## Expected Behavior
+What you expected to happen.
 
-**Minimal reproduction project:**
-<!-- a small project which reproduces the issue -->
+## Actual Behavior
+What actually happened.
+
+## Screenshots / Logs
+If applicable, add screenshots or logs.
+
+## Environment
+- OS:
+- Version/Commit:
+
+## Additional Context
+Anything else that might help.

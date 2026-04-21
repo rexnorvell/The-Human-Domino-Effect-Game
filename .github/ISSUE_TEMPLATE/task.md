@@ -1,16 +1,17 @@
 ---
 name: Task
-about: A small task to implement
-title: ''
+about: General development task
+title: "[TASK] "
 labels: task
-assignees: MikeSchulze
-
 ---
 
-## A Task is not a bug or feature request
+## Description
+Describe the task.
 
-### Description
-<!-- Describe the task you want to do -->
+## Acceptance Criteria
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
 
-### Acceptance criteria
-<!-- Define the acceptance criteria here to accept the task as done -->
+## Notes
+Any implementation details or constraints.

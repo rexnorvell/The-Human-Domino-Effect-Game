@@ -171,12 +171,6 @@ func handle_level(level):
 	for top in range(10):
 		for bottom in range(top + 1):
 			gamestate.dominoes.append([bottom, top])
-
-	randomize()
-	gamestate.random_seed = randi() % 10000000
-	seed(gamestate.random_seed)
-
-	gamestate.dominoes.shuffle()
 	
 	# Set host username and ip address labels
 	waitroom_host_name.set_text("Host: " + get_player_name())

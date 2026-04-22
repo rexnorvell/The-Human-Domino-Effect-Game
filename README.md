@@ -1,4 +1,4 @@
-# ![image](UI/sprites/Domino Effect Logo.png)
+# ![Logo](UI/sprites/Domino%20Effect%20Logo.png)
 
 ### Overview
 
